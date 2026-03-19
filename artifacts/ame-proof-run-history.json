@@ -1,0 +1,29 @@
+﻿{
+    "runId":  "20260319-154219",
+    "generatedAt":  "2026-03-19T15:42:19.9995696-07:00",
+    "label":  "Mar 19, 2026 3:42 PM",
+    "status":  "Completed",
+    "runner":  "run-demo.ps1",
+    "mode":  "Local demo rebuild",
+    "datasetDate":  "2026-03-18",
+    "verifiedDate":  "2026-03-18",
+    "signalsLoaded":  9,
+    "priorityLeads":  7,
+    "earlySignals":  5,
+    "meetingLinked":  1,
+    "outputsRefreshed":  [
+                             {
+                                 "label":  "Dashboard bundle",
+                                 "path":  "ame-proof-app-data.js"
+                             },
+                             {
+                                 "label":  "Leadership Brief",
+                                 "path":  "ame-proof-daily-briefing.html"
+                             },
+                             {
+                                 "label":  "Morning Digest",
+                                 "path":  "ame-proof-morning-digest.html"
+                             }
+                         ],
+    "detail":  "Dashboard, Morning Digest, and Leadership Brief refreshed from the local demo build."
+}

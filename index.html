@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AME Project Intelligence Demo</title>
+  <meta
+    name="description"
+    content="Verified municipal intelligence proof of concept for AME Group with workflow automation and a MERX import lane."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260319-16" />
+</head>
+<body>
+  <header class="shell-topbar">
+    <div class="shell-topbar-branding">
+      <div class="shell-topbar-logo">
+        <div class="logo-mark" aria-label="AME Group logo">
+          <span class="logo-disc disc-a">A</span>
+          <span class="logo-disc disc-m">M</span>
+          <span class="logo-disc disc-e">E</span>
+          <span class="logo-word"><span class="logo-g">G</span><span class="logo-rest">roup</span></span>
+        </div>
+      </div>
+      <div class="shell-topbar-brand">
+        <h1>AME BC Market Intelligence</h1>
+      </div>
+    </div>
+
+    <nav class="shell-topbar-nav" aria-label="Primary sections">
+      <button class="top-nav-link is-active" type="button" data-section-target="feed">Signal Board</button>
+      <button class="top-nav-link" type="button" data-section-target="merx">MERX Intake</button>
+      <button class="top-nav-link" type="button" data-section-target="workflow">How It Works</button>
+    </nav>
+
+    <div class="shell-topbar-actions">
+      <label class="topbar-search" aria-label="Search project signals">
+        <span class="search-label">Search signals</span>
+        <input id="searchFilter" type="search" placeholder="Search city, project, or keyword" />
+      </label>
+      <div class="topbar-cta-stack">
+        <a class="ghost-button top-cta top-cta-briefing" href="artifacts/ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Leadership Brief</a>
+        <a class="ghost-button top-cta top-cta-digest" href="artifacts/ame-proof-morning-digest.html" target="_blank" rel="noreferrer">Morning Digest</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-shell">
+    <main class="shell-canvas">
+      <section class="welcome-panel panel">
+        <div class="welcome-copy">
+          <h2>AME Opportunity Radar</h2>
+          <p class="lede">This demo dashboard brings together verified BC municipal signals and real public procurement notices so AME Group can scan quickly, qualify faster, and move the strongest leads into action before the competition.</p>
+          <div class="compact-actions">
+            <button class="ghost-button hero-button" type="button" data-nav-target="feed">Open Signal Board</button>
+            <button class="primary-button hero-button" type="button" data-nav-target="merx">Open MERX Intake</button>
+          </div>
+        </div>
+
+        <div class="welcome-meta">
+          <div class="metric-chip">
+            <span class="metric-chip-label">Last Automation Run</span>
+            <strong id="heroLastRun">Loading</strong>
+          </div>
+          <div class="metric-chip">
+            <span class="metric-chip-label">Last Checked</span>
+            <strong id="heroLastChecked">Loading</strong>
+          </div>
+          <div class="metric-chip">
+            <span class="metric-chip-label">Priority Leads</span>
+            <strong id="heroPriorityCount">0 Priority Leads</strong>
+          </div>
+          <div class="metric-chip">
+            <span class="metric-chip-label">Notice Library</span>
+            <strong id="heroMerxCount">0</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="metric-panel">
+        <div id="truthStrip" class="truth-strip"></div>
+      </section>
+
+      <section class="run-history-panel panel">
+        <div class="section-head">
+          <div>
+            <p class="section-tag">Automation Run Log</p>
+            <h3>What the local demo refreshed most recently</h3>
+          </div>
+        </div>
+        <div class="run-history-layout">
+          <div id="runHistorySummary" class="run-history-summary"></div>
+          <div id="runHistoryList" class="run-history-list"></div>
+        </div>
+      </section>
+
+      <section id="workspaceFeed" class="workspace-panel panel is-active" data-section="feed">
+        <div class="section-head section-head-stack">
+          <div>
+            <p class="section-tag">Signal Board</p>
+            <h3>Verified municipal project signals filtered for AME</h3>
+          </div>
+          <div class="feed-head-actions">
+            <a class="ghost-button" href="artifacts/ame-proof-morning-digest.html" target="_blank" rel="noreferrer">Open Morning Digest</a>
+          </div>
+        </div>
+
+        <div class="filter-workbench">
+          <div class="filter-group">
+            <p class="detail-label">Source</p>
+            <div id="sourceFilterChips" class="filter-chip-row"></div>
+          </div>
+          <div class="filter-group">
+            <p class="detail-label">Relevance</p>
+            <div id="priorityFilterChips" class="filter-chip-row"></div>
+          </div>
+          <div id="filterStatus" class="filter-status"></div>
+        </div>
+
+        <div id="signalSteps" class="flow-strip signal-steps"></div>
+
+        <div class="feed-layout">
+          <div id="recordGrid" class="record-grid"></div>
+          <aside id="signalInspector" class="signal-inspector"></aside>
+        </div>
+      </section>
+
+      <section id="workspaceMerx" class="workspace-panel panel" data-section="merx">
+        <div class="section-head section-head-stack">
+          <div>
+            <p class="section-tag">MERX Intake</p>
+            <h3>Real notice library with AME scoring</h3>
+          </div>
+          <div class="workflow-actions">
+            <button id="classifyMerx" class="primary-button" type="button">Generate Recommendation</button>
+            <button id="clearMerx" class="ghost-button" type="button">Clear</button>
+          </div>
+        </div>
+
+        <div class="merx-strip">
+          <span class="merx-strip-pill">Real public notices only</span>
+          <span class="merx-strip-copy">This is the approved-intake demo lane. Pick a notice on the left, then review extracted fields and the AME recommendation on the right.</span>
+        </div>
+
+        <div id="merxSteps" class="flow-strip merx-steps"></div>
+
+        <div class="merx-board">
+          <section class="merx-library">
+            <div class="merx-library-head">
+              <p class="detail-label">Notice Library</p>
+              <p class="empty-copy">Select one real public notice to run through the intake workflow.</p>
+            </div>
+            <div id="merxDemoOptions" class="merx-notice-list"></div>
+          </section>
+          <section class="merx-detail-stack">
+            <div id="merxFields" class="sandbox-result"></div>
+            <div id="merxResult" class="sandbox-result"></div>
+            <div id="merxRaw" class="sandbox-result"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="workspaceWorkflow" class="workspace-panel panel" data-section="workflow">
+        <div class="section-head section-head-stack">
+          <div>
+            <p class="section-tag">How It Works</p>
+            <h3>Walk through how a public source becomes an AME lead</h3>
+          </div>
+          <div class="workflow-actions">
+            <label>
+              Scenario
+              <select id="workflowSelect"></select>
+            </label>
+            <button id="playWorkflow" class="ghost-button" type="button">Play Steps</button>
+            <button id="nextWorkflow" class="primary-button" type="button">Next Step</button>
+          </div>
+        </div>
+
+        <div class="workflow-intro">
+          <p>Step through a real municipal source and show exactly how the system extracts facts, scores fit, and produces a usable briefing entry.</p>
+        </div>
+
+        <div id="stageButtons" class="stage-buttons"></div>
+
+        <div class="workflow-layout">
+          <article class="workflow-card">
+            <p id="workflowMode" class="section-tag"></p>
+            <h4 id="workflowTitle" class="workflow-title"></h4>
+            <p id="workflowSource" class="workflow-source"></p>
+            <pre id="workflowBody" class="workflow-body"></pre>
+          </article>
+          <article id="workflowMeta" class="workflow-card workflow-meta"></article>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="data/ame-proof-app-data.js?v=20260319-16"></script>
+  <script src="script.js?v=20260319-16"></script>
+</body>
+</html>

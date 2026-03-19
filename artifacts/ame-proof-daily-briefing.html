@@ -1,0 +1,1369 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AME Leadership Brief</title>
+  <style>
+    :root {
+      --paper: #f4f6fb;
+      --ink: #132136;
+      --muted: #5f6d80;
+      --line: rgba(19, 33, 54, 0.1);
+      --blue: #0f66b0;
+      --green: #6a8400;
+      --lime: #c6f250;
+      --panel: rgba(255,255,255,0.92);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Aptos, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, #f7f9fd 0%, #f2f5fb 100%);
+    }
+    h1, h2, h3, h4 { margin: 0; font-family: Manrope, Bahnschrift, "Arial Narrow", sans-serif; }
+    p, li { color: var(--muted); line-height: 1.55; }
+    .brief-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(255,255,255,0.96);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 8px 24px rgba(19, 33, 54, 0.05);
+    }
+    .brief-topbar-inner {
+      width: min(1480px, calc(100vw - 2rem));
+      margin: 0 auto;
+      padding: 1rem 0;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 1rem;
+      align-items: center;
+    }
+    .brief-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .brief-brand-copy strong {
+      display: block;
+      font-size: 1rem;
+      color: var(--blue);
+    }
+    .brief-brand-copy span {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .brief-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.16rem;
+    }
+    .brief-logo .logo-disc {
+      width: 2.7rem;
+      height: 2.7rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: Manrope, Bahnschrift, "Arial Narrow", sans-serif;
+      font-size: 1.65rem;
+      line-height: 1;
+    }
+    .brief-logo .disc-a { background: #1f7fc2; }
+    .brief-logo .disc-m { background: #989598; }
+    .brief-logo .disc-e { background: #adca45; }
+    .brief-logo .logo-word {
+      margin-left: 0.28rem;
+      font-size: 2.4rem;
+      line-height: 0.86;
+      letter-spacing: -0.05em;
+      font-weight: 300;
+    }
+    .brief-logo .logo-g { color: #2a2a2a; }
+    .brief-logo .logo-rest { color: #989598; }
+    .brief-nav {
+      display: flex;
+      gap: 0.45rem;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .brief-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.6rem;
+      padding: 0.68rem 0.92rem;
+      border-radius: 999px;
+      text-decoration: none;
+      color: #405063;
+      font-weight: 700;
+    }
+    .brief-nav .is-active {
+      background: rgba(15, 102, 176, 0.1);
+      color: var(--blue);
+    }
+    .topbar-actions {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+    .topbar-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.6rem;
+      padding: 0.68rem 0.92rem;
+      border-radius: 999px;
+      background: rgba(15,102,176,0.08);
+      color: var(--blue);
+      font-weight: 700;
+    }
+    .page {
+      width: min(1480px, calc(100vw - 2rem));
+      margin: 0 auto;
+      padding: 1.25rem 0 2.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 1.1rem;
+      box-shadow: 0 16px 36px rgba(19, 33, 54, 0.06);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .hero-card {
+      display: grid;
+      gap: 1rem;
+      background:
+        radial-gradient(circle at top right, rgba(198,242,80,0.18), transparent 32%),
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(246,249,255,0.96));
+    }
+    .hero-title {
+      display: grid;
+      gap: 0.4rem;
+    }
+    .hero-title h1 {
+      font-size: clamp(1.9rem, 3vw, 3rem);
+      line-height: 0.98;
+      max-width: 17ch;
+    }
+    .section-subcopy {
+      margin: 0.35rem 0 0;
+      font-size: 0.94rem;
+    }
+    .eyebrow {
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .hero-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.8rem;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+    }
+    .executive-console {
+      display: grid;
+      gap: 1rem;
+      background:
+        radial-gradient(circle at top right, rgba(15,102,176,0.12), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(246,249,255,0.96));
+    }
+    .console-layout {
+      display: grid;
+      grid-template-columns: minmax(320px, 0.72fr) minmax(0, 1.28fr);
+      gap: 1rem;
+      align-items: start;
+    }
+    .console-controls,
+    .console-output-grid {
+      display: grid;
+      gap: 0.8rem;
+    }
+    .console-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+    }
+    .console-field {
+      display: grid;
+      gap: 0.35rem;
+    }
+    .console-field select {
+      width: 100%;
+      min-height: 3rem;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+    .compose-button {
+      width: fit-content;
+      min-width: 14rem;
+      cursor: pointer;
+      border: 0;
+    }
+    .queue-button {
+      min-width: 12.5rem;
+      cursor: pointer;
+    }
+    .queue-button.is-complete {
+      background: rgba(198, 242, 80, 0.25);
+      color: var(--green);
+      border-color: rgba(106, 132, 0, 0.2);
+    }
+    .console-footnote {
+      margin: 0;
+      font-size: 0.84rem;
+    }
+    .console-output-card {
+      min-height: 100%;
+    }
+    .outcome-card {
+      background: linear-gradient(180deg, rgba(247, 252, 236, 0.98), rgba(255, 255, 255, 0.96));
+    }
+    .console-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.65rem;
+    }
+    .summary-item {
+      padding: 0.78rem 0.82rem;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(247,250,255,0.98);
+    }
+    .summary-item strong,
+    .draft-copy strong {
+      color: var(--ink);
+    }
+    .draft-copy {
+      margin: 0;
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+    .outcome-list {
+      margin: 0;
+      padding-left: 1rem;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    .outcome-list li + li {
+      margin-top: 0.38rem;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: #f7faff;
+      padding: 0.9rem 1rem;
+    }
+    .metric strong {
+      display: block;
+      font-size: 1.85rem;
+      line-height: 1;
+      margin-top: 0.35rem;
+      color: var(--blue);
+    }
+    .metric.watch strong { color: var(--green); }
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) 320px;
+      gap: 1rem;
+      align-items: start;
+    }
+    .lead-column, .rail-column { display: grid; gap: 1rem; }
+    .priority-shell { display: grid; gap: 0.9rem; }
+    .priority-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .priority-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    .brief-card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.96);
+      padding: 1rem;
+      display: grid;
+      gap: 0.75rem;
+      box-shadow: 0 18px 34px rgba(26, 36, 49, 0.06);
+      cursor: pointer;
+    }
+    .brief-card.watch { background: rgba(247,250,255,0.98); }
+    .brief-card.is-selected {
+      border-color: rgba(15,102,176,0.28);
+      box-shadow: 0 0 0 2px rgba(15,102,176,0.1), 0 18px 34px rgba(26, 36, 49, 0.08);
+    }
+    .brief-card h3 { font-size: 1.15rem; }
+    .brief-card-top, .brief-tags, .service-row, .spotlight-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .card-note {
+      margin: -0.15rem 0 0;
+      font-size: 0.82rem;
+    }
+    .brief-card-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.6rem;
+    }
+    .mini-metric {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #f7faff;
+      padding: 0.72rem 0.8rem;
+    }
+    .mini-metric span {
+      display: block;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .mini-metric strong {
+      display: block;
+      margin-top: 0.2rem;
+      font-size: 1.05rem;
+      color: var(--ink);
+    }
+    .mini-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.62rem;
+      border-radius: 999px;
+      border: 1px solid rgba(26, 36, 49, 0.08);
+      background: rgba(26, 36, 49, 0.04);
+      color: var(--ink);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .mini-pill.priority { background: rgba(198,242,80,0.38); color: #425300; }
+    .mini-pill.watch { background: rgba(15,102,176,0.12); color: #0f66b0; }
+    .action {
+      padding: 0.85rem;
+      border-radius: 14px;
+      background: rgba(15,102,176,0.08);
+      color: var(--ink);
+    }
+    .detail-kicker {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .card-links {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .brief-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-height: 2.5rem;
+      padding: 0.72rem 0.95rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(173,202,69,0.18);
+      color: #5e7000;
+      text-decoration: none;
+      font-weight: 700;
+      font: inherit;
+      cursor: pointer;
+    }
+    .button-link {
+      appearance: none;
+    }
+    .muted-link {
+      background: rgba(15,102,176,0.08);
+      color: var(--blue);
+    }
+    .rail-card {
+      display: grid;
+      gap: 0.9rem;
+    }
+    .executive-card {
+      background:
+        radial-gradient(circle at top right, rgba(198,242,80,0.16), transparent 32%),
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(246,249,255,0.96));
+    }
+    .action-grid {
+      display: grid;
+      gap: 0.6rem;
+    }
+    .sector-row {
+      display: grid;
+      gap: 0.45rem;
+    }
+    .sector-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+    }
+    .sector-head strong, .activity-item strong {
+      color: var(--ink);
+    }
+    .sector-bar {
+      height: 0.62rem;
+      border-radius: 999px;
+      background: #dce7f7;
+      overflow: hidden;
+    }
+    .sector-bar span {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--blue), #4e7e00);
+    }
+    .activity-item {
+      display: flex;
+      gap: 0.85rem;
+      align-items: flex-start;
+    }
+    .activity-dot {
+      width: 0.95rem;
+      height: 0.95rem;
+      flex: 0 0 0.95rem;
+      margin-top: 0.22rem;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 3px solid var(--blue);
+      box-shadow: 0 0 0 4px rgba(15,102,176,0.08);
+    }
+    .activity-time {
+      margin: 0 0 0.15rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+    .spotlight {
+      display: grid;
+      gap: 0.9rem;
+      background:
+        radial-gradient(circle at bottom right, rgba(198,242,80,0.15), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(246,249,255,0.96));
+    }
+    .spotlight-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .source-note {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1rem;
+      background: rgba(247,250,255,0.98);
+    }
+    .route-row,
+    .principal-row {
+      display: grid;
+      gap: 0.45rem;
+      padding: 0.85rem;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(247,250,255,0.98);
+    }
+    .route-row-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .section-shell {
+      display: grid;
+      gap: 0.9rem;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .support-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    ul { margin: 0.75rem 0 0; padding-left: 1rem; }
+    @media (max-width: 1180px) {
+      .brief-topbar-inner,
+      .hero-grid,
+      .content-grid,
+      .console-layout {
+        grid-template-columns: 1fr;
+      }
+      .brief-nav {
+        justify-content: flex-start;
+      }
+      .topbar-actions {
+        justify-content: flex-start;
+      }
+    }
+    @media (max-width: 860px) {
+      .brief-topbar-inner,
+      .page {
+        width: min(100vw - 1rem, 100%);
+      }
+      .priority-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-stat-grid,
+      .brief-card-metrics,
+      .console-summary-grid {
+        grid-template-columns: 1fr;
+      }
+      .spotlight-head,
+      .sector-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="brief-topbar">
+    <div class="brief-topbar-inner">
+      <div class="brief-brand">
+        <div class="brief-logo" aria-label="AME Group logo">
+          <span class="logo-disc disc-a">A</span>
+          <span class="logo-disc disc-m">M</span>
+          <span class="logo-disc disc-e">E</span>
+          <span class="logo-word"><span class="logo-g">G</span><span class="logo-rest">roup</span></span>
+        </div>
+        <div class="brief-brand-copy">
+          <strong>AME Market Intelligence</strong>
+          <span>Leadership Dashboard</span>
+        </div>
+      </div>
+      <nav class="brief-nav" aria-label="Brief navigation">
+        <a class="is-active" href="#">Leadership Brief</a>
+        <a href="../index.html" target="_blank" rel="noreferrer">Signal Board</a>
+        <a href="./ame-proof-morning-digest.html" target="_blank" rel="noreferrer">Morning Digest</a>
+      </nav>
+      <div class="topbar-actions">
+        <span class="topbar-pill">March 18, 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero-grid">
+      <article class="panel hero-card">
+        <div class="hero-meta">
+          <span class="mini-pill priority">Executive Routing</span>
+          <span class="mini-pill">Verified Public Sources</span>
+        </div>
+        <div class="hero-title">
+          <p class="eyebrow">Leadership Brief</p>
+          <h1>Executive Routing Dashboard for March 18, 2026</h1>
+          <p><strong>4 priority leads and 1 watchlist signals for AME&#39;s aquatic + construction brief on March 18, 2026.</strong></p>
+          <p>This briefing surfaces the strongest BC municipal project signals relevant to AME and shows how approved MERX alerts would join the same daily pipeline.</p>
+        </div>
+        <div class="hero-stat-grid">
+          <article class="metric">
+            <p class="eyebrow">Priority Leads</p>
+            <strong>4</strong>
+            <p>High-fit leads ready for principal review.</p>
+          </article>
+          <article class="metric watch">
+            <p class="eyebrow">Watchlist</p>
+            <strong>1</strong>
+            <p>Signals to monitor for the next move.</p>
+          </article>
+          <article class="metric">
+            <p class="eyebrow">Checked</p>
+            <strong>March 18, 2026</strong>
+            <p>Public-source verification date for this briefing set.</p>
+          </article>
+        </div>
+        <div class="hero-actions">
+          <a class="brief-link" href="./ame-proof-morning-digest.html" target="_blank" rel="noreferrer">Open Morning Digest</a>
+          <a class="brief-link muted-link" href="#executiveActionConsole">Jump To Executive Console</a>
+          <a class="brief-link muted-link" href="../index.html" target="_blank" rel="noreferrer">Back To Signal Board</a>
+        </div>
+      </article>
+    </section>
+
+    <section id="executiveActionConsole" class="panel executive-console">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">Executive Action Console</p>
+      <h2>Assign an owner and draft the next move</h2>
+      <p>Choose the lead, role, person, office, and action. The dashboard then drafts the internal routing email and the outward-facing follow-up note.</p>
+    </div>
+    <div class="hero-meta">
+      <span class="mini-pill priority">Choose Owner</span>
+      <span class="mini-pill">Route Office</span>
+      <span class="mini-pill">Draft Response</span>
+    </div>
+  </div>
+  <div class="hero-actions">
+    <button class="brief-link button-link js-exec-quick" type="button" data-exec-role="Principal" data-exec-action="Assign Principal Review">Assign Principal Review</button>
+    <button class="brief-link button-link muted-link js-exec-quick" type="button" data-exec-role="Director" data-exec-action="Route Office Review">Route Office Review</button>
+    <button class="brief-link button-link muted-link js-exec-quick" type="button" data-exec-role="Associate" data-exec-action="Prepare Client Contact">Prepare Client Contact</button>
+  </div>
+  <div class="console-layout">
+    <div class="console-controls">
+      <label class="console-field">
+        <span class="detail-label">Lead</span>
+        <select id="execLeadSelect"></select>
+      </label>
+      <label class="console-field">
+        <span class="detail-label">Role</span>
+        <select id="execRoleSelect">
+          <option value="Director">Director</option>
+          <option value="Principal" selected>Principal</option>
+          <option value="Associate">Associate</option>
+        </select>
+      </label>
+      <label class="console-field">
+        <span class="detail-label">Person</span>
+        <select id="execPersonSelect"></select>
+      </label>
+      <label class="console-field">
+        <span class="detail-label">Office</span>
+        <select id="execOfficeSelect"></select>
+      </label>
+      <label class="console-field">
+        <span class="detail-label">Action</span>
+        <select id="execActionSelect"></select>
+      </label>
+      <div class="console-actions">
+        <button id="composeExecutiveAction" class="brief-link compose-button" type="button">Prepare Executive Response</button>
+        <button id="queueExecutiveAction" class="brief-link muted-link queue-button" type="button">Queue Assignment</button>
+      </div>
+    </div>
+    <div class="console-output-grid">
+      <div id="execSummary" class="detail-block console-output-card"></div>
+      <div id="execDraft" class="detail-block console-output-card"></div>
+      <div id="execReply" class="detail-block console-output-card"></div>
+      <div id="execOutcome" class="detail-block console-output-card outcome-card"></div>
+    </div>
+  </div>
+</section>
+
+    <section class="content-grid">
+      <div class="lead-column">
+        <section class="panel priority-shell">
+          <div class="priority-header">
+            <div>
+              <h2>Priority Leads</h2>
+              <p class="section-subcopy">Click any lead card to load it into the executive action console above.</p>
+            </div>
+            <span class="topbar-pill">4 active</span>
+          </div>
+          <div class="priority-grid">
+            <article class="brief-card" data-lead-id="proof-003">
+  <div class="brief-card-top">
+    <span class="mini-pill priority">High Priority</span>
+    <div class="brief-tags">
+      <span class="mini-pill">Construction</span>
+      <span class="mini-pill">Recreation Complex</span>
+    </div>
+  </div>
+  <h3>Burnaby civic update says Burnaby Lake Recreation Complex is past 50% completion</h3>
+  <p class="meta">City of Burnaby | Burnaby, BC</p>
+  <div class="brief-card-metrics">
+    <div class="mini-metric">
+      <span>Priority Score</span>
+      <strong>100</strong>
+    </div>
+    <div class="mini-metric">
+      <span>Current Stage</span>
+      <strong>Construction</strong>
+    </div>
+  </div>
+  <div class="service-row"><span class="mini-pill">Mechanical Design</span><span class="mini-pill">Commissioning</span><span class="mini-pill">Energy + Sustainability</span></div>
+  <p>The project is in delivery and still relevant for downstream packages, specialist scopes, and relationship mapping around aquatic centre, pool, aquatic.</p>
+  <div class="action">
+    <span class="detail-kicker">Next Move</span>
+    Map likely packages, local partners, and probable follow-on scopes for AME pursuit.
+  </div>
+  <div class="card-links"><a class="brief-link" href="https://www.burnaby.ca/our-city/news/2026-03-09/burnabys-once-generation-civic-building-program-reaches-50-completion" target="_blank" rel="noreferrer">Open Source</a> <button class="brief-link muted-link js-load-lead" type="button" data-lead-id="proof-003" data-role-default="Principal" data-action-default="Assign Principal Review">Load Into Action Console</button></div>
+  <p class="card-note">Click anywhere on this card to load the lead into the executive action console.</p>
+</article>
+<article class="brief-card" data-lead-id="proof-006">
+  <div class="brief-card-top">
+    <span class="mini-pill priority">High Priority</span>
+    <div class="brief-tags">
+      <span class="mini-pill">Procurement</span>
+      <span class="mini-pill">Pool / Aquatic Centre</span>
+    </div>
+  </div>
+  <h3>Crystal Pool project page says construction management procurement is underway</h3>
+  <p class="meta">City of Victoria | Victoria, BC</p>
+  <div class="brief-card-metrics">
+    <div class="mini-metric">
+      <span>Priority Score</span>
+      <strong>100</strong>
+    </div>
+    <div class="mini-metric">
+      <span>Current Stage</span>
+      <strong>Procurement</strong>
+    </div>
+  </div>
+  <div class="service-row"><span class="mini-pill">Mechanical Design</span><span class="mini-pill">Fire Suppression Design</span><span class="mini-pill">Energy + Sustainability</span></div>
+  <p>This record is already in procurement-facing motion and contains direct signals around aquatic centre, crystal pool, pool.</p>
+  <div class="action">
+    <span class="detail-kicker">Next Move</span>
+    Track council or owner procurement milestones and identify likely consultant or trade entry points.
+  </div>
+  <div class="card-links"><a class="brief-link" href="https://www.victoria.ca/city-government/projects/crystal-pool-replacement-project" target="_blank" rel="noreferrer">Open Source</a> <button class="brief-link muted-link js-load-lead" type="button" data-lead-id="proof-006" data-role-default="Principal" data-action-default="Assign Principal Review">Load Into Action Console</button></div>
+  <p class="card-note">Click anywhere on this card to load the lead into the executive action console.</p>
+</article>
+<article class="brief-card" data-lead-id="proof-009">
+  <div class="brief-card-top">
+    <span class="mini-pill priority">High Priority</span>
+    <div class="brief-tags">
+      <span class="mini-pill">Planning</span>
+      <span class="mini-pill">Aquatic Centre</span>
+    </div>
+  </div>
+  <h3>Park Board gives greenlight to Vancouver Aquatic Centre renewal</h3>
+  <p class="meta">City of Vancouver | Vancouver, BC</p>
+  <div class="brief-card-metrics">
+    <div class="mini-metric">
+      <span>Priority Score</span>
+      <strong>100</strong>
+    </div>
+    <div class="mini-metric">
+      <span>Current Stage</span>
+      <strong>Planning</strong>
+    </div>
+  </div>
+  <div class="service-row"><span class="mini-pill">Mechanical Design</span><span class="mini-pill">Energy + Sustainability</span><span class="mini-pill">Commissioning</span></div>
+  <p>The project is pre-construction but clearly aligned with AME&#39;s watch profile through aquatic centre, vancouver aquatic centre, pool.</p>
+  <div class="action">
+    <span class="detail-kicker">Next Move</span>
+    Monitor the project for next-phase design, enabling works, or management procurements.
+  </div>
+  <div class="card-links"><a class="brief-link" href="https://vancouver.ca/news-calendar/green-light-for-vancouver-aquatic-centre-renewal-april-1.aspx" target="_blank" rel="noreferrer">Open Source</a> <button class="brief-link muted-link js-load-lead" type="button" data-lead-id="proof-009" data-role-default="Principal" data-action-default="Assign Principal Review">Load Into Action Console</button></div>
+  <p class="card-note">Click anywhere on this card to load the lead into the executive action console.</p>
+</article>
+<article class="brief-card" data-lead-id="proof-004">
+  <div class="brief-card-top">
+    <span class="mini-pill priority">High Priority</span>
+    <div class="brief-tags">
+      <span class="mini-pill">Planning</span>
+      <span class="mini-pill">Community Centre / Aquatic Centre</span>
+    </div>
+  </div>
+  <h3>Newton Community Centre page lists 50-metre pool and early-2026 design-build target</h3>
+  <p class="meta">City of Surrey | Surrey, BC</p>
+  <div class="brief-card-metrics">
+    <div class="mini-metric">
+      <span>Priority Score</span>
+      <strong>88</strong>
+    </div>
+    <div class="mini-metric">
+      <span>Current Stage</span>
+      <strong>Planning</strong>
+    </div>
+  </div>
+  <div class="service-row"><span class="mini-pill">Mechanical Design</span><span class="mini-pill">Fire Suppression Design</span><span class="mini-pill">Energy + Sustainability</span></div>
+  <p>The project is pre-construction but clearly aligned with AME&#39;s watch profile through pool, aquatic, construction.</p>
+  <div class="action">
+    <span class="detail-kicker">Next Move</span>
+    Monitor the project for next-phase design, enabling works, or management procurements.
+  </div>
+  <div class="card-links"><a class="brief-link" href="https://www.surrey.ca/about-surrey/capital-projects/newton-community-centre" target="_blank" rel="noreferrer">Open Source</a> <button class="brief-link muted-link js-load-lead" type="button" data-lead-id="proof-004" data-role-default="Principal" data-action-default="Assign Principal Review">Load Into Action Console</button></div>
+  <p class="card-note">Click anywhere on this card to load the lead into the executive action console.</p>
+</article>
+          </div>
+        </section>
+
+        <section class="panel spotlight">
+  <div class="spotlight-head">
+    <div>
+      <p class="eyebrow">Watchlist Signal</p>
+      <h2>Contract for direct-access road to future Newton Community Centre goes before council</h2>
+      <p class="meta">City of Surrey | Surrey, BC</p>
+    </div>
+    <div class="brief-tags">
+      <span class="mini-pill watch">Watchlist</span>
+      <span class="mini-pill">Community Centre Enabling Works</span>
+    </div>
+  </div>
+  <p>This record is already in procurement-facing motion and contains direct signals around aquatic, construction, community centre.</p>
+  <div class="action">Hold for background context only.</div>
+  <div class="spotlight-actions">
+    <a class="brief-link" href="https://www.surrey.ca/news-events/news/contract-direct-access-road-future-newton-community-centre-goes-council" target="_blank" rel="noreferrer">Open Source</a>
+    <a class="brief-link muted-link" href="../index.html" target="_blank" rel="noreferrer">Open Signal Board</a>
+  </div>
+</section>
+
+        <section class="panel section-shell">
+          <div class="section-head">
+            <h3>Source Notes</h3>
+          </div>
+          <div class="source-note">
+            <ul>
+              <li>Signal Board cards link directly to official public sources.</li>
+<li>Meeting-linked records help surface civic projects before broader market visibility.</li>
+<li>The MERX alert intake flow is designed for approved alert imports such as saved-search emails or CSV exports.</li>
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <aside class="rail-column">
+        <section class="panel rail-card executive-card">
+  <h3>Executive Queue</h3>
+  <p>Pick the action type here, then use the console to assign the right owner and generate the follow-up draft.</p>
+  <div class="brief-card-metrics">
+    <div class="mini-metric">
+      <span>Directors</span>
+      <strong>5</strong>
+    </div>
+    <div class="mini-metric">
+      <span>Principals</span>
+      <strong>16</strong>
+    </div>
+    <div class="mini-metric">
+      <span>Associates</span>
+      <strong>16</strong>
+    </div>
+    <div class="mini-metric">
+      <span>Offices</span>
+      <strong>6</strong>
+    </div>
+  </div>
+  <div class="action-grid">
+    <button class="brief-link button-link js-exec-quick" type="button" data-exec-role="Principal" data-exec-action="Assign Principal Review">Assign Principal</button>
+    <button class="brief-link button-link muted-link js-exec-quick" type="button" data-exec-role="Director" data-exec-action="Request Go/No-Go">Request Go / No-Go</button>
+    <button class="brief-link button-link muted-link js-exec-quick" type="button" data-exec-role="Associate" data-exec-action="Prepare Client Contact">Prepare Client Contact</button>
+  </div>
+  <p class="console-footnote">Team names and office routing options are grounded in AME's published team and office directories. The drafts below remain demo copy.</p>
+</section>
+        <section class="panel rail-card">
+  <h3>Automation Log</h3>
+  <p>This is the local demo run history. It shows when the package was rebuilt, separate from the source verification date.</p>
+  <div class="brief-card-metrics">
+    <div class="mini-metric">
+      <span>Latest run</span>
+      <strong>Mar 19, 2026 3:42 PM</strong>
+    </div>
+    <div class="mini-metric">
+      <span>Signals loaded</span>
+      <strong>9</strong>
+    </div>
+    <div class="mini-metric">
+      <span>Priority leads</span>
+      <strong>7</strong>
+    </div>
+    <div class="mini-metric">
+      <span>Early signals</span>
+      <strong>5</strong>
+    </div>
+  </div>
+  <div class="principal-row">
+  <strong>Mar 19, 2026 3:42 PM</strong>
+  <p>Dashboard, Morning Digest, and Leadership Brief refreshed from the local demo build.</p>
+  <p>Signals: 9 | Priority: 7 | Early: 5</p>
+</div>
+</section>
+        <section class="panel rail-card">
+          <h3>Office Routing Snapshot</h3>
+          <p>Use these recommended routes to keep the shortlist aligned with the most relevant office before the handoff goes out.</p>
+          <div class="route-row">
+  <div class="route-row-head">
+    <strong>Vancouver Office</strong>
+    <span>4 leads</span>
+  </div>
+  <p>Use AME's office directory to route the current shortlist for local follow-up.</p>
+  <a class="brief-link muted-link" href="https://amegroup.ca/contact-us/" target="_blank" rel="noreferrer">Open Office Contact</a>
+</div>
+<div class="route-row">
+  <div class="route-row-head">
+    <strong>Victoria Office</strong>
+    <span>1 lead</span>
+  </div>
+  <p>Use AME's office directory to route the current shortlist for local follow-up.</p>
+  <a class="brief-link muted-link" href="https://amegroup.ca/contact-us/" target="_blank" rel="noreferrer">Open Office Contact</a>
+</div>
+<div class="route-row">
+  <div class="route-row-head">
+    <strong>Kelowna Satellite Office</strong>
+    <span>0 leads</span>
+  </div>
+  <p>Use AME's office directory to route the current shortlist for local follow-up.</p>
+  <a class="brief-link muted-link" href="https://amegroup.ca/contact-us/" target="_blank" rel="noreferrer">Open Office Contact</a>
+</div>
+<div class="route-row">
+  <div class="route-row-head">
+    <strong>Nanaimo Satellite Office</strong>
+    <span>0 leads</span>
+  </div>
+  <p>Use AME's office directory to route the current shortlist for local follow-up.</p>
+  <a class="brief-link muted-link" href="https://amegroup.ca/contact-us/" target="_blank" rel="noreferrer">Open Office Contact</a>
+</div>
+        </section>
+        <section class="panel rail-card">
+          <h3>Review Bench</h3>
+          <p>Suggested principal-review bench based on the AME leadership structure you provided.</p>
+          <div class="principal-row">
+  <strong>Louise McKenzie</strong>
+  <p>Principal listed on AME&#39;s leadership team.</p>
+  <a class="brief-link muted-link" href="https://amegroup.ca/our-team/" target="_blank" rel="noreferrer">Open Leadership Team</a>
+</div>
+<div class="principal-row">
+  <strong>Reza Mousakhani</strong>
+  <p>Principal listed on AME&#39;s leadership team.</p>
+  <a class="brief-link muted-link" href="https://amegroup.ca/our-team/" target="_blank" rel="noreferrer">Open Leadership Team</a>
+</div>
+        </section>
+        <section class="panel rail-card">
+          <h3>Market Shape</h3>
+          <div class="sector-row">
+  <div class="sector-head">
+    <strong>Recreation</strong>
+    <span>4 active leads</span>
+  </div>
+  <div class="sector-bar"><span style="width:100%"></span></div>
+</div>
+<div class="sector-row">
+  <div class="sector-head">
+    <strong>Civic</strong>
+    <span>1 active lead</span>
+  </div>
+  <div class="sector-bar"><span style="width:25%"></span></div>
+</div>
+<div class="sector-row">
+  <div class="sector-head">
+    <strong>Infrastructure</strong>
+    <span>0 active leads</span>
+  </div>
+  <div class="sector-bar"><span style="width:8%"></span></div>
+</div>
+        </section>
+        <section class="panel rail-card">
+          <h3>Reference Directories</h3>
+          <p>Support links only. The live executive workflow should happen in the console and action cards on this page.</p>
+          <div class="support-links">
+            <a class="brief-link muted-link" href="https://amegroup.ca/our-team/" target="_blank" rel="noreferrer">Open Team Directory</a>
+            <a class="brief-link muted-link" href="https://amegroup.ca/contact-us/" target="_blank" rel="noreferrer">Open Office Directory</a>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const executiveLeads = [{"id":"proof-003","title":"Burnaby civic update says Burnaby Lake Recreation Complex is past 50% completion","entity":"City of Burnaby","location":"Burnaby, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Construction","asset":"Recreation Complex","whyItMatters":"The project is in delivery and still relevant for downstream packages, specialist scopes, and relationship mapping around aquatic centre, pool, aquatic.","action":"Map likely packages, local partners, and probable follow-on scopes for AME pursuit.","serviceLines":["Mechanical Design","Commissioning","Energy + Sustainability"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.burnaby.ca/our-city/news/2026-03-09/burnabys-once-generation-civic-building-program-reaches-50-completion"},{"id":"proof-006","title":"Crystal Pool project page says construction management procurement is underway","entity":"City of Victoria","location":"Victoria, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Procurement","asset":"Pool / Aquatic Centre","whyItMatters":"This record is already in procurement-facing motion and contains direct signals around aquatic centre, crystal pool, pool.","action":"Track council or owner procurement milestones and identify likely consultant or trade entry points.","serviceLines":["Mechanical Design","Fire Suppression Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Victoria Office","sourceUrl":"https://www.victoria.ca/city-government/projects/crystal-pool-replacement-project"},{"id":"proof-009","title":"Park Board gives greenlight to Vancouver Aquatic Centre renewal","entity":"City of Vancouver","location":"Vancouver, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Planning","asset":"Aquatic Centre","whyItMatters":"The project is pre-construction but clearly aligned with AME\u0027s watch profile through aquatic centre, vancouver aquatic centre, pool.","action":"Monitor the project for next-phase design, enabling works, or management procurements.","serviceLines":["Mechanical Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://vancouver.ca/news-calendar/green-light-for-vancouver-aquatic-centre-renewal-april-1.aspx"},{"id":"proof-004","title":"Newton Community Centre page lists 50-metre pool and early-2026 design-build target","entity":"City of Surrey","location":"Surrey, BC","priority":"Priority","priorityKey":"priority","score":88,"stage":"Planning","asset":"Community Centre / Aquatic Centre","whyItMatters":"The project is pre-construction but clearly aligned with AME\u0027s watch profile through pool, aquatic, construction.","action":"Monitor the project for next-phase design, enabling works, or management procurements.","serviceLines":["Mechanical Design","Fire Suppression Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.surrey.ca/about-surrey/capital-projects/newton-community-centre"},{"id":"proof-005","title":"Contract for direct-access road to future Newton Community Centre goes before council","entity":"City of Surrey","location":"Surrey, BC","priority":"Watch","priorityKey":"watch","score":70,"stage":"Procurement","asset":"Community Centre Enabling Works","whyItMatters":"This record is already in procurement-facing motion and contains direct signals around aquatic, construction, community centre.","action":"Hold for background context only.","serviceLines":["Mechanical Design","Fire Suppression Design","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.surrey.ca/news-events/news/contract-direct-access-road-future-newton-community-centre-goes-council"}];
+    const teamDirectory = {"Director":[{"name":"Ahmet Ozata","credentials":"P.Eng., LEED AP"},{"name":"Jeff Hill","credentials":"P.Eng."},{"name":"Marie-France Venneri","credentials":"P.Eng., LEED AP"},{"name":"Nic Besseling","credentials":"P.Eng., LEED AP BD+C"},{"name":"Paula Murtha","credentials":"P. Eng., C.Eng., MIEI"}],"Principal":[{"name":"Brandon Ganne","credentials":"P.Eng., LEED Green Associate"},{"name":"Brett Banadyga","credentials":"P.Eng., LEED AP BD+C"},{"name":"Cassidy Taylor","credentials":"P.Eng., CPHD, LEED AP"},{"name":"Charles Lankester","credentials":"P.Eng., MEL, LEED AP BD+C"},{"name":"Eric Cresswell","credentials":"P.Eng."},{"name":"Greg Tarnopolsky","credentials":"P.Eng., CEM, LEED AP"},{"name":"Irsan Tjioe","credentials":"P.L.Eng., LEED Green Associate"},{"name":"Kyle Keep","credentials":"P.Eng."},{"name":"Louise McKenzie","credentials":"P.Eng., LEED AP"},{"name":"Marc Trudeau","credentials":"P.Eng., Architect AIBC, BEMP, CPHD, LEED AP BD+C"},{"name":"Matt Younger","credentials":"P.Eng., P.E., CPHD, LEED AP"},{"name":"Mike Kasuya","credentials":"P.L.Eng., CPHD, LEED AP BD+C"},{"name":"Patrick Stewart","credentials":"P.Eng., CPHD"},{"name":"Reza Mousakhani","credentials":"P.Eng., CPHD, LEED Green Associate"},{"name":"Taio Waldhaus","credentials":"P.Eng., CPHD"},{"name":"Zlatko Puljic","credentials":"P.Eng., CEM, HBDP, LEED AP"}],"Associate":[{"name":"Alex Chou","credentials":"P.Eng., LEED AP"},{"name":"Amy Xu","credentials":"P.Eng., LEED Green Associate"},{"name":"Ben Chan","credentials":"LEED AP"},{"name":"Chris Best","credentials":"P.Eng., MASc, CEM, CFPS"},{"name":"Emi Nakamura","credentials":""},{"name":"James Wong","credentials":""},{"name":"Jarrod Yip","credentials":"P.Eng."},{"name":"Matthew Theriault","credentials":"P.L.(Eng.), CFEI"},{"name":"Mitch Frackson","credentials":"P.Eng., CPHD"},{"name":"Nathan O\u0027Riain","credentials":"C.E.T."},{"name":"Nathan Young","credentials":"P.L.Eng., AScT"},{"name":"Nermeen Aly","credentials":""},{"name":"Nick Fletcher","credentials":""},{"name":"Pardeep Sharma","credentials":"P.Tech.(Eng.), ASHRAE CHD"},{"name":"Parman Paul","credentials":"EIT, CPHD"},{"name":"Scott Campbell","credentials":"LEED AP"}]};
+    const officeDirectory = [{"name":"Victoria Office","address":"912 - 1175 Douglas Street, Victoria, BC V8W 2E1","phone":"+1 (250) 382 5999"},{"name":"Vancouver Office","address":"200 - 638 Smithe Street, Vancouver, BC V6B 1E3","phone":"+1 (604) 684 5995"},{"name":"Calgary Office","address":"900 - 1122 4th Street SW, Calgary, AB T2R 1M1","phone":"+1 (403) 252 2333"},{"name":"Edmonton Office","address":"Unit 100 - 14220 112 Avenue NW, Edmonton, AB T5M 2T8","phone":"+1 (780) 962 3573"},{"name":"Kelowna Satellite Office","address":"Suite 506 - 460 Doyle Avenue, Kelowna, BC V1Y 0C2","phone":"+1 (604) 684 5995"},{"name":"Nanaimo Satellite Office","address":"105 - 238 Franklyn Street, Nanaimo, BC V9R 2X4","phone":"+1 (250) 382 5999"}];
+    const actionCatalog = {
+      Director: [
+        "Assign Principal Review",
+        "Request Go/No-Go",
+        "Route Office Review",
+        "Approve Client Outreach"
+      ],
+      Principal: [
+        "Lead Pursuit Review",
+        "Prepare Client Contact",
+        "Validate Scope Fit",
+        "Set Capture Plan"
+      ],
+      Associate: [
+        "Assemble Background Notes",
+        "Prepare Scope Matrix",
+        "Draft Client Outreach",
+        "Confirm Source Evidence"
+      ]
+    };
+
+    const leadSelect = document.getElementById("execLeadSelect");
+    const roleSelect = document.getElementById("execRoleSelect");
+    const personSelect = document.getElementById("execPersonSelect");
+    const officeSelect = document.getElementById("execOfficeSelect");
+    const actionSelect = document.getElementById("execActionSelect");
+    const composeButton = document.getElementById("composeExecutiveAction");
+    const queueButton = document.getElementById("queueExecutiveAction");
+    const summaryPanel = document.getElementById("execSummary");
+    const draftPanel = document.getElementById("execDraft");
+    const replyPanel = document.getElementById("execReply");
+    const outcomePanel = document.getElementById("execOutcome");
+    const quickButtons = Array.from(document.querySelectorAll(".js-exec-quick"));
+    const leadCards = Array.from(document.querySelectorAll(".brief-card[data-lead-id]"));
+    const loadButtons = Array.from(document.querySelectorAll(".js-load-lead"));
+
+    let selectedLeadId = executiveLeads[0] ? executiveLeads[0].id : "";
+    let queuedAssignment = null;
+    const queueTimestampFormatter = new Intl.DateTimeFormat("en-CA", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+
+    function esc(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function formatServiceLines(lines) {
+      return (lines || []).length ? lines.join(", ") : "No service line fit detected yet.";
+    }
+
+    function getLead(leadId) {
+      return executiveLeads.find(function (lead) { return lead.id === leadId; }) || executiveLeads[0] || null;
+    }
+
+    function getOffice(officeName) {
+      return officeDirectory.find(function (office) { return office.name === officeName; }) || officeDirectory[0] || null;
+    }
+
+    function toAlias(value) {
+      return String(value ?? "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, ".")
+        .replace(/^\.|\.$/g, "");
+    }
+
+    function getFirstName(fullName) {
+      return String(fullName || "").split(" ")[0] || "Team";
+    }
+
+    function getCurrentExecutiveSelection() {
+      const lead = getLead(selectedLeadId);
+      const role = roleSelect.value;
+      const selectedPersonName = personSelect.value;
+      const office = getOffice(officeSelect.value);
+      const action = actionSelect.value;
+      const people = teamDirectory[role] || [];
+      const person = people.find(function (item) { return item.name === selectedPersonName; }) || people[0] || { name: "Unassigned", credentials: "" };
+      const firstName = getFirstName(person.name);
+      const ownerAlias = toAlias(person.name) + "@ame-demo.local";
+      const officeAlias = toAlias(office ? office.name : "ame-office") + "@ame-demo.local";
+      const serviceLines = formatServiceLines(lead ? lead.serviceLines : []);
+
+      return {
+        lead,
+        role,
+        action,
+        office,
+        person,
+        firstName,
+        ownerAlias,
+        officeAlias,
+        serviceLines,
+      };
+    }
+
+    function populateLeadOptions() {
+      leadSelect.innerHTML = executiveLeads.map(function (lead) {
+        return '<option value="' + esc(lead.id) + '">' + esc(lead.title) + "</option>";
+      }).join("");
+      if (selectedLeadId) {
+        leadSelect.value = selectedLeadId;
+      }
+    }
+
+    function populatePeople(role, preferredName) {
+      const people = teamDirectory[role] || [];
+      personSelect.innerHTML = people.map(function (person) {
+        const label = person.credentials ? person.name + " - " + person.credentials : person.name;
+        return '<option value="' + esc(person.name) + '">' + esc(label) + "</option>";
+      }).join("");
+
+      const targetName = people.some(function (person) { return person.name === preferredName; }) ? preferredName : (people[0] ? people[0].name : "");
+      personSelect.value = targetName;
+      return people;
+    }
+
+    function populateActions(role, preferredAction) {
+      const actions = actionCatalog[role] || [];
+      actionSelect.innerHTML = actions.map(function (action) {
+        return '<option value="' + esc(action) + '">' + esc(action) + "</option>";
+      }).join("");
+      actionSelect.value = actions.includes(preferredAction) ? preferredAction : (actions[0] || "");
+    }
+
+    function populateOffices(preferredOffice) {
+      officeSelect.innerHTML = officeDirectory.map(function (office) {
+        return '<option value="' + esc(office.name) + '">' + esc(office.name) + "</option>";
+      }).join("");
+      officeSelect.value = officeDirectory.some(function (office) { return office.name === preferredOffice; }) ? preferredOffice : (officeDirectory[0] ? officeDirectory[0].name : "");
+    }
+
+    function highlightLeadCards() {
+      leadCards.forEach(function (card) {
+        card.classList.toggle("is-selected", card.getAttribute("data-lead-id") === selectedLeadId);
+      });
+    }
+
+    function renderExecutivePanels() {
+      const selection = getCurrentExecutiveSelection();
+      const lead = selection.lead;
+      const role = selection.role;
+      const office = selection.office;
+      const action = selection.action;
+      const person = selection.person;
+      const firstName = selection.firstName;
+      const ownerAlias = selection.ownerAlias;
+      const officeAlias = selection.officeAlias;
+      const serviceLines = selection.serviceLines;
+      const internalDraft = [
+        "To: " + person.name + " [" + role + "] <" + ownerAlias + ">",
+        "CC: " + (office ? office.name : "AME Office") + " <" + officeAlias + ">",
+        "Subject: " + action + " | " + (lead ? lead.title : "Selected lead"),
+        "",
+        "Hi " + firstName + ",",
+        "",
+        "Please take ownership of " + (lead ? lead.title : "this lead") + ".",
+        "Priority: " + (lead ? lead.priority : "Priority") + " | Stage: " + (lead ? lead.stage : "Stage"),
+        "Recommended office: " + (office ? office.name : "AME Office"),
+        "Why it matters: " + (lead ? lead.whyItMatters : "Lead details pending."),
+        "Recommended next move: " + (lead ? lead.action : "Review required."),
+        "AME service lines: " + serviceLines,
+        "",
+        "Please reply with your view on timing, relationships, and any scope nuance before the leadership handoff goes out.",
+        "",
+        "AME Market Intelligence Demo"
+      ].join("\n");
+
+      let contactDraft = [
+        "Demo Contact Response",
+        "",
+        "Office: " + (office ? office.name : "AME Office"),
+        "Phone: " + (office ? office.phone : "TBD"),
+        "Address: " + (office ? office.address : "TBD"),
+        "",
+        "Action: " + action,
+        "Owner: " + person.name + " (" + role + ")",
+        "",
+        "Suggested note:",
+        "We are reviewing " + (lead ? lead.title : "this opportunity") + " and preparing the right AME lead for the next conversation. The current read is " + (lead ? lead.whyItMatters : "pending review") + "."
+      ].join("\n");
+
+      if (action === "Prepare Client Contact" || action === "Draft Client Outreach" || action === "Approve Client Outreach") {
+        contactDraft = [
+          "Demo Client Outreach Draft",
+          "",
+          "Subject: AME follow-up on " + (lead ? lead.title : "the opportunity"),
+          "",
+          "Hello,",
+          "",
+          "AME is reviewing the " + (lead ? lead.title : "project") + " opportunity in " + (lead ? lead.location : "BC") + ".",
+          "Our team sees relevance through " + serviceLines + ".",
+          "The current public signal suggests: " + (lead ? lead.whyItMatters : "pending review") + ".",
+          "If helpful, we can organize a short introductory discussion through the " + (office ? office.name : "most relevant office") + ".",
+          "",
+          "Best,",
+          person.name,
+          role + " | " + (office ? office.name : "AME")
+        ].join("\n");
+      }
+
+      summaryPanel.innerHTML = ''
+        + '<p class="detail-label">Executive Assignment</p>'
+        + '<div class="console-summary-grid">'
+        +   '<div class="summary-item"><span class="detail-kicker">Lead</span><strong>' + esc(lead ? lead.title : "No lead selected") + '</strong></div>'
+        +   '<div class="summary-item"><span class="detail-kicker">Owner</span><strong>' + esc(person.name + " (" + role + ")") + '</strong></div>'
+        +   '<div class="summary-item"><span class="detail-kicker">Office</span><strong>' + esc(office ? office.name : "AME Office") + '</strong></div>'
+        +   '<div class="summary-item"><span class="detail-kicker">Action</span><strong>' + esc(action) + '</strong></div>'
+        +   '<div class="summary-item"><span class="detail-kicker">Priority</span><strong>' + esc(lead ? lead.priority + " | Score " + lead.score : "Pending") + '</strong></div>'
+        +   '<div class="summary-item"><span class="detail-kicker">Service Lines</span><strong>' + esc(serviceLines) + '</strong></div>'
+        + '</div>';
+
+      draftPanel.innerHTML = ''
+        + '<p class="detail-label">Internal Routing Email [demo draft only]</p>'
+        + '<p class="draft-copy">' + esc(internalDraft) + '</p>';
+
+      replyPanel.innerHTML = ''
+        + '<p class="detail-label">Contact Response [demo draft only]</p>'
+        + '<p class="draft-copy">' + esc(contactDraft) + '</p>';
+
+      const hasQueuedMatch = Boolean(
+        queuedAssignment
+        && queuedAssignment.leadId === (lead ? lead.id : "")
+        && queuedAssignment.role === role
+        && queuedAssignment.owner === person.name
+        && queuedAssignment.office === (office ? office.name : "AME Office")
+        && queuedAssignment.action === action
+      );
+
+      if (hasQueuedMatch) {
+        outcomePanel.innerHTML = ''
+          + '<p class="detail-label">Assignment Queue [demo outcome]</p>'
+          + '<div class="console-summary-grid">'
+          +   '<div class="summary-item"><span class="detail-kicker">Queued At</span><strong>' + esc(queuedAssignment.queuedAt) + '</strong></div>'
+          +   '<div class="summary-item"><span class="detail-kicker">Next Checkpoint</span><strong>' + esc(queuedAssignment.nextCheckpoint) + '</strong></div>'
+          +   '<div class="summary-item"><span class="detail-kicker">Owner Alias</span><strong>' + esc(queuedAssignment.ownerAlias) + '</strong></div>'
+          +   '<div class="summary-item"><span class="detail-kicker">Office Route</span><strong>' + esc(queuedAssignment.officeAlias) + '</strong></div>'
+          + '</div>'
+          + '<ul class="outcome-list">'
+          +   '<li>Assignment queued for ' + esc(person.name + " (" + role + ")") + '.</li>'
+          +   '<li>Internal routing draft is ready for the ' + esc(office ? office.name : "AME Office") + ' handoff.</li>'
+          +   '<li>Leadership follow-up is set for ' + esc(queuedAssignment.nextCheckpoint) + '.</li>'
+          + '</ul>';
+        queueButton.textContent = "Assignment Queued";
+        queueButton.classList.add("is-complete");
+      } else {
+        outcomePanel.innerHTML = ''
+          + '<p class="detail-label">Assignment Queue</p>'
+          + '<p class="draft-copy">Queue the assignment after you review the drafts. The demo will then show who owns the lead, which office it routes through, and when leadership should check back in.</p>';
+        queueButton.textContent = "Queue Assignment";
+        queueButton.classList.remove("is-complete");
+      }
+
+      highlightLeadCards();
+    }
+
+    function syncLeadSelection(leadId, roleOverride, actionOverride) {
+      selectedLeadId = leadId || selectedLeadId;
+      const lead = getLead(selectedLeadId);
+      if (!lead) return;
+
+      queuedAssignment = null;
+
+      leadSelect.value = selectedLeadId;
+
+      if (roleOverride) {
+        roleSelect.value = roleOverride;
+      }
+
+      populateActions(roleSelect.value, actionOverride || actionSelect.value);
+      populatePeople(roleSelect.value, personSelect.value);
+      populateOffices(lead.recommendedOffice || officeSelect.value);
+      renderExecutivePanels();
+    }
+
+    populateLeadOptions();
+    populateActions(roleSelect.value, "Assign Principal Review");
+    populatePeople(roleSelect.value, "");
+    populateOffices(executiveLeads[0] ? executiveLeads[0].recommendedOffice : "");
+    renderExecutivePanels();
+
+    leadSelect.addEventListener("change", function () {
+      syncLeadSelection(leadSelect.value);
+    });
+
+    roleSelect.addEventListener("change", function () {
+      queuedAssignment = null;
+      populateActions(roleSelect.value, actionSelect.value);
+      populatePeople(roleSelect.value, "");
+      renderExecutivePanels();
+    });
+
+    personSelect.addEventListener("change", function () {
+      queuedAssignment = null;
+      renderExecutivePanels();
+    });
+    officeSelect.addEventListener("change", function () {
+      queuedAssignment = null;
+      renderExecutivePanels();
+    });
+    actionSelect.addEventListener("change", function () {
+      queuedAssignment = null;
+      renderExecutivePanels();
+    });
+    composeButton.addEventListener("click", renderExecutivePanels);
+    queueButton.addEventListener("click", function () {
+      const selection = getCurrentExecutiveSelection();
+      const nextCheckpoint = new Date();
+      nextCheckpoint.setDate(nextCheckpoint.getDate() + 1);
+      nextCheckpoint.setHours(8, 30, 0, 0);
+
+      queuedAssignment = {
+        leadId: selection.lead ? selection.lead.id : "",
+        role: selection.role,
+        owner: selection.person.name,
+        office: selection.office ? selection.office.name : "AME Office",
+        action: selection.action,
+        ownerAlias: selection.ownerAlias,
+        officeAlias: selection.officeAlias,
+        queuedAt: queueTimestampFormatter.format(new Date()),
+        nextCheckpoint: queueTimestampFormatter.format(nextCheckpoint),
+      };
+
+      renderExecutivePanels();
+    });
+
+    quickButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        const role = button.getAttribute("data-exec-role");
+        const action = button.getAttribute("data-exec-action");
+        syncLeadSelection(selectedLeadId, role, action);
+        const consoleNode = document.getElementById("executiveActionConsole");
+        if (consoleNode) {
+          consoleNode.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
+    loadButtons.forEach(function (button) {
+      button.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        syncLeadSelection(
+          button.getAttribute("data-lead-id"),
+          button.getAttribute("data-role-default"),
+          button.getAttribute("data-action-default")
+        );
+        const consoleNode = document.getElementById("executiveActionConsole");
+        if (consoleNode) {
+          consoleNode.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
+    leadCards.forEach(function (card) {
+      card.addEventListener("click", function (event) {
+        if (event.target.closest("a, button")) return;
+        syncLeadSelection(card.getAttribute("data-lead-id"));
+        const consoleNode = document.getElementById("executiveActionConsole");
+        if (consoleNode) {
+          consoleNode.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
