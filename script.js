@@ -1140,7 +1140,7 @@ function selectDigestRecord(recordId, shouldScroll = false) {
 }
 
 function selectRecord(recordId, options = {}) {
-  const { shouldScroll = false } = options;
+  const { shouldScroll = false, focusInspector = false } = options;
   state.selectedRecordId = recordId;
   setActiveSection("feed", shouldScroll);
   renderSignalSteps();
@@ -1148,8 +1148,11 @@ function selectRecord(recordId, options = {}) {
   renderSignalInspector();
   renderBriefingTable();
   renderArtifact();
-  if (shouldScroll && state.selectedRecordId) {
+  if (shouldScroll && state.selectedRecordId && !focusInspector) {
     spotlightRecord(state.selectedRecordId);
+  }
+  if (focusInspector && signalInspector) {
+    signalInspector.scrollIntoView({ behavior: "smooth", block: "start" });
   }
   flashPanel(signalInspector);
 }
@@ -1321,7 +1324,7 @@ function renderRecordGrid() {
           ${displayHits.map((hit, index) => `<button class="pill chip-button" type="button" data-chip-query="${esc((record.keywordHits || [])[index] || hit)}">${esc(hit)}</button>`).join("")}
         </div>
         <div class="record-card-actions">
-          <button class="record-inline-link primary compact" type="button" data-record-id="${esc(record.id)}">Inspect Signal</button>
+          <button class="record-inline-link primary compact" type="button" data-inspect-record="${esc(record.id)}">Inspect Signal</button>
           <a class="record-inline-link compact" href="${esc(record.sourceUrl)}" target="_blank" rel="noreferrer">Open Source</a>
         </div>
       </article>
@@ -1331,6 +1334,13 @@ function renderRecordGrid() {
   recordGrid.querySelectorAll("[data-record-id]").forEach((button) => {
     button.addEventListener("click", () => {
       selectRecord(button.getAttribute("data-record-id"));
+    });
+  });
+
+  recordGrid.querySelectorAll("[data-inspect-record]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      selectRecord(button.getAttribute("data-inspect-record"), { shouldScroll: true, focusInspector: true });
     });
   });
 
