@@ -1,0 +1,548 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AME Morning Digest</title>
+  <style>
+    :root {
+      --paper: #f5f8ff;
+      --ink: #132136;
+      --muted: #5f6d80;
+      --line: rgba(19, 33, 54, 0.1);
+      --blue: #0f66b0;
+      --green: #6b8800;
+      --lime: #c6f250;
+      --panel: rgba(255,255,255,0.94);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Aptos, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f7f9fd 0%, #eff4fb 100%);
+    }
+    h1, h2, h3, h4 { margin: 0; font-family: Manrope, Bahnschrift, "Arial Narrow", sans-serif; }
+    p, li { color: var(--muted); line-height: 1.55; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,0.96);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 8px 24px rgba(19, 33, 54, 0.05);
+    }
+    .topbar-inner, .page {
+      width: min(1480px, calc(100vw - 2rem));
+      margin: 0 auto;
+    }
+    .topbar-inner {
+      padding: 1rem 0;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 1rem;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .brand-copy strong {
+      display: block;
+      color: var(--green);
+      font-size: 1rem;
+    }
+    .brand-copy span {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .brief-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.16rem;
+    }
+    .brief-logo .logo-disc {
+      width: 2.7rem;
+      height: 2.7rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: Manrope, Bahnschrift, "Arial Narrow", sans-serif;
+      font-size: 1.65rem;
+      line-height: 1;
+    }
+    .brief-logo .disc-a { background: #1f7fc2; }
+    .brief-logo .disc-m { background: #989598; }
+    .brief-logo .disc-e { background: #adca45; }
+    .brief-logo .logo-word {
+      margin-left: 0.28rem;
+      font-size: 2.4rem;
+      line-height: 0.86;
+      letter-spacing: -0.05em;
+      font-weight: 300;
+    }
+    .brief-logo .logo-g { color: #2a2a2a; }
+    .brief-logo .logo-rest { color: #989598; }
+    .nav {
+      display: flex;
+      justify-content: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+    .nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.6rem;
+      padding: 0.68rem 0.92rem;
+      border-radius: 999px;
+      text-decoration: none;
+      color: #405063;
+      font-weight: 700;
+    }
+    .nav .is-active {
+      background: rgba(15, 102, 176, 0.1);
+      color: var(--blue);
+    }
+    .topbar-actions {
+      display: flex;
+      gap: 0.55rem;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+    .link-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.6rem;
+      padding: 0.68rem 0.92rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.92);
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .link-pill.primary {
+      border: 0;
+      background: linear-gradient(135deg, var(--blue), #3889cd);
+      color: #fff;
+    }
+    .page {
+      padding: 1.25rem 0 2.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 1.1rem;
+      box-shadow: 0 16px 36px rgba(19, 33, 54, 0.06);
+    }
+    .eyebrow {
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .hero {
+      display: grid;
+      gap: 1rem;
+      background:
+        radial-gradient(circle at top right, rgba(198,242,80,0.18), transparent 32%),
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(246,249,255,0.96));
+    }
+    .hero h1 {
+      font-size: clamp(1.9rem, 3vw, 3rem);
+      line-height: 0.98;
+      max-width: 16ch;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #f7faff;
+      padding: 0.85rem 0.95rem;
+    }
+    .metric strong {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 1.75rem;
+      color: var(--blue);
+      line-height: 1;
+    }
+    .digest-grid {
+      display: grid;
+      grid-template-columns: minmax(360px, 0.84fr) minmax(0, 1.16fr);
+      gap: 1rem;
+      align-items: start;
+    }
+    .queue-panel, .focus-panel, .actions-panel {
+      display: grid;
+      gap: 0.85rem;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .count-pill, .mini-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.62rem;
+      border-radius: 999px;
+      border: 1px solid rgba(19, 33, 54, 0.08);
+      background: rgba(19, 33, 54, 0.04);
+      color: var(--ink);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .mini-pill.priority {
+      background: rgba(198,242,80,0.38);
+      color: #425300;
+    }
+    .mini-pill.watch {
+      background: rgba(15,102,176,0.12);
+      color: var(--blue);
+    }
+    .queue-list {
+      display: grid;
+      gap: 0.75rem;
+    }
+    .digest-row {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.94);
+      padding: 0.95rem;
+      display: grid;
+      gap: 0.55rem;
+      cursor: pointer;
+      transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    }
+    .digest-row:hover {
+      transform: translateY(-1px);
+      border-color: rgba(15,102,176,0.24);
+      box-shadow: 0 14px 28px rgba(19, 33, 54, 0.07);
+    }
+    .digest-row.is-active {
+      border-color: rgba(15,102,176,0.3);
+      box-shadow: 0 0 0 2px rgba(15,102,176,0.1), 0 14px 28px rgba(19, 33, 54, 0.07);
+    }
+    .row-top, .chip-row, .actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: center;
+    }
+    .row-meta {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    .row-copy {
+      margin: 0;
+    }
+    .focus-panel {
+      position: sticky;
+      top: 5.8rem;
+    }
+    .focus-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+    .detail-block {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #f7faff;
+      padding: 0.85rem;
+    }
+    .detail-block p {
+      margin: 0;
+    }
+    .detail-label {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .detail-list {
+      margin: 0;
+      padding-left: 1rem;
+    }
+    .detail-list li + li {
+      margin-top: 0.4rem;
+    }
+    .service-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    @media (max-width: 1180px) {
+      .topbar-inner,
+      .digest-grid,
+      .hero-stats,
+      .focus-grid {
+        grid-template-columns: 1fr;
+      }
+      .focus-panel {
+        position: static;
+        top: auto;
+      }
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      .page {
+        width: min(100vw - 1rem, 100%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brief-logo" aria-label="AME Group logo">
+          <span class="logo-disc disc-a">A</span>
+          <span class="logo-disc disc-m">M</span>
+          <span class="logo-disc disc-e">E</span>
+          <span class="logo-word"><span class="logo-g">G</span><span class="logo-rest">roup</span></span>
+        </div>
+        <div class="brand-copy">
+          <strong>AME Market Intelligence</strong>
+          <span>Morning Digest</span>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Digest navigation">
+        <a href="../index.html" target="_blank" rel="noreferrer">Signal Board</a>
+        <a class="is-active" href="#">Morning Digest</a>
+        <a href="./ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Leadership Brief</a>
+      </nav>
+      <div class="topbar-actions">
+        <a class="link-pill" href="../index.html" target="_blank" rel="noreferrer">Back To Signal Board</a>
+        <a class="link-pill primary" href="./ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Open Leadership Brief</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="panel hero">
+      <p class="eyebrow">Morning Digest</p>
+      <div>
+        <h1>AME morning review surface for March 18, 2026</h1>
+        <p>This is the separate shortlist page AME can use to review the day's strongest signals without scrolling through the full Signal Board.</p>
+      </div>
+      <div class="hero-stats">
+        <article class="metric">
+          <p class="eyebrow">Priority Leads</p>
+          <strong>4</strong>
+          <p>High-fit items ready for the morning discussion.</p>
+        </article>
+        <article class="metric">
+          <p class="eyebrow">Watchlist</p>
+          <strong>1</strong>
+          <p>Signals that still need timing or scope confirmation.</p>
+        </article>
+        <article class="metric">
+          <p class="eyebrow">Checked</p>
+          <strong>March 18, 2026</strong>
+          <p>Public-source verification date for the digest.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="digest-grid">
+      <section class="panel queue-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Priority Queue</p>
+            <h2>Briefed leads</h2>
+          </div>
+          <span id="digestCount" class="count-pill">4 priority / 1 watchlist</span>
+        </div>
+        <div id="digestList" class="queue-list"></div>
+      </section>
+
+      <aside class="focus-panel">
+        <section id="digestFocus" class="panel"></section>
+        <section class="panel actions-panel">
+          <p class="eyebrow">Next Step</p>
+          <h3>Use the leadership brief for the clean handoff</h3>
+          <p>Once the team agrees on the lead order here, move to the leadership brief for the shareable follow-up artifact.</p>
+          <div class="actions-row">
+            <a class="link-pill primary" href="./ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Open Leadership Brief</a>
+            <a class="link-pill" href="../index.html" target="_blank" rel="noreferrer">Return To Signal Board</a>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <script src="../data/ame-proof-app-data.js"></script>
+  <script>
+    const appData = window.AME_DEMO_DATA;
+    const storageKey = "ameDigestRecordId";
+    const defaultDigestRecordId = "proof-003";
+    const digestList = document.getElementById("digestList");
+    const digestFocus = document.getElementById("digestFocus");
+
+    const esc = (value) => String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+
+    function formatLabel(value) {
+      return String(value ?? "").replace(/\b([A-Za-z][A-Za-z0-9]*)\b/g, function (word) {
+        const map = {
+          ahu: "AHU",
+          ahu1: "AHU1",
+          ahu2: "AHU2",
+          bas: "BAS",
+          bc: "BC",
+          hvac: "HVAC",
+          rfp: "RFP",
+          rfq: "RFQ",
+        };
+        const mapped = map[word.toLowerCase()];
+        if (mapped) return mapped;
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      });
+    }
+
+    function getSourceLabel(sourceKey) {
+      return sourceKey === "municipal-meeting-linked" ? "Meeting-Linked Doc" : "Public Page";
+    }
+
+    function getRecordByTitle(title) {
+      return appData.processedRecords.find(function (record) {
+        return record.title === title;
+      }) || null;
+    }
+
+    function getDrivers(record) {
+      const drivers = [];
+      const hits = (record.keywordHits || []).slice(0, 3).map(formatLabel);
+      if (hits.length) drivers.push("Keyword fit: " + hits.join(", "));
+      if (record.stageLabel) drivers.push("Current stage: " + formatLabel(record.stageLabel));
+      if ((record.ameServiceLines || []).length) drivers.push("Service line fit: " + record.ameServiceLines.slice(0, 3).join(", "));
+      drivers.push("Source confidence: " + getSourceLabel(record.sourceKey));
+      return drivers;
+    }
+
+    const digestRecords = []
+      .concat(appData.briefing.priorityLeads.map(function (row) { return getRecordByTitle(row.title); }).filter(Boolean))
+      .concat(appData.briefing.watchlist.map(function (row) { return getRecordByTitle(row.title); }).filter(Boolean));
+
+    let activeRecordId = defaultDigestRecordId;
+    try {
+      activeRecordId = window.localStorage.getItem(storageKey) || defaultDigestRecordId;
+    } catch (error) {
+      activeRecordId = defaultDigestRecordId;
+    }
+
+    if (!digestRecords.some(function (record) { return record.id === activeRecordId; })) {
+      activeRecordId = digestRecords[0] ? digestRecords[0].id : null;
+    }
+
+    function saveDigestRecord(recordId) {
+      activeRecordId = recordId;
+      try {
+        window.localStorage.setItem(storageKey, recordId);
+      } catch (error) {
+      }
+    }
+
+    function renderList() {
+      digestList.innerHTML = digestRecords.map(function (record) {
+        const isActive = record.id === activeRecordId;
+        return ''
+          + '<button class="digest-row' + (isActive ? ' is-active' : '') + '" type="button" data-record-id="' + esc(record.id) + '">'
+          +   '<div class="row-top">'
+          +     '<span class="mini-pill ' + esc(record.priorityKey) + '">' + esc(record.priorityLabel) + '</span>'
+          +     '<span class="mini-pill">' + esc(formatLabel(record.assetType)) + '</span>'
+          +     '<span class="mini-pill">' + esc(formatLabel(record.stageLabel)) + '</span>'
+          +   '</div>'
+          +   '<h3>' + esc(record.title) + '</h3>'
+          +   '<p class="row-meta">' + esc(record.entity) + ' | ' + esc(record.location) + ' | ' + esc(getSourceLabel(record.sourceKey)) + '</p>'
+          +   '<p class="row-copy">' + esc(record.summary || record.sourceExcerpt || "") + '</p>'
+          + '</button>';
+      }).join("");
+
+      digestList.querySelectorAll("[data-record-id]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          saveDigestRecord(button.getAttribute("data-record-id"));
+          renderList();
+          renderFocus();
+        });
+      });
+    }
+
+    function renderFocus() {
+      const record = digestRecords.find(function (item) { return item.id === activeRecordId; }) || digestRecords[0] || null;
+
+      if (!record) {
+        digestFocus.innerHTML = '<p class="eyebrow">Selected Lead</p><h3>No digest lead available</h3><p>No records were generated for this digest.</p>';
+        return;
+      }
+
+      const evidence = (record.evidence || []).slice(0, 3).map(function (item) {
+        return '<li>' + esc(item) + '</li>';
+      }).join("");
+      const drivers = getDrivers(record).map(function (item) {
+        return '<li>' + esc(item) + '</li>';
+      }).join("");
+      const services = (record.ameServiceLines || []).map(function (item) {
+        return '<span class="mini-pill">' + esc(item) + '</span>';
+      }).join("");
+
+      digestFocus.innerHTML = ''
+        + '<p class="eyebrow">Selected Lead</p>'
+        + '<h3>' + esc(record.title) + '</h3>'
+        + '<p>' + esc(record.entity) + ' | ' + esc(record.location) + ' | ' + esc(getSourceLabel(record.sourceKey)) + '</p>'
+        + '<div class="chip-row">'
+        +   '<span class="mini-pill ' + esc(record.priorityKey) + '">' + esc(record.priorityLabel) + '</span>'
+        +   '<span class="mini-pill">' + esc(formatLabel(record.stageLabel)) + '</span>'
+        +   '<span class="mini-pill">' + esc(formatLabel(record.assetType)) + '</span>'
+        + '</div>'
+        + '<div class="focus-grid">'
+        +   '<div class="detail-block"><span class="detail-label">Verified Project Signal</span><p>' + esc(record.summary || record.sourceExcerpt || "") + '</p></div>'
+        +   '<div class="detail-block"><span class="detail-label">Recommended Next Step</span><p>' + esc(record.action || "") + '</p></div>'
+        + '</div>'
+        + '<div class="focus-grid">'
+        +   '<div class="detail-block"><span class="detail-label">Why It Matters</span><p>' + esc(record.whyItMatters || "") + '</p></div>'
+        +   '<div class="detail-block"><span class="detail-label">Commercial Angle</span><p>' + esc(record.goToMarketPlay || record.whyItMatters || "") + '</p></div>'
+        + '</div>'
+        + '<div class="detail-block"><span class="detail-label">Score Drivers</span><ul class="detail-list">' + drivers + '</ul></div>'
+        + '<div class="detail-block"><span class="detail-label">Source Evidence</span><ul class="detail-list">' + evidence + '</ul></div>'
+        + '<div class="detail-block"><span class="detail-label">AME Service Lines</span><div class="service-row">' + services + '</div></div>'
+        + '<div class="actions-row">'
+        +   (record.sourceUrl ? '<a class="link-pill primary" href="' + esc(record.sourceUrl) + '" target="_blank" rel="noreferrer">Open Official Source</a>' : '')
+        +   '<a class="link-pill" href="./ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Open Leadership Brief</a>'
+        + '</div>';
+    }
+
+    renderList();
+    renderFocus();
+  </script>
+</body>
+</html>
