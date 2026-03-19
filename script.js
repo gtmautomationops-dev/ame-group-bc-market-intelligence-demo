@@ -597,7 +597,9 @@ function updateSectionState(section) {
   });
 
   workspacePanels.forEach((panel) => {
-    panel.classList.toggle("is-current", panel.getAttribute("data-section") === section);
+    const isTarget = panel.getAttribute("data-section") === section;
+    panel.classList.toggle("is-current", isTarget);
+    panel.classList.toggle("is-active", isTarget);
   });
 }
 
@@ -1305,7 +1307,7 @@ function renderRecordGrid() {
           <button class="pill chip-button priority-${esc(record.priorityKey)}" type="button" data-chip-priority="${esc(record.priorityKey)}">${esc(record.priorityLabel)}</button>
           <span class="pill">Score ${esc(record.score)}</span>
         </div>
-        <button class="record-card-toggle" type="button" data-record-id="${esc(record.id)}" aria-expanded="${isActive ? "true" : "false"}">
+        <div class="record-card-toggle" role="button" tabindex="0" data-record-id="${esc(record.id)}" aria-expanded="${isActive ? "true" : "false"}">
           <div>
             <h4 class="record-title">${esc(record.title)}</h4>
             <p class="record-meta">${esc(record.entity)} - ${esc(record.location)}</p>
@@ -1319,7 +1321,7 @@ function renderRecordGrid() {
             ${timingSignals.chips.map((chip) => `<span class="pill ${esc(chip.tone)}">${esc(chip.label)}</span>`).join("")}
           </div>
           <p class="record-fact record-fact-compact">${esc(compactFact)}</p>
-        </button>
+        </div>
         <div class="chip-row chip-row-actions">
           ${displayHits.map((hit, index) => `<button class="pill chip-button" type="button" data-chip-query="${esc((record.keywordHits || [])[index] || hit)}">${esc(hit)}</button>`).join("")}
         </div>
@@ -1331,9 +1333,16 @@ function renderRecordGrid() {
     `;
   }).join("");
 
-  recordGrid.querySelectorAll("[data-record-id]").forEach((button) => {
+  recordGrid.querySelectorAll(".record-card-toggle[data-record-id]").forEach((button) => {
     button.addEventListener("click", () => {
       selectRecord(button.getAttribute("data-record-id"));
+    });
+
+    button.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        selectRecord(button.getAttribute("data-record-id"));
+      }
     });
   });
 

@@ -485,7 +485,8 @@ h2 {
   display: none;
 }
 
-.workspace-panel.is-active {
+.workspace-panel.is-active,
+.workspace-panel.is-current {
   display: block;
 }
 
@@ -661,6 +662,12 @@ h2 {
   background: transparent;
   border: 0;
   cursor: pointer;
+}
+
+.record-card-toggle:focus-visible {
+  outline: 3px solid rgba(15, 102, 176, 0.28);
+  outline-offset: 6px;
+  border-radius: 16px;
 }
 
 .record-card:hover,
