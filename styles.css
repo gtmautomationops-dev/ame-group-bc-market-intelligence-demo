@@ -3201,8 +3201,7 @@ body {
 .guided-tour-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(7, 14, 24, 0.58);
-  backdrop-filter: blur(3px);
+  background: rgba(7, 14, 24, 0.34);
 }
 
 .guided-tour-spotlight {
@@ -3262,6 +3261,10 @@ body {
   align-items: center;
 }
 
+.guided-tour-actions .primary-button:disabled {
+  opacity: 0.38;
+}
+
 .guided-tour-panel-wrap {
   display: grid;
   gap: 0.7rem;
@@ -3316,6 +3319,64 @@ body {
 
 .guided-tour-progress-item.is-locked {
   opacity: 0.46;
+}
+
+.guided-preview-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1810;
+  display: grid;
+  place-items: center;
+}
+
+.guided-preview-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 14, 24, 0.48);
+}
+
+.guided-preview-card {
+  position: relative;
+  z-index: 1;
+  width: min(1080px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  padding: 1.1rem;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 253, 248, 0.98);
+  box-shadow: 0 28px 60px rgba(7, 14, 24, 0.28);
+  display: grid;
+  gap: 0.9rem;
+}
+
+.guided-preview-head,
+.guided-preview-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.guided-preview-copy {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.guided-preview-frame-wrap {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.92);
+  min-height: min(70vh, 760px);
+}
+
+.guided-preview-frame-wrap iframe {
+  width: 100%;
+  height: min(70vh, 760px);
+  border: 0;
+  background: #ffffff;
 }
 
 .guided-tour-progress-number {

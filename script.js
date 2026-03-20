@@ -562,6 +562,10 @@ function persistDigestRecord(recordId) {
 }
 
 function openMorningDigestPage() {
+  if (typeof window.AMEGuidedOpenPagePreview === "function") {
+    const handled = window.AMEGuidedOpenPagePreview(MORNING_DIGEST_URL, "Morning Digest");
+    if (handled) return;
+  }
   window.open(MORNING_DIGEST_URL, "_blank", "noopener,noreferrer");
 }
 

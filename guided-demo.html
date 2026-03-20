@@ -83,7 +83,7 @@
         <div>
           <p class="section-tag">Self-Guided Demo</p>
           <h3>Follow the walkthrough and try the workflow yourself</h3>
-          <p class="lede">Start with Signal Board, inspect a real municipal lead, move into the procurement intake lane, and finish in the Leadership Brief executive handoff. Each step highlights what to click, what changed, and why it matters.</p>
+          <p class="lede">This version removes the guesswork. Every step tells the viewer exactly what to click, shows the result in place, and explains why that feature matters to AME.</p>
         </div>
         <div class="guided-tour-banner-actions">
           <button id="startGuidedTour" class="primary-button" type="button">Start Guided Tour</button>
@@ -236,8 +236,29 @@
     </aside>
   </div>
 
-  <script src="data/ame-proof-app-data.js?v=20260319-23"></script>
-  <script src="script.js?v=20260319-23"></script>
-  <script src="guided-tour.js?v=20260319-23"></script>
+  <div id="guidedPreviewModal" class="guided-preview-modal" hidden>
+    <div class="guided-preview-backdrop"></div>
+    <section class="guided-preview-card" role="dialog" aria-modal="true" aria-label="Guided preview">
+      <div class="guided-preview-head">
+        <div>
+          <p id="guidedPreviewLabel" class="section-tag">Preview</p>
+          <h3 id="guidedPreviewTitle">Preview</h3>
+        </div>
+        <button id="guidedPreviewCloseX" class="ghost-button compact" type="button">Close</button>
+      </div>
+      <p id="guidedPreviewCopy" class="guided-preview-copy"></p>
+      <div class="guided-preview-frame-wrap">
+        <iframe id="guidedPreviewFrame" title="Guided preview frame"></iframe>
+      </div>
+      <div class="guided-preview-actions">
+        <a id="guidedPreviewOpen" class="primary-button" href="#" target="_blank" rel="noreferrer">Open Full Page</a>
+        <button id="guidedPreviewClose" class="ghost-button" type="button">Back To Guided Demo</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="data/ame-proof-app-data.js?v=20260319-24"></script>
+  <script src="script.js?v=20260319-24"></script>
+  <script src="guided-tour.js?v=20260319-24"></script>
 </body>
 </html>
