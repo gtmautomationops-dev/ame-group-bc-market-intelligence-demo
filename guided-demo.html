@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260319-30" />
+  <link rel="stylesheet" href="styles.css?v=20260319-31" />
 </head>
 <body class="guided-demo-page" data-guided-demo="true">
   <header class="shell-topbar">
@@ -69,7 +69,10 @@
         </section>
       </div>
       <div id="guidedTourStatus" class="guided-tour-status">Follow the step on the right. The guide will unlock Continue as soon as the action is completed.</div>
-      <div id="guidedTourProgress" class="guided-tour-progress"></div>
+      <details class="guided-tour-outline">
+        <summary>See the full guided path</summary>
+        <div id="guidedTourProgress" class="guided-tour-progress"></div>
+      </details>
       <div class="guided-tour-actions">
         <button id="guidedTourBack" class="ghost-button" type="button">Back</button>
         <button id="guidedTourShowMe" class="ghost-button" type="button">Show Me</button>
@@ -250,8 +253,8 @@
     </section>
   </div>
 
-  <script src="data/ame-proof-app-data.js?v=20260319-30"></script>
-  <script src="script.js?v=20260319-30"></script>
-  <script src="guided-tour.js?v=20260319-30"></script>
+  <script src="data/ame-proof-app-data.js?v=20260319-31"></script>
+  <script src="script.js?v=20260319-31"></script>
+  <script src="guided-tour.js?v=20260319-31"></script>
 </body>
 </html>

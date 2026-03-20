@@ -3893,12 +3893,39 @@ body {
   color: #0f66b0;
 }
 
+.guided-demo-page .guided-tour-outline {
+  border: 1px solid rgba(11, 28, 48, 0.08);
+  border-radius: 18px;
+  background: rgba(247, 250, 255, 0.78);
+  padding: 0.2rem 0.2rem 0.35rem;
+}
+
+.guided-demo-page .guided-tour-outline summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 0.65rem 0.8rem;
+  font-family: "Barlow", "Inter", sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #54667a;
+}
+
+.guided-demo-page .guided-tour-outline summary::-webkit-details-marker {
+  display: none;
+}
+
+.guided-demo-page .guided-tour-outline[open] summary {
+  color: #0f66b0;
+}
+
 .guided-demo-page .guided-tour-progress {
   display: grid;
   gap: 0.42rem;
-  max-height: 32vh;
+  max-height: 24vh;
   overflow: auto;
-  padding-right: 0.1rem;
+  padding: 0 0.35rem 0.2rem;
 }
 
 .guided-demo-page .guided-tour-progress-item {
