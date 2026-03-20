@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260319-31" />
+  <link rel="stylesheet" href="styles.css?v=20260320-03" />
 </head>
 <body class="guided-demo-page" data-guided-demo="true">
   <header class="shell-topbar">
@@ -30,7 +30,7 @@
     </div>
 
     <nav class="shell-topbar-nav" aria-label="Primary sections">
-      <button class="top-nav-link is-active" type="button" data-section-target="feed">Signal Board</button>
+      <button class="top-nav-link is-active" type="button" data-section-target="feed">Project Signals</button>
       <button class="top-nav-link" type="button" data-section-target="merx">MERX Intake</button>
       <button class="top-nav-link" type="button" data-section-target="workflow">How It Works</button>
     </nav>
@@ -52,7 +52,7 @@
       <div class="guided-tour-toolbar">
         <div>
           <p class="section-tag">Self-Guided Walkthrough</p>
-          <p id="guidedTourStep" class="guided-tour-step-pill">Step 1 of 14</p>
+          <p id="guidedTourStep" class="guided-tour-step-pill">Step 1 of 18</p>
         </div>
         <button id="startGuidedTour" class="ghost-button compact" type="button">Restart</button>
       </div>
@@ -88,7 +88,7 @@
           <h2>AME Opportunity Radar</h2>
           <p class="lede">This guided version helps a first-time viewer understand how AME can spot relevant signals early, qualify them quickly, and move stronger opportunities into action before the competition.</p>
           <div class="compact-actions">
-            <button class="ghost-button hero-button" type="button" data-nav-target="feed">Open Signal Board</button>
+          <button class="ghost-button hero-button" type="button" data-nav-target="feed">Open Project Signals</button>
             <button class="primary-button hero-button" type="button" data-nav-target="merx">Open MERX Intake</button>
           </div>
         </div>
@@ -133,7 +133,7 @@
       <section id="workspaceFeed" class="workspace-panel panel is-active" data-section="feed">
         <div class="section-head section-head-stack">
           <div>
-            <p class="section-tag">Signal Board</p>
+            <p class="section-tag">Project Signals</p>
             <h3>Verified municipal project signals filtered for AME</h3>
           </div>
           <div class="feed-head-actions">
@@ -243,9 +243,7 @@
         <button id="guidedPreviewCloseX" class="ghost-button compact" type="button">Close</button>
       </div>
       <p id="guidedPreviewCopy" class="guided-preview-copy"></p>
-      <div class="guided-preview-frame-wrap">
-        <iframe id="guidedPreviewFrame" title="Guided preview frame"></iframe>
-      </div>
+      <div id="guidedPreviewStage" class="guided-preview-stage"></div>
       <div class="guided-preview-actions">
         <a id="guidedPreviewOpen" class="primary-button" href="#" target="_blank" rel="noreferrer">Open Full Page</a>
         <button id="guidedPreviewClose" class="ghost-button" type="button">Back To Guided Demo</button>
@@ -253,8 +251,12 @@
     </section>
   </div>
 
-  <script src="data/ame-proof-app-data.js?v=20260319-31"></script>
-  <script src="script.js?v=20260319-31"></script>
-  <script src="guided-tour.js?v=20260319-31"></script>
+  <div id="guidedActionCue" class="guided-action-cue" hidden>
+    <span id="guidedActionCueText">Click here</span>
+  </div>
+
+  <script src="data/ame-proof-app-data.js?v=20260320-03"></script>
+  <script src="script.js?v=20260320-03"></script>
+  <script src="guided-tour.js?v=20260320-04"></script>
 </body>
 </html>
