@@ -15,6 +15,7 @@
   const backButton = document.getElementById("guidedTourBack");
   const skipButton = document.getElementById("guidedTourSkip");
   const startButton = document.getElementById("startGuidedTour");
+  const searchInput = document.getElementById("searchFilter");
 
   const previewModal = document.getElementById("guidedPreviewModal");
   const previewFrame = document.getElementById("guidedPreviewFrame");
@@ -25,13 +26,42 @@
   const previewClose = document.getElementById("guidedPreviewClose");
   const previewCloseX = document.getElementById("guidedPreviewCloseX");
 
-  if (!spotlight || !card || !stepLabel || !titleEl || !bodyEl || !hintEl || !valueEl || !progressEl || !nextButton || !showMeButton || !backButton || !skipButton || !startButton || !previewModal || !previewFrame || !previewTitle || !previewLabel || !previewCopy || !previewOpen || !previewClose || !previewCloseX) {
+  if (
+    !spotlight ||
+    !card ||
+    !stepLabel ||
+    !titleEl ||
+    !bodyEl ||
+    !hintEl ||
+    !valueEl ||
+    !progressEl ||
+    !nextButton ||
+    !showMeButton ||
+    !backButton ||
+    !skipButton ||
+    !startButton ||
+    !searchInput ||
+    !previewModal ||
+    !previewFrame ||
+    !previewTitle ||
+    !previewLabel ||
+    !previewCopy ||
+    !previewOpen ||
+    !previewClose ||
+    !previewCloseX
+  ) {
     return;
   }
 
+  const MORNING_DIGEST_URL = "artifacts/ame-proof-morning-digest.html";
+  const LEADERSHIP_BRIEF_URL = "artifacts/ame-proof-daily-briefing.html";
+  const MERRITT_NOTICE_ID = "merritt-aquatic-mezzanine";
+  const CRYSTAL_RECORD_ID = "proof-006";
+  const VANCOUVER_RECORD_ID = "proof-009";
+
   const PREVIEW_COPY = {
-    "Morning Digest": "This preview keeps the team handoff in the same guided experience. The viewer can see the shortlist and morning review surface without losing their place.",
-    "Leadership Brief": "This preview shows the executive handoff in place. The viewer can see how AME routes ownership and action without jumping into a new tab unexpectedly.",
+    "Morning Digest": "This is the daily triage surface. The team can review the strongest leads without going back to the full board.",
+    "Leadership Brief": "This is the executive routing surface. It turns a promising lead into ownership, follow-up, and the next move.",
   };
 
   const state = {
@@ -43,132 +73,300 @@
 
   const steps = [
     {
-      kicker: "Step 1 of 7",
-      title: "Signal Board: inspect a real municipal signal",
-      body: "Start on the board. Click Inspect Signal on a verified municipal record. This turns public source text into a working AME lead instead of leaving it buried in a public webpage.",
-      value: "This is where AME gets early visibility and can start aligning with preferred partners before the wider market crowds in.",
-      hint: "Click the highlighted Inspect Signal button. Or click Try It For Me.",
-      selector: "#recordGrid [data-inspect-record]",
-      section: "feed",
-      advanceOn: "click",
-      successSelector: "#signalInspector .inspector-card:not(.inspector-empty)",
-      successTitle: "Signal Board turned a public source into a review surface",
-      successBody: "The selected signal is now expanded with verified source text, score drivers, AME fit, and the next move.",
-      successValue: "Instead of reading scattered public pages, the team gets one place to qualify what matters quickly.",
-      successHint: "Now click Next to send this lead into Morning Digest.",
+      kicker: "Step 1 of 12",
+      progressLabel: "Dashboard",
+      title: "Start on the dashboard",
+      body: "This is AME BC Market Intelligence. It combines verified BC municipal signals, real public procurement notices, daily triage, and executive routing into one workflow.",
+      hint: "Look at Last Automation Run, Last Checked, Priority Leads, and Notice Library. Then click Continue.",
+      value: "The first promise is transparency. The demo shows when it refreshed and when the source data was actually checked.",
+      selector: ".welcome-panel",
+      successSelector: ".welcome-meta",
     },
     {
-      kicker: "Step 2 of 7",
-      title: "Morning Digest: send the lead to daily review",
-      body: "Now move the selected lead into the team's morning review surface. This is the daily shortlist view that turns discovery into a team conversation.",
-      value: "This compresses the time from 'we found something' to 'the team knows exactly what to discuss this morning.'",
-      hint: "Click Send To Morning Digest. Or click Try It For Me.",
+      kicker: "Step 2 of 12",
+      progressLabel: "Workflow Map",
+      title: "Frame the workflow",
+      body: "The experience breaks into working surfaces. Signal Board is the early-warning surface. MERX Intake is the qualification lane. How It Works makes the automation explainable. Morning Digest and Leadership Brief turn the same intelligence into team and executive action.",
+      hint: "Use the top navigation as your map, then click Continue.",
+      value: "This removes the 'where do I go next?' problem. The viewer immediately understands the journey from signal to action.",
+      selector: ".shell-topbar-nav",
+      successSelector: ".shell-topbar-nav",
+    },
+    {
+      kicker: "Step 3 of 12",
+      progressLabel: "Priority Filter",
+      title: "Filter to priority leads",
+      body: "Start in Signal Board by narrowing the board to AME's highest-fit leads. This is the fastest way to get from a full feed to the small set that deserves attention first.",
+      hint: "Click the highlighted Priority chip. Or click Do It For Me.",
+      value: "This is the first time-saving move: turn a busy board into a shortlist in one click.",
+      selector: '#priorityFilterChips [data-priority-chip="priority"]',
+      section: "feed",
+      actionLabel: "Do It For Me",
+      perform() {
+        clickSelector('#priorityFilterChips [data-priority-chip="priority"]');
+      },
+      validate() {
+        return Boolean(document.querySelector('#priorityFilterChips [data-priority-chip="priority"].is-active'));
+      },
+      successSelector: "#filterStatus",
+      successTitle: "Priority leads are isolated",
+      successBody: "The board is now narrowed to high-fit AME leads, so the viewer is no longer scanning everything at once.",
+      successHint: "Now search Victoria to pull one target lead to the surface, then click Continue.",
+      successValue: "This is how AME moves from broad monitoring to focused pursuit discussion in seconds.",
+    },
+    {
+      kicker: "Step 4 of 12",
+      progressLabel: "Search Victoria",
+      title: "Search for Victoria",
+      body: "Now search Victoria to pull the Crystal Pool opportunity to the top. This shows how quickly the board can move from broad filtering to a city-specific pursuit conversation.",
+      hint: "Type Victoria in the search box. Or click Do It For Me.",
+      value: "This proves the board can be narrowed instantly by city, project, or keyword without re-reading the whole feed.",
+      selector: "#searchFilter",
+      section: "feed",
+      actionLabel: "Do It For Me",
+      completeOn: "input",
+      prepare() {
+        if (typeof window.applyQuickFilter === "function") {
+          window.applyQuickFilter({ source: "all", priority: "priority", query: "" });
+        }
+      },
+      perform() {
+        setSearchValue("Victoria");
+      },
+      validate() {
+        return searchInput.value.trim().toLowerCase() === "victoria"
+          && Boolean(document.querySelector(`#recordGrid [data-inspect-record="${CRYSTAL_RECORD_ID}"]`));
+      },
+      successSelector: `#recordGrid [data-record-card="${CRYSTAL_RECORD_ID}"]`,
+      successTitle: "The Victoria lead is now front and center",
+      successBody: "The board is now narrowed to the Crystal Pool opportunity, ready to inspect.",
+      successHint: "Now open the Crystal Pool lead in the inspector, then click Continue.",
+      successValue: "This is how AME gets from a market scan to one specific opportunity in seconds.",
+    },
+    {
+      kicker: "Step 5 of 12",
+      progressLabel: "Inspect Crystal Pool",
+      title: "Inspect the Crystal Pool lead",
+      body: "Open the Crystal Pool signal. One click should turn public source text into a decision-ready AME lead with verified source, scoring logic, timing advantage, and next step.",
+      hint: "Click the highlighted Inspect Signal button. Or click Do It For Me.",
+      value: "This is where AME saves time: the system translates public text into a working review surface instead of leaving it in scattered websites.",
+      selector: `#recordGrid [data-inspect-record="${CRYSTAL_RECORD_ID}"]`,
+      section: "feed",
+      actionLabel: "Do It For Me",
+      perform() {
+        clickSelector(`#recordGrid [data-inspect-record="${CRYSTAL_RECORD_ID}"]`);
+      },
+      validate() {
+        return getText("#signalInspector .inspector-title").includes("Crystal Pool project page says construction management procurement is underway");
+      },
+      successSelector: "#signalInspector",
+      successTitle: "The Crystal Pool lead is open in the inspector",
+      successBody: "The selected signal now shows Verified Source, Why It Scored, Why AME Sees This Early, and Next Move in one place.",
+      successHint: "Look at the inspector blocks, then click Continue to compare a second example.",
+      successValue: "This is the core promise: public source text becomes a decision-ready AME lead instead of manual reading and interpretation.",
+    },
+    {
+      kicker: "Step 6 of 12",
+      progressLabel: "Compare Vancouver",
+      title: "Compare a second early signal in Vancouver",
+      body: "Now clear the search and inspect the Vancouver Aquatic Centre renewal signal. This shows a planning-stage opportunity where AME can still shape the response before the market crowds in.",
+      hint: "Click the highlighted Inspect Signal button. Or click Do It For Me.",
+      value: "The real value is not just finding opportunities. It is finding them early enough to build partner alignment and position before competitors react.",
+      selector: `#recordGrid [data-inspect-record="${VANCOUVER_RECORD_ID}"]`,
+      section: "feed",
+      actionLabel: "Do It For Me",
+      prepare() {
+        if (typeof window.applyQuickFilter === "function") {
+          window.applyQuickFilter({ source: "all", priority: "all", query: "" });
+        }
+      },
+      perform() {
+        clickSelector(`#recordGrid [data-inspect-record="${VANCOUVER_RECORD_ID}"]`);
+      },
+      validate() {
+        return getText("#signalInspector .inspector-title").includes("Park Board gives greenlight to Vancouver Aquatic Centre renewal");
+      },
+      successSelector: "#signalInspector",
+      successTitle: "A planning-stage Vancouver lead is now open",
+      successBody: "The inspector now shows the planning signal, first-seen timing, and AME-fit chips for the Vancouver Aquatic Centre renewal.",
+      successHint: "Notice the planning timing and AME-fit chips, then click Continue to move this lead into Morning Digest.",
+      successValue: "This is where speed becomes a competitive advantage: AME can start building early alliances through its preferred partner network before the market fully mobilizes.",
+    },
+    {
+      kicker: "Step 7 of 12",
+      progressLabel: "Morning Digest",
+      title: "Send the lead into Morning Digest",
+      body: "Now move the selected lead into Morning Digest. This is the team's daily triage surface for reviewing what matters without going back through the full board.",
+      hint: "Click Send To Morning Digest. Or click Do It For Me.",
+      value: "This turns discovery into a daily team conversation instead of leaving the signal stuck in one person's browser.",
       selector: "#signalInspector [data-open-digest]",
       section: "feed",
-      advanceOn: "click",
-      successSelector: "#guidedPreviewModal:not([hidden]) .guided-preview-card",
-      successTitle: "Morning Digest preview is open",
-      successBody: "The daily review view is now open inside the guided demo, so the viewer can see the shortlist without losing their place.",
-      successValue: "This is the handoff surface that keeps the team moving every morning.",
-      successHint: "Look at the preview, then click Next for the executive handoff.",
+      actionLabel: "Do It For Me",
+      perform() {
+        clickSelector("#signalInspector [data-open-digest]");
+      },
+      validate() {
+        return !previewModal.hidden && previewTitle.textContent.trim() === "Morning Digest";
+      },
+      successSelector: "#guidedPreviewModal .guided-preview-card",
+      successTitle: "Morning Digest is open",
+      successBody: "The daily review surface is now visible inside the guided demo, so the viewer can see how the shortlist gets handed to the team.",
+      successHint: "You can see the triage view now. Click Continue to open the executive handoff.",
+      successValue: "This reduces time spent hunting for context and increases time spent deciding what to do next.",
     },
     {
-      kicker: "Step 3 of 7",
-      title: "Leadership Brief: open the executive handoff",
-      body: "Now open the executive handoff. This is where opportunity intelligence turns into ownership, routing, and action for AME leadership.",
-      value: "This is how AME moves from 'interesting signal' to 'who owns this and what happens next?'",
-      hint: "Click Leadership Brief. Or click Try It For Me.",
+      kicker: "Step 8 of 12",
+      progressLabel: "Leadership Brief",
+      title: "Open the Leadership Brief",
+      body: "Now open the Leadership Brief. This is where the same intelligence becomes executive routing, ownership, and follow-through.",
+      hint: "Click Leadership Brief. Or click Do It For Me.",
+      value: "Morning Digest is for triage. Leadership Brief is for ownership and action.",
       selector: ".top-cta-briefing",
       section: "feed",
-      advanceOn: "click",
-      beforeEnter: () => {
+      actionLabel: "Do It For Me",
+      prepare() {
         closePreview();
       },
-      successSelector: "#guidedPreviewModal:not([hidden]) .guided-preview-card",
-      successTitle: "Leadership Brief preview is open",
-      successBody: "The executive handoff is now open in-page, so the viewer can see leadership routing and action controls without leaving the demo.",
-      successValue: "This is where AME routes the strongest leads to the right people and offices faster than the competition.",
-      successHint: "Look at the executive view, then click Next to move into procurement intake.",
+      perform() {
+        clickSelector(".top-cta-briefing");
+      },
+      validate() {
+        return !previewModal.hidden && previewTitle.textContent.trim() === "Leadership Brief";
+      },
+      successSelector: "#guidedPreviewModal .guided-preview-card",
+      successTitle: "Leadership Brief is open",
+      successBody: "The executive handoff is now visible in the preview, showing how AME routes the lead to the right owner, office, and next move.",
+      successHint: "This is the executive view. Click Continue to qualify a real procurement notice.",
+      successValue: "This is where intelligence stops being information and becomes movement.",
     },
     {
-      kicker: "Step 4 of 7",
-      title: "MERX Intake: move into procurement qualification",
-      body: "Now switch to the intake lane. This is where real public procurement notices are qualified quickly once they reach market.",
-      value: "At this point the advantage is qualification speed: AME can assess fit and route faster than teams who are still manually reading notices.",
-      hint: "Click the highlighted MERX Intake tab. Or click Try It For Me.",
+      kicker: "Step 9 of 12",
+      progressLabel: "MERX Intake",
+      title: "Move into MERX Intake and load a real notice",
+      body: "Now switch to MERX Intake. This is the qualification lane. For the demo it uses real public procurement notices, not live MERX scraping.",
+      hint: "Click MERX Intake. Or click Do It For Me.",
+      value: "This is where AME can qualify procurement notices quickly once they hit the market.",
       selector: '[data-section-target="merx"]',
       section: "merx",
-      advanceOn: "click",
-      beforeEnter: () => {
+      actionLabel: "Do It For Me",
+      prepare() {
         closePreview();
       },
-      afterAction: () => {
-        const firstNotice = document.querySelector("#merxDemoOptions [data-merx-notice]");
-        if (firstNotice) {
-          firstNotice.click();
-        }
+      afterAction() {
+        window.setTimeout(() => {
+          clickSelector(`#merxDemoOptions [data-merx-notice="${MERRITT_NOTICE_ID}"]`);
+        }, 160);
       },
-      successSelector: "#workspaceMerx .section-head > div:first-child",
-      successTitle: "MERX Intake is open",
-      successBody: "The intake lane is now ready with a real notice selected for qualification.",
-      successValue: "This shortens the time from notice arrival to a real AME go / no-go discussion.",
-      successHint: "Now click Next to score the selected notice.",
+      perform() {
+        clickSelector('[data-section-target="merx"]');
+      },
+      validate() {
+        return getText("#merxRaw h4").includes("Nicola Valley Aquatic Centre Mechanical Mezzanine Repair");
+      },
+      successSelector: "#merxFields",
+      successTitle: "A real public notice is loaded",
+      successBody: "Step 1 now shows the imported notice and Step 2 shows the extracted project, buyer, location, date, and keyword hits.",
+      successHint: "The notice is ready to score. Click Continue to generate the recommendation.",
+      successValue: "This is how AME can move from notice arrival to a real qualification decision faster than teams still reading the notice manually.",
     },
     {
-      kicker: "Step 5 of 7",
-      title: "MERX Intake: generate an AME recommendation",
-      body: "Now generate the recommendation. This turns the selected notice into AME-specific guidance with fit, service lines, and the next move.",
-      value: "This is the speed layer: AME can qualify, route, and activate preferred partners faster than competitors still reading the notice manually.",
-      hint: "Click Generate Recommendation. Or click Try It For Me.",
+      kicker: "Step 10 of 12",
+      progressLabel: "Recommendation",
+      title: "Generate an AME recommendation",
+      body: "Now score the selected notice. This is where the system becomes commercially useful: it classifies fit, suggests service lines, and recommends AME's next move.",
+      hint: "Click Generate Recommendation. Or click Do It For Me.",
+      value: "This turns a procurement notice into AME-specific guidance instead of forcing the team to interpret it from scratch.",
       selector: "#classifyMerx",
       section: "merx",
-      advanceOn: "click",
-      beforeEnter: () => {
-        const firstNotice = document.querySelector("#merxDemoOptions [data-merx-notice]");
-        if (firstNotice) {
-          firstNotice.click();
-        }
+      actionLabel: "Do It For Me",
+      prepare() {
+        clickSelector(`#merxDemoOptions [data-merx-notice="${MERRITT_NOTICE_ID}"]`);
       },
-      successSelector: "#merxResult.is-recommendation-panel, #merxResult .merx-status",
-      successTitle: "Recommendation generated",
-      successBody: "The notice is now scored, classified, and tied to AME service lines and a concrete next move.",
-      successValue: "This is how AME moves from notice-reading to decision-making faster than the competition.",
-      successHint: "Look at the score and recommendation, then click Next to open the explainability view.",
+      perform() {
+        clickSelector("#classifyMerx");
+      },
+      validate() {
+        return Boolean(document.querySelector("#merxResult .merx-status"));
+      },
+      successSelector: "#merxResult",
+      successTitle: "The notice is now scored for AME fit",
+      successBody: "The recommendation panel now shows priority, score, suggested service lines, and the recommended AME move, all tied back to the real public notice.",
+      successHint: "Notice the Priority, Score, Suggested Service Lines, and Recommended AME Move, then click Continue.",
+      successValue: "This is the qualification-speed advantage: AME can route, partner, and act while competitors are still parsing the notice.",
     },
     {
-      kicker: "Step 6 of 7",
-      title: "How It Works: open the explainability view",
-      body: "Now switch to the explainability layer. This is where the system shows how raw public text becomes an AME-ready lead.",
-      value: "This removes the black-box problem and makes the workflow easier to trust internally.",
-      hint: "Click the highlighted How It Works tab. Or click Try It For Me.",
+      kicker: "Step 11 of 12",
+      progressLabel: "How It Works",
+      title: "Open the explainability view",
+      body: "Now switch to How It Works. This is the explainability layer that shows exactly how public source text becomes an AME-ready lead.",
+      hint: "Click How It Works. Or click Do It For Me.",
+      value: "No one wants a black-box score. This is what makes the workflow easier to trust internally.",
       selector: '[data-section-target="workflow"]',
       section: "workflow",
-      advanceOn: "click",
+      actionLabel: "Do It For Me",
+      perform() {
+        clickSelector('[data-section-target="workflow"]');
+      },
+      validate() {
+        return Boolean(document.querySelector("#workspaceWorkflow .workflow-layout"));
+      },
       successSelector: "#workspaceWorkflow .workflow-layout",
-      successTitle: "How It Works is open",
-      successBody: "The explainability view is now open and ready to step through.",
-      successValue: "This gives AME a transparent, defensible workflow instead of a mystery score.",
-      successHint: "Now click Next to step the pipeline once.",
+      successTitle: "The explainability view is open",
+      successBody: "The pipeline is now visible and ready to step through, showing how source material is extracted, scored, and turned into a briefing row.",
+      successHint: "Click Continue to play the pipeline from raw input through briefing output.",
+      successValue: "This makes the automation understandable, not mysterious.",
     },
     {
-      kicker: "Step 7 of 7",
-      title: "How It Works: step the pipeline",
-      body: "Step the workflow once. This lets the viewer see the pipeline change in place instead of just being told that the system extracts and scores the data.",
-      value: "This makes the automation feel concrete instead of abstract.",
-      hint: "Click Next Step. Or click Try It For Me.",
-      selector: "#nextWorkflow",
+      kicker: "Step 12 of 12",
+      progressLabel: "Pipeline Proof",
+      title: "Play the pipeline",
+      body: "Now click Play Steps. The workflow will move through Raw input, Extracted facts, Scored result, and Briefing row so the viewer can see the machine doing real work.",
+      hint: "Click Play Steps. Or click Do It For Me.",
+      value: "This is the final proof: the system is not just describing automation, it is showing the transformation from public source to AME-ready output.",
+      selector: "#playWorkflow",
       section: "workflow",
-      advanceOn: "click",
+      actionLabel: "Do It For Me",
+      prepare() {
+        const select = document.getElementById("workflowSelect");
+        if (select && select.options.length) {
+          select.selectedIndex = 0;
+          select.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      },
+      perform() {
+        clickSelector("#playWorkflow");
+      },
+      validate() {
+        return Boolean(document.querySelector('#stageButtons [data-stage="briefing"].is-active'));
+      },
+      waitAttempts: 50,
+      waitDelay: 140,
       successSelector: "#workflowMeta",
-      successTitle: "Pipeline step completed",
-      successBody: "The workflow view just advanced, showing how source material moves through extraction, scoring, and briefing logic.",
-      successValue: "The viewer can now see the machine doing work rather than just reading claims about it.",
-      successHint: "Click Finish to end the tour, or use the preview buttons anytime.",
+      successTitle: "The pipeline has played through to a briefing row",
+      successBody: "You just saw raw public text move through extraction, scoring, and into a briefing-ready output that the team and leadership can use.",
+      successHint: "That is the end of the guided proof. Click Finish to close the walkthrough.",
+      successValue: "The advantage here is not just seeing data. It is compressing the time from public signal to AME action.",
     },
   ];
 
-  function getTarget(selector) {
-    return selector ? document.querySelector(selector) : null;
+  function getTarget(selector, root = document) {
+    return selector ? root.querySelector(selector) : null;
+  }
+
+  function getText(selector, root = document) {
+    return getTarget(selector, root)?.textContent?.trim() || "";
+  }
+
+  function clickSelector(selector, root = document) {
+    const target = getTarget(selector, root);
+    if (!target) return false;
+    target.click();
+    return true;
+  }
+
+  function setSearchValue(value) {
+    searchInput.value = value;
+    searchInput.dispatchEvent(new Event("input", { bubbles: true }));
   }
 
   function closePreview() {
@@ -193,28 +391,44 @@
   function interceptPreviewLinks() {
     document.querySelectorAll(".top-cta-briefing, .top-cta-digest").forEach((link) => {
       link.addEventListener("click", (event) => {
-        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
-          return;
-        }
-
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
         event.preventDefault();
-        const title = link.textContent.trim();
-        openPreview(link.getAttribute("href"), title);
+        openPreview(link.getAttribute("href"), link.textContent.trim());
       });
     });
+  }
+
+  function waitFor(check, callback, attempts = 32, delay = 150) {
+    let passed = false;
+    try {
+      passed = Boolean(check());
+    } catch (error) {
+      passed = false;
+    }
+
+    if (passed) {
+      callback();
+      return;
+    }
+
+    if (attempts <= 0) return;
+    window.setTimeout(() => waitFor(check, callback, attempts - 1, delay), delay);
+  }
+
+  function waitForTarget(selector, callback, attempts = 28, delay = 150) {
+    waitFor(() => getTarget(selector), () => callback(getTarget(selector)), attempts, delay);
   }
 
   function renderProgress(index) {
     progressEl.innerHTML = steps.map((step, stepIndex) => {
       const isComplete = state.completedSteps.has(stepIndex);
       const isActive = stepIndex === index;
-      const isLocked = stepIndex > index && !state.completedSteps.has(stepIndex - 1);
       const marker = isComplete ? "&check;" : String(stepIndex + 1);
 
       return `
-        <article class="guided-tour-progress-item ${isActive ? "is-active" : ""} ${isComplete ? "is-complete" : ""} ${isLocked ? "is-locked" : ""}">
+        <article class="guided-tour-progress-item ${isActive ? "is-active" : ""} ${isComplete ? "is-complete" : ""}">
           <span class="guided-tour-progress-number">${marker}</span>
-          <span class="guided-tour-progress-copy">${step.title}</span>
+          <span class="guided-tour-progress-copy">${step.progressLabel || step.title}</span>
         </article>
       `;
     }).join("");
@@ -234,21 +448,14 @@
 
   function openSection(section) {
     if (!section) return;
-    const tab = document.querySelector(`[data-section-target="${section}"]`);
-    if (tab) {
-      tab.click();
-    }
-  }
 
-  function waitForTarget(selector, callback, attempts = 24) {
-    const target = getTarget(selector);
-    if (target) {
-      callback(target);
+    if (typeof window.setActiveSection === "function") {
+      window.setActiveSection(section, true);
       return;
     }
 
-    if (attempts <= 0) return;
-    window.setTimeout(() => waitForTarget(selector, callback, attempts - 1), 140);
+    const button = document.querySelector(`[data-section-target="${section}"]`);
+    if (button) button.click();
   }
 
   function positionCard(rect) {
@@ -261,17 +468,13 @@
       top = rect.top - cardRect.height - 18;
     }
 
-    if (top < padding) {
-      top = padding;
-    }
+    if (top < padding) top = padding;
 
     if (left + cardRect.width > window.innerWidth - padding) {
       left = window.innerWidth - cardRect.width - padding;
     }
 
-    if (left < padding) {
-      left = padding;
-    }
+    if (left < padding) left = padding;
 
     card.style.top = `${top}px`;
     card.style.left = `${left}px`;
@@ -299,9 +502,7 @@
 
     if (pulse) {
       target.classList.remove("tour-target-pulse");
-      window.requestAnimationFrame(() => {
-        target.classList.add("tour-target-pulse");
-      });
+      window.requestAnimationFrame(() => target.classList.add("tour-target-pulse"));
     }
 
     if (scroll) {
@@ -311,28 +512,47 @@
     updateSpotlight(target);
   }
 
-  function setStepContent(step, isComplete = false) {
+  function setButtons(step, isComplete) {
+    const isActionStep = Boolean(step.perform || step.completeOn === "input" || step.selector);
+    const isReadOnly = !step.perform && step.completeOn !== "input" && !step.actionLabel;
     const isLastStep = state.stepIndex === steps.length - 1;
-    const kicker = isComplete ? `${step.kicker} Complete` : step.kicker;
-    const title = isComplete && step.successTitle ? step.successTitle : step.title;
-    const body = isComplete && step.successBody ? step.successBody : step.body;
-    const hint = isComplete && step.successHint ? step.successHint : step.hint;
-    const value = isComplete && step.successValue ? step.successValue : step.value;
-
-    stepLabel.textContent = kicker;
-    titleEl.textContent = title;
-    bodyEl.textContent = body;
-    hintEl.textContent = hint || "";
-    valueEl.textContent = value || "";
 
     backButton.disabled = state.stepIndex === 0;
-    nextButton.textContent = isLastStep ? "Finish" : "Next";
-    nextButton.disabled = Boolean(step.advanceOn === "click" && !isComplete);
-    showMeButton.textContent = isComplete ? "Show Result Again" : "Try It For Me";
+    nextButton.textContent = isLastStep ? "Finish" : "Continue";
+    nextButton.disabled = isActionStep && !isReadOnly && !isComplete;
+
+    if (isReadOnly) {
+      showMeButton.hidden = true;
+      return;
+    }
+
+    if (isComplete) {
+      showMeButton.hidden = true;
+      return;
+    }
+
+    showMeButton.hidden = false;
+    showMeButton.textContent = step.actionLabel || "Do It For Me";
     showMeButton.disabled = false;
   }
 
-  function markCurrentStepComplete() {
+  function setStepContent(step, isComplete = false) {
+    stepLabel.textContent = isComplete && step.successTitle ? `${step.kicker} Complete` : step.kicker;
+    titleEl.textContent = isComplete && step.successTitle ? step.successTitle : step.title;
+    bodyEl.textContent = isComplete && step.successBody ? step.successBody : step.body;
+    hintEl.textContent = isComplete && step.successHint ? step.successHint : (step.hint || "");
+    valueEl.textContent = isComplete && step.successValue ? step.successValue : (step.value || "");
+    setButtons(step, isComplete);
+  }
+
+  function resolveSuccessTarget(step) {
+    if (step.successSelector) {
+      return getTarget(step.successSelector);
+    }
+    return getTarget(step.selector);
+  }
+
+  function completeCurrentStep() {
     const step = steps[state.stepIndex];
     if (!step) return;
 
@@ -347,25 +567,90 @@
       step.afterAction();
     }
 
-    const successSelector = step.successSelector || step.selector;
-    waitForTarget(successSelector, (target) => {
+    const validate = step.validate || (() => Boolean(resolveSuccessTarget(step)));
+    waitFor(
+      validate,
+      () => {
+        const successTarget = resolveSuccessTarget(step);
+        if (successTarget) {
+          focusTarget(successTarget, { scroll: true, pulse: true });
+        }
+        setStepContent(step, true);
+        renderProgress(state.stepIndex);
+      },
+      step.waitAttempts || 32,
+      step.waitDelay || 150,
+    );
+  }
+
+  function attachStepAction(target, step) {
+    const isReadOnly = !step.perform && !step.actionLabel && step.completeOn !== "input";
+    if (isReadOnly) return;
+
+    if (step.completeOn === "input") {
+      const handler = () => {
+        if (step.validate && step.validate()) {
+          completeCurrentStep();
+        }
+      };
+      target.addEventListener("input", handler);
+      state.cleanupAction = () => target.removeEventListener("input", handler);
+      return;
+    }
+
+    const handler = () => {
+      window.setTimeout(() => completeCurrentStep(), step.successDelay || 260);
+    };
+
+    target.addEventListener("click", handler, { once: true });
+    state.cleanupAction = () => target.removeEventListener("click", handler);
+  }
+
+  function performCurrentStep() {
+    const step = steps[state.stepIndex];
+    if (!step) return;
+
+    if (typeof step.perform === "function") {
+      step.perform();
+    } else {
+      clickSelector(step.selector);
+    }
+
+    if (step.completeOn === "input") {
+      window.setTimeout(() => completeCurrentStep(), step.successDelay || 320);
+      return;
+    }
+
+    if (!step.selector) {
+      window.setTimeout(() => completeCurrentStep(), step.successDelay || 320);
+    }
+  }
+
+  function renderStep(index) {
+    clearTarget();
+    state.stepIndex = index;
+
+    const step = steps[index];
+    closePreview();
+    openSection(step.section || "feed");
+
+    if (typeof step.prepare === "function") {
+      step.prepare();
+    }
+
+    waitForTarget(step.selector || step.successSelector, (target) => {
       focusTarget(target, { scroll: true, pulse: true });
-      setStepContent(step, true);
-      renderProgress(state.stepIndex);
+      setStepContent(step, false);
+      renderProgress(index);
+      attachStepAction(target, step);
     });
   }
 
   function advance() {
-    const currentStep = steps[state.stepIndex];
-    if (currentStep && !currentStep.advanceOn) {
-      state.completedSteps.add(state.stepIndex);
-    }
-
     if (state.stepIndex >= steps.length - 1) {
       finishTour();
       return;
     }
-
     renderStep(state.stepIndex + 1);
   }
 
@@ -383,51 +668,6 @@
     state.stepIndex = -1;
   }
 
-  function attachAdvanceOn(target, step) {
-    if (step.advanceOn !== "click") return;
-
-    const handler = () => {
-      window.setTimeout(() => {
-        markCurrentStepComplete();
-      }, 280);
-    };
-
-    target.addEventListener("click", handler, { once: true });
-    state.cleanupAction = () => target.removeEventListener("click", handler);
-  }
-
-  function performStepAction(step) {
-    if (!step) return;
-
-    if (typeof step.beforeEnter === "function") {
-      step.beforeEnter();
-    }
-
-    const target = getTarget(step.selector);
-    if (!target) return;
-
-    target.click();
-  }
-
-  function renderStep(index) {
-    clearTarget();
-    state.stepIndex = index;
-
-    const step = steps[index];
-    openSection(step.section);
-
-    if (typeof step.beforeEnter === "function") {
-      step.beforeEnter();
-    }
-
-    waitForTarget(step.selector, (target) => {
-      focusTarget(target, { scroll: true, pulse: true });
-      setStepContent(step, false);
-      renderProgress(index);
-      attachAdvanceOn(target, step);
-    });
-  }
-
   startButton.addEventListener("click", () => {
     state.completedSteps.clear();
     closePreview();
@@ -443,7 +683,7 @@
   });
 
   showMeButton.addEventListener("click", () => {
-    performStepAction(steps[state.stepIndex]);
+    performCurrentStep();
   });
 
   backButton.addEventListener("click", previous);
