@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AME Project Intelligence Demo</title>
+  <title>AME Guided Demo</title>
   <meta
     name="description"
-    content="Verified municipal intelligence proof of concept for AME Group with workflow automation and a MERX import lane."
+    content="Self-guided walkthrough for AME Group market intelligence with verified municipal signals and real public procurement notices."
   />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=20260319-20" />
 </head>
-<body>
+<body class="guided-demo-page" data-guided-demo="true">
   <header class="shell-topbar">
     <div class="shell-topbar-branding">
       <div class="shell-topbar-logo">
@@ -52,7 +52,7 @@
       <section class="welcome-panel panel">
         <div class="welcome-copy">
           <h2>AME Opportunity Radar</h2>
-          <p class="lede">This demo dashboard brings together verified BC municipal signals and real public procurement notices so AME Group can scan quickly, qualify faster, and move the strongest leads into action before the competition.</p>
+          <p class="lede">This guided version helps a first-time viewer understand how AME can spot relevant signals early, qualify them quickly, and move stronger opportunities into action before the competition.</p>
           <div class="compact-actions">
             <button class="ghost-button hero-button" type="button" data-nav-target="feed">Open Signal Board</button>
             <button class="primary-button hero-button" type="button" data-nav-target="merx">Open MERX Intake</button>
@@ -76,6 +76,18 @@
             <span class="metric-chip-label">Notice Library</span>
             <strong id="heroMerxCount">0</strong>
           </div>
+        </div>
+      </section>
+
+      <section class="guided-tour-banner panel">
+        <div>
+          <p class="section-tag">Self-Guided Demo</p>
+          <h3>Follow the walkthrough to see the workflow in under two minutes</h3>
+          <p class="lede">Start with Signal Board, inspect a real municipal lead, move into the procurement intake lane, and finish in the Leadership Brief executive handoff.</p>
+        </div>
+        <div class="guided-tour-banner-actions">
+          <button id="startGuidedTour" class="primary-button" type="button">Start Guided Tour</button>
+          <a class="ghost-button" href="index.html">Open Standard Dashboard</a>
         </div>
       </section>
 
@@ -194,11 +206,27 @@
           <article id="workflowMeta" class="workflow-card workflow-meta"></article>
         </div>
       </section>
-
     </main>
+  </div>
+
+  <div id="guidedTourLayer" class="guided-tour-layer" hidden>
+    <div class="guided-tour-backdrop"></div>
+    <div id="guidedTourSpotlight" class="guided-tour-spotlight"></div>
+    <aside id="guidedTourCard" class="guided-tour-card" role="dialog" aria-live="polite" aria-label="Guided walkthrough">
+      <p id="guidedTourStep" class="section-tag guided-tour-step">Guided Tour</p>
+      <h3 id="guidedTourTitle">Start Guided Tour</h3>
+      <p id="guidedTourBody" class="guided-tour-body"></p>
+      <p id="guidedTourHint" class="guided-tour-hint"></p>
+      <div class="guided-tour-actions">
+        <button id="guidedTourBack" class="ghost-button" type="button">Back</button>
+        <button id="guidedTourNext" class="primary-button" type="button">Next</button>
+        <button id="guidedTourSkip" class="record-inline-link compact" type="button">Skip Tour</button>
+      </div>
+    </aside>
   </div>
 
   <script src="data/ame-proof-app-data.js?v=20260319-20"></script>
   <script src="script.js?v=20260319-20"></script>
+  <script src="guided-tour.js?v=20260319-20"></script>
 </body>
 </html>

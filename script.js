@@ -511,8 +511,8 @@ function getMerxNoticeState(notice) {
     key: "reference",
     label: "Reference notice",
     timeline: `Reference from ${closingLabel}`,
-    explainer: "This older notice stays here as a reference example for the intake workflow.",
-    actionLabel: "Use As Reference",
+    explainer: "This older notice stays here as a demo example for the intake workflow.",
+    actionLabel: "Open Example",
   };
 }
 
@@ -1547,7 +1547,7 @@ function renderMerxOptions() {
     {
       key: "reference",
       title: "Reference notices",
-      copy: "Older notices stay here only as intake reference examples, not as fresh market signals.",
+      copy: "Older notices stay here only as demo examples, not as fresh market signals.",
       notices: buckets.reference,
     },
   ].filter((group) => group.notices.length);

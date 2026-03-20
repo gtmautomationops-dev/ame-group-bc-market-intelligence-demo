@@ -288,6 +288,29 @@ h2 {
   gap: 1rem;
 }
 
+.guided-tour-banner {
+  padding: 1.25rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  background:
+    radial-gradient(circle at top right, rgba(15, 102, 176, 0.09), transparent 30%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(242, 247, 255, 0.96));
+}
+
+.guided-tour-banner .lede {
+  max-width: 52rem;
+}
+
+.guided-tour-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .run-history-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
@@ -2596,6 +2619,14 @@ body {
   .shell-topbar-nav {
     justify-content: flex-start;
   }
+
+  .guided-tour-banner {
+    grid-template-columns: 1fr;
+  }
+
+  .guided-tour-banner-actions {
+    justify-content: flex-start;
+  }
 }
 
 @media (max-width: 940px) {
@@ -3156,6 +3187,89 @@ body {
   margin-top: 0.42rem;
 }
 
+.guided-tour-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1800;
+  pointer-events: none;
+}
+
+.guided-tour-layer.is-active {
+  pointer-events: auto;
+}
+
+.guided-tour-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 14, 24, 0.58);
+  backdrop-filter: blur(3px);
+}
+
+.guided-tour-spotlight {
+  position: fixed;
+  border-radius: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.94);
+  box-shadow:
+    0 0 0 9999px rgba(7, 14, 24, 0.46),
+    0 0 0 6px rgba(173, 202, 69, 0.28),
+    0 22px 42px rgba(0, 0, 0, 0.28);
+  transition: top 180ms ease, left 180ms ease, width 180ms ease, height 180ms ease;
+  pointer-events: none;
+}
+
+.guided-tour-card {
+  position: fixed;
+  z-index: 1802;
+  width: min(380px, calc(100vw - 2rem));
+  padding: 1.1rem 1.1rem 1rem;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 249, 255, 0.96));
+  box-shadow: 0 30px 60px rgba(7, 14, 24, 0.26);
+  display: grid;
+  gap: 0.75rem;
+}
+
+.guided-tour-step {
+  color: #5a7600;
+  font-weight: 800;
+}
+
+.guided-tour-card h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.1;
+  color: #0b1c30;
+}
+
+.guided-tour-body,
+.guided-tour-hint {
+  margin: 0;
+  color: #42566d;
+  line-height: 1.55;
+}
+
+.guided-tour-hint {
+  font-size: 0.92rem;
+  color: #5f6d80;
+}
+
+.guided-tour-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.tour-target-active {
+  position: relative !important;
+  z-index: 1801 !important;
+}
+
+.tour-running .shell-topbar {
+  z-index: 1700;
+}
+
 .detail-list-wrap {
   padding: 0.15rem 0;
 }
@@ -3287,6 +3401,10 @@ body {
   .digest-preview {
     position: static;
     top: auto;
+  }
+
+  .guided-tour-card {
+    width: min(92vw, 360px);
   }
 }
 
