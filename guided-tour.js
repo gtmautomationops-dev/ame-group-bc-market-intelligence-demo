@@ -468,24 +468,11 @@
 
   function positionCard(rect) {
     const padding = 20;
-    const cardRect = card.getBoundingClientRect();
-    let top = rect.bottom + 18;
-    let left = rect.left;
-
-    if (top + cardRect.height > window.innerHeight - padding) {
-      top = rect.top - cardRect.height - 18;
-    }
-
-    if (top < padding) top = padding;
-
-    if (left + cardRect.width > window.innerWidth - padding) {
-      left = window.innerWidth - cardRect.width - padding;
-    }
-
-    if (left < padding) left = padding;
-
-    card.style.top = `${top}px`;
-    card.style.left = `${left}px`;
+    const maxHeight = Math.max(360, window.innerHeight - padding * 2);
+    card.style.top = `${padding}px`;
+    card.style.left = `${padding}px`;
+    card.style.maxHeight = `${maxHeight}px`;
+    card.scrollTop = 0;
   }
 
   function updateSpotlight(target) {

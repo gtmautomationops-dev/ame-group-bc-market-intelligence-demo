@@ -3232,6 +3232,11 @@ body {
   overscroll-behavior: contain;
 }
 
+.guided-demo-page .guided-tour-card {
+  top: 20px;
+  left: 20px;
+}
+
 .guided-tour-step {
   color: #5a7600;
   font-weight: 800;
