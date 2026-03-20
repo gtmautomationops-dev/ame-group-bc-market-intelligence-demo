@@ -3304,6 +3304,12 @@ body {
   color: #0b1c30;
 }
 
+.guided-tour-progress-item.is-complete {
+  border-color: rgba(173, 202, 69, 0.24);
+  background: rgba(173, 202, 69, 0.12);
+  color: #23324a;
+}
+
 .guided-tour-progress-number {
   width: 1.8rem;
   height: 1.8rem;
@@ -3321,6 +3327,11 @@ body {
   color: #5a7600;
 }
 
+.guided-tour-progress-item.is-complete .guided-tour-progress-number {
+  background: #5a7600;
+  color: #ffffff;
+}
+
 .guided-tour-progress-copy {
   font-size: 0.92rem;
   line-height: 1.25;
@@ -3331,8 +3342,26 @@ body {
   z-index: 1801 !important;
 }
 
+.tour-target-pulse {
+  animation: guidedTargetPulse 760ms ease;
+}
+
 .tour-running .shell-topbar {
   z-index: 1700;
+}
+
+@keyframes guidedTargetPulse {
+  0% {
+    transform: scale(1);
+  }
+
+  45% {
+    transform: scale(1.015);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .detail-list-wrap {
