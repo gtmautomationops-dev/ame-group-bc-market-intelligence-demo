@@ -575,7 +575,7 @@
       </div>
       <nav class="brief-nav" aria-label="Brief navigation">
         <a class="is-active" href="#">Leadership Brief</a>
-        <a href="../index.html" target="_blank" rel="noreferrer">Signal Board</a>
+        <a href="../index.html" target="_blank" rel="noreferrer">Project Signals</a>
         <a href="./ame-proof-morning-digest.html" target="_blank" rel="noreferrer">Morning Digest</a>
       </nav>
       <div class="topbar-actions">
@@ -600,12 +600,12 @@
         <div class="hero-stat-grid">
           <article class="metric">
             <p class="eyebrow">Priority Leads</p>
-            <strong>4</strong>
+            <strong id="heroPriorityCount">4</strong>
             <p>High-fit leads ready for principal review.</p>
           </article>
           <article class="metric watch">
             <p class="eyebrow">Watchlist</p>
-            <strong>1</strong>
+            <strong id="heroWatchCount">1</strong>
             <p>Signals to monitor for the next move.</p>
           </article>
           <article class="metric">
@@ -617,7 +617,7 @@
         <div class="hero-actions">
           <a class="brief-link" href="./ame-proof-morning-digest.html" target="_blank" rel="noreferrer">Open Morning Digest</a>
           <a class="brief-link muted-link" href="#executiveActionConsole">Jump To Executive Console</a>
-          <a class="brief-link muted-link" href="../index.html" target="_blank" rel="noreferrer">Back To Signal Board</a>
+          <a class="brief-link muted-link" href="../index.html" target="_blank" rel="noreferrer">Back To Project Signals</a>
         </div>
       </article>
     </section>
@@ -688,7 +688,7 @@
               <h2>Priority Leads</h2>
               <p class="section-subcopy">Click any lead card to load it into the executive action console above.</p>
             </div>
-            <span class="topbar-pill">4 active</span>
+            <span id="priorityActiveCount" class="topbar-pill">4 active</span>
           </div>
           <div class="priority-grid">
             <article class="brief-card" data-lead-id="proof-003">
@@ -826,7 +826,7 @@
   <div class="action">Hold for background context only.</div>
   <div class="spotlight-actions">
     <a class="brief-link" href="https://www.surrey.ca/news-events/news/contract-direct-access-road-future-newton-community-centre-goes-council" target="_blank" rel="noreferrer">Open Source</a>
-    <a class="brief-link muted-link" href="../index.html" target="_blank" rel="noreferrer">Open Signal Board</a>
+    <a class="brief-link muted-link" href="../index.html" target="_blank" rel="noreferrer">Open Project Signals</a>
   </div>
 </section>
 
@@ -836,7 +836,7 @@
           </div>
           <div class="source-note">
             <ul>
-              <li>Signal Board cards link directly to official public sources.</li>
+              <li>Project Signals cards link directly to official public sources.</li>
 <li>Meeting-linked records help surface civic projects before broader market visibility.</li>
 <li>The MERX alert intake flow is designed for approved alert imports such as saved-search emails or CSV exports.</li>
             </ul>
@@ -992,7 +992,45 @@
   </main>
 
   <script>
-    const executiveLeads = [{"id":"proof-003","title":"Burnaby civic update says Burnaby Lake Recreation Complex is past 50% completion","entity":"City of Burnaby","location":"Burnaby, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Construction","asset":"Recreation Complex","whyItMatters":"The project is in delivery and still relevant for downstream packages, specialist scopes, and relationship mapping around aquatic centre, pool, aquatic.","action":"Map likely packages, local partners, and probable follow-on scopes for AME pursuit.","serviceLines":["Mechanical Design","Commissioning","Energy + Sustainability"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.burnaby.ca/our-city/news/2026-03-09/burnabys-once-generation-civic-building-program-reaches-50-completion"},{"id":"proof-006","title":"Crystal Pool project page says construction management procurement is underway","entity":"City of Victoria","location":"Victoria, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Procurement","asset":"Pool / Aquatic Centre","whyItMatters":"This record is already in procurement-facing motion and contains direct signals around aquatic centre, crystal pool, pool.","action":"Track council or owner procurement milestones and identify likely consultant or trade entry points.","serviceLines":["Mechanical Design","Fire Suppression Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Victoria Office","sourceUrl":"https://www.victoria.ca/city-government/projects/crystal-pool-replacement-project"},{"id":"proof-009","title":"Park Board gives greenlight to Vancouver Aquatic Centre renewal","entity":"City of Vancouver","location":"Vancouver, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Planning","asset":"Aquatic Centre","whyItMatters":"The project is pre-construction but clearly aligned with AME\u0027s watch profile through aquatic centre, vancouver aquatic centre, pool.","action":"Monitor the project for next-phase design, enabling works, or management procurements.","serviceLines":["Mechanical Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://vancouver.ca/news-calendar/green-light-for-vancouver-aquatic-centre-renewal-april-1.aspx"},{"id":"proof-004","title":"Newton Community Centre page lists 50-metre pool and early-2026 design-build target","entity":"City of Surrey","location":"Surrey, BC","priority":"Priority","priorityKey":"priority","score":88,"stage":"Planning","asset":"Community Centre / Aquatic Centre","whyItMatters":"The project is pre-construction but clearly aligned with AME\u0027s watch profile through pool, aquatic, construction.","action":"Monitor the project for next-phase design, enabling works, or management procurements.","serviceLines":["Mechanical Design","Fire Suppression Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.surrey.ca/about-surrey/capital-projects/newton-community-centre"},{"id":"proof-005","title":"Contract for direct-access road to future Newton Community Centre goes before council","entity":"City of Surrey","location":"Surrey, BC","priority":"Watch","priorityKey":"watch","score":70,"stage":"Procurement","asset":"Community Centre Enabling Works","whyItMatters":"This record is already in procurement-facing motion and contains direct signals around aquatic, construction, community centre.","action":"Hold for background context only.","serviceLines":["Mechanical Design","Fire Suppression Design","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.surrey.ca/news-events/news/contract-direct-access-road-future-newton-community-centre-goes-council"}];
+    const storedExecutiveLeadKey = "ameExecutiveLeadId";
+    const transientLeadStorageKey = "ameTransientDigestLead";
+    const baseExecutiveLeads = [{"id":"proof-003","title":"Burnaby civic update says Burnaby Lake Recreation Complex is past 50% completion","entity":"City of Burnaby","location":"Burnaby, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Construction","asset":"Recreation Complex","whyItMatters":"The project is in delivery and still relevant for downstream packages, specialist scopes, and relationship mapping around aquatic centre, pool, aquatic.","action":"Map likely packages, local partners, and probable follow-on scopes for AME pursuit.","serviceLines":["Mechanical Design","Commissioning","Energy + Sustainability"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.burnaby.ca/our-city/news/2026-03-09/burnabys-once-generation-civic-building-program-reaches-50-completion"},{"id":"proof-006","title":"Crystal Pool project page says construction management procurement is underway","entity":"City of Victoria","location":"Victoria, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Procurement","asset":"Pool / Aquatic Centre","whyItMatters":"This record is already in procurement-facing motion and contains direct signals around aquatic centre, crystal pool, pool.","action":"Track council or owner procurement milestones and identify likely consultant or trade entry points.","serviceLines":["Mechanical Design","Fire Suppression Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Victoria Office","sourceUrl":"https://www.victoria.ca/city-government/projects/crystal-pool-replacement-project"},{"id":"proof-009","title":"Park Board gives greenlight to Vancouver Aquatic Centre renewal","entity":"City of Vancouver","location":"Vancouver, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Planning","asset":"Aquatic Centre","whyItMatters":"The project is pre-construction but clearly aligned with AME\u0027s watch profile through aquatic centre, vancouver aquatic centre, pool.","action":"Monitor the project for next-phase design, enabling works, or management procurements.","serviceLines":["Mechanical Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://vancouver.ca/news-calendar/green-light-for-vancouver-aquatic-centre-renewal-april-1.aspx"},{"id":"proof-004","title":"Newton Community Centre page lists 50-metre pool and early-2026 design-build target","entity":"City of Surrey","location":"Surrey, BC","priority":"Priority","priorityKey":"priority","score":88,"stage":"Planning","asset":"Community Centre / Aquatic Centre","whyItMatters":"The project is pre-construction but clearly aligned with AME\u0027s watch profile through pool, aquatic, construction.","action":"Monitor the project for next-phase design, enabling works, or management procurements.","serviceLines":["Mechanical Design","Fire Suppression Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.surrey.ca/about-surrey/capital-projects/newton-community-centre"},{"id":"proof-005","title":"Contract for direct-access road to future Newton Community Centre goes before council","entity":"City of Surrey","location":"Surrey, BC","priority":"Watch","priorityKey":"watch","score":70,"stage":"Procurement","asset":"Community Centre Enabling Works","whyItMatters":"This record is already in procurement-facing motion and contains direct signals around aquatic, construction, community centre.","action":"Hold for background context only.","serviceLines":["Mechanical Design","Fire Suppression Design","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.surrey.ca/news-events/news/contract-direct-access-road-future-newton-community-centre-goes-council"}];
+    function readTransientLead() {
+      try {
+        const raw = window.localStorage.getItem(transientLeadStorageKey);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return parsed && parsed.id ? parsed : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function normalizeExecutiveLead(record) {
+      if (!record || !record.id) return null;
+      return {
+        id: record.id,
+        title: record.title,
+        entity: record.entity,
+        location: record.location,
+        priority: record.priority || record.priorityLabel || "Priority",
+        priorityKey: record.priorityKey || "priority",
+        score: record.score || 0,
+        stage: record.stage || record.stageLabel || "Procurement",
+        asset: record.asset || record.assetType || "Procurement Notice",
+        whyItMatters: record.whyItMatters || record.summary || "",
+        action: record.action || "",
+        serviceLines: record.serviceLines || record.ameServiceLines || [],
+        recommendedOffice: record.recommendedOffice || "Vancouver Office",
+        sourceUrl: record.sourceUrl || "",
+        sourceKey: record.sourceKey || "",
+      };
+    }
+
+    const transientExecutiveLead = normalizeExecutiveLead(readTransientLead());
+    const executiveLeads = transientExecutiveLead
+      ? [transientExecutiveLead].concat(baseExecutiveLeads.filter(function (lead) { return lead.id !== transientExecutiveLead.id; }))
+      : baseExecutiveLeads;
     const teamDirectory = {"Director":[{"name":"Ahmet Ozata","credentials":"P.Eng., LEED AP"},{"name":"Jeff Hill","credentials":"P.Eng."},{"name":"Marie-France Venneri","credentials":"P.Eng., LEED AP"},{"name":"Nic Besseling","credentials":"P.Eng., LEED AP BD+C"},{"name":"Paula Murtha","credentials":"P. Eng., C.Eng., MIEI"}],"Principal":[{"name":"Brandon Ganne","credentials":"P.Eng., LEED Green Associate"},{"name":"Brett Banadyga","credentials":"P.Eng., LEED AP BD+C"},{"name":"Cassidy Taylor","credentials":"P.Eng., CPHD, LEED AP"},{"name":"Charles Lankester","credentials":"P.Eng., MEL, LEED AP BD+C"},{"name":"Eric Cresswell","credentials":"P.Eng."},{"name":"Greg Tarnopolsky","credentials":"P.Eng., CEM, LEED AP"},{"name":"Irsan Tjioe","credentials":"P.L.Eng., LEED Green Associate"},{"name":"Kyle Keep","credentials":"P.Eng."},{"name":"Louise McKenzie","credentials":"P.Eng., LEED AP"},{"name":"Marc Trudeau","credentials":"P.Eng., Architect AIBC, BEMP, CPHD, LEED AP BD+C"},{"name":"Matt Younger","credentials":"P.Eng., P.E., CPHD, LEED AP"},{"name":"Mike Kasuya","credentials":"P.L.Eng., CPHD, LEED AP BD+C"},{"name":"Patrick Stewart","credentials":"P.Eng., CPHD"},{"name":"Reza Mousakhani","credentials":"P.Eng., CPHD, LEED Green Associate"},{"name":"Taio Waldhaus","credentials":"P.Eng., CPHD"},{"name":"Zlatko Puljic","credentials":"P.Eng., CEM, HBDP, LEED AP"}],"Associate":[{"name":"Alex Chou","credentials":"P.Eng., LEED AP"},{"name":"Amy Xu","credentials":"P.Eng., LEED Green Associate"},{"name":"Ben Chan","credentials":"LEED AP"},{"name":"Chris Best","credentials":"P.Eng., MASc, CEM, CFPS"},{"name":"Emi Nakamura","credentials":""},{"name":"James Wong","credentials":""},{"name":"Jarrod Yip","credentials":"P.Eng."},{"name":"Matthew Theriault","credentials":"P.L.(Eng.), CFEI"},{"name":"Mitch Frackson","credentials":"P.Eng., CPHD"},{"name":"Nathan O\u0027Riain","credentials":"C.E.T."},{"name":"Nathan Young","credentials":"P.L.Eng., AScT"},{"name":"Nermeen Aly","credentials":""},{"name":"Nick Fletcher","credentials":""},{"name":"Pardeep Sharma","credentials":"P.Tech.(Eng.), ASHRAE CHD"},{"name":"Parman Paul","credentials":"EIT, CPHD"},{"name":"Scott Campbell","credentials":"LEED AP"}]};
     const officeDirectory = [{"name":"Victoria Office","address":"912 - 1175 Douglas Street, Victoria, BC V8W 2E1","phone":"+1 (250) 382 5999"},{"name":"Vancouver Office","address":"200 - 638 Smithe Street, Vancouver, BC V6B 1E3","phone":"+1 (604) 684 5995"},{"name":"Calgary Office","address":"900 - 1122 4th Street SW, Calgary, AB T2R 1M1","phone":"+1 (403) 252 2333"},{"name":"Edmonton Office","address":"Unit 100 - 14220 112 Avenue NW, Edmonton, AB T5M 2T8","phone":"+1 (780) 962 3573"},{"name":"Kelowna Satellite Office","address":"Suite 506 - 460 Doyle Avenue, Kelowna, BC V1Y 0C2","phone":"+1 (604) 684 5995"},{"name":"Nanaimo Satellite Office","address":"105 - 238 Franklyn Street, Nanaimo, BC V9R 2X4","phone":"+1 (250) 382 5999"}];
     const actionCatalog = {
@@ -1027,11 +1065,21 @@
     const draftPanel = document.getElementById("execDraft");
     const replyPanel = document.getElementById("execReply");
     const outcomePanel = document.getElementById("execOutcome");
+    const heroPriorityCount = document.getElementById("heroPriorityCount");
+    const heroWatchCount = document.getElementById("heroWatchCount");
+    const priorityActiveCount = document.getElementById("priorityActiveCount");
     const quickButtons = Array.from(document.querySelectorAll(".js-exec-quick"));
     const leadCards = Array.from(document.querySelectorAll(".brief-card[data-lead-id]"));
     const loadButtons = Array.from(document.querySelectorAll(".js-load-lead"));
 
     let selectedLeadId = executiveLeads[0] ? executiveLeads[0].id : "";
+    try {
+      const storedLeadId = window.localStorage.getItem(storedExecutiveLeadKey);
+      if (storedLeadId && executiveLeads.some(function (lead) { return lead.id === storedLeadId; })) {
+        selectedLeadId = storedLeadId;
+      }
+    } catch (error) {
+    }
     let queuedAssignment = null;
     const queueTimestampFormatter = new Intl.DateTimeFormat("en-CA", {
       month: "short",
@@ -1143,6 +1191,15 @@
       });
     }
 
+    function renderHeroCounts() {
+      const priorityCount = executiveLeads.filter(function (lead) { return lead.priorityKey === "priority"; }).length;
+      const watchCount = executiveLeads.filter(function (lead) { return lead.priorityKey === "watch"; }).length;
+
+      if (heroPriorityCount) heroPriorityCount.textContent = String(priorityCount);
+      if (heroWatchCount) heroWatchCount.textContent = String(watchCount);
+      if (priorityActiveCount) priorityActiveCount.textContent = priorityCount + " active";
+    }
+
     function renderExecutivePanels() {
       const selection = getCurrentExecutiveSelection();
       const lead = selection.lead;
@@ -1208,6 +1265,9 @@
 
       summaryPanel.innerHTML = ''
         + '<p class="detail-label">Executive Assignment</p>'
+        + (lead && lead.sourceKey === "merx-import"
+          ? '<div class="hero-meta"><span class="mini-pill priority">MERX Intake Route</span><span class="mini-pill">Imported Notice</span></div>'
+          : '')
         + '<div class="console-summary-grid">'
         +   '<div class="summary-item"><span class="detail-kicker">Lead</span><strong>' + esc(lead ? lead.title : "No lead selected") + '</strong></div>'
         +   '<div class="summary-item"><span class="detail-kicker">Owner</span><strong>' + esc(person.name + " (" + role + ")") + '</strong></div>'
@@ -1266,6 +1326,11 @@
       const lead = getLead(selectedLeadId);
       if (!lead) return;
 
+      try {
+        window.localStorage.setItem(storedExecutiveLeadKey, selectedLeadId);
+      } catch (error) {
+      }
+
       queuedAssignment = null;
 
       leadSelect.value = selectedLeadId;
@@ -1280,6 +1345,7 @@
       renderExecutivePanels();
     }
 
+    renderHeroCounts();
     populateLeadOptions();
     populateActions(roleSelect.value, "Assign Principal Review");
     populatePeople(roleSelect.value, "");

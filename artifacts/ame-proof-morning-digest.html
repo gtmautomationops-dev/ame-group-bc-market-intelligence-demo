@@ -332,13 +332,13 @@
         </div>
       </div>
       <nav class="nav" aria-label="Digest navigation">
-        <a href="../index.html" target="_blank" rel="noreferrer">Signal Board</a>
+        <a href="../index.html" target="_blank" rel="noreferrer">Project Signals</a>
         <a class="is-active" href="#">Morning Digest</a>
         <a href="./ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Leadership Brief</a>
       </nav>
       <div class="topbar-actions">
-        <a class="link-pill" href="../index.html" target="_blank" rel="noreferrer">Back To Signal Board</a>
-        <a class="link-pill primary" href="./ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Open Leadership Brief</a>
+        <a class="link-pill" href="../index.html" target="_blank" rel="noreferrer">Back To Project Signals</a>
+        <button class="link-pill primary" type="button" data-open-brief>Open Leadership Brief</button>
       </div>
     </div>
   </header>
@@ -348,7 +348,7 @@
       <p class="eyebrow">Morning Digest</p>
       <div>
         <h1>AME morning review surface for March 18, 2026</h1>
-        <p>This is the separate shortlist page AME can use to review the day's strongest signals without scrolling through the full Signal Board.</p>
+        <p>This is the separate shortlist page AME can use to review the day's strongest signals without scrolling through the full Project Signals view.</p>
       </div>
       <div class="hero-stats">
         <article class="metric">
@@ -388,8 +388,8 @@
           <h3>Use the leadership brief for the clean handoff</h3>
           <p>Once the team agrees on the lead order here, move to the leadership brief for the shareable follow-up artifact.</p>
           <div class="actions-row">
-            <a class="link-pill primary" href="./ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Open Leadership Brief</a>
-            <a class="link-pill" href="../index.html" target="_blank" rel="noreferrer">Return To Signal Board</a>
+            <button class="link-pill primary" type="button" data-open-brief>Open Leadership Brief</button>
+            <a class="link-pill" href="../index.html" target="_blank" rel="noreferrer">Return To Project Signals</a>
           </div>
         </section>
       </aside>
@@ -400,9 +400,13 @@
   <script>
     const appData = window.AME_DEMO_DATA;
     const storageKey = "ameDigestRecordId";
+    const executiveStorageKey = "ameExecutiveLeadId";
+    const transientLeadStorageKey = "ameTransientDigestLead";
+    const leadershipBriefUrl = "./ame-proof-daily-briefing.html";
     const defaultDigestRecordId = "proof-003";
     const digestList = document.getElementById("digestList");
     const digestFocus = document.getElementById("digestFocus");
+    const digestCount = document.getElementById("digestCount");
 
     const esc = (value) => String(value ?? "")
       .replaceAll("&", "&amp;")
@@ -430,7 +434,27 @@
     }
 
     function getSourceLabel(sourceKey) {
+      if (sourceKey === "merx-import") return "Imported Notice";
       return sourceKey === "municipal-meeting-linked" ? "Meeting-Linked Doc" : "Public Page";
+    }
+
+    function readTransientLead() {
+      try {
+        const raw = window.localStorage.getItem(transientLeadStorageKey);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return parsed && parsed.id ? parsed : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function openLeadershipBrief(recordId) {
+      try {
+        if (recordId) window.localStorage.setItem(executiveStorageKey, recordId);
+      } catch (error) {
+      }
+      window.open(leadershipBriefUrl, "_blank", "noopener,noreferrer");
     }
 
     function getRecordByTitle(title) {
@@ -449,9 +473,14 @@
       return drivers;
     }
 
+    const transientLead = readTransientLead();
     const digestRecords = []
+      .concat(transientLead ? [transientLead] : [])
       .concat(appData.briefing.priorityLeads.map(function (row) { return getRecordByTitle(row.title); }).filter(Boolean))
-      .concat(appData.briefing.watchlist.map(function (row) { return getRecordByTitle(row.title); }).filter(Boolean));
+      .concat(appData.briefing.watchlist.map(function (row) { return getRecordByTitle(row.title); }).filter(Boolean))
+      .filter(function (record, index, collection) {
+        return collection.findIndex(function (item) { return item.id === record.id; }) === index;
+      });
 
     let activeRecordId = defaultDigestRecordId;
     try {
@@ -462,6 +491,18 @@
 
     if (!digestRecords.some(function (record) { return record.id === activeRecordId; })) {
       activeRecordId = digestRecords[0] ? digestRecords[0].id : null;
+    }
+
+    function renderQueueSummary() {
+      if (!digestCount) return;
+
+      const priorityCount = digestRecords.filter(function (record) { return record.priorityKey === "priority"; }).length;
+      const watchCount = digestRecords.filter(function (record) { return record.priorityKey === "watch"; }).length;
+      const otherCount = digestRecords.length - priorityCount - watchCount;
+
+      const parts = [priorityCount + " priority", watchCount + " watchlist"];
+      if (otherCount > 0) parts.push(otherCount + " other");
+      digestCount.textContent = parts.join(" / ");
     }
 
     function saveDigestRecord(recordId) {
@@ -537,10 +578,23 @@
         + '<div class="detail-block"><span class="detail-label">AME Service Lines</span><div class="service-row">' + services + '</div></div>'
         + '<div class="actions-row">'
         +   (record.sourceUrl ? '<a class="link-pill primary" href="' + esc(record.sourceUrl) + '" target="_blank" rel="noreferrer">Open Official Source</a>' : '')
-        +   '<a class="link-pill" href="./ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Open Leadership Brief</a>'
+        +   '<button class="link-pill" type="button" data-open-brief="true">Open Leadership Brief</button>'
         + '</div>';
+
+      digestFocus.querySelectorAll("[data-open-brief]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          openLeadershipBrief(record.id);
+        });
+      });
     }
 
+    document.querySelectorAll("[data-open-brief]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        openLeadershipBrief(activeRecordId);
+      });
+    });
+
+    renderQueueSummary();
     renderList();
     renderFocus();
   </script>

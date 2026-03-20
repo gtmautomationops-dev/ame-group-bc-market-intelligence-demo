@@ -1,5 +1,9 @@
 const appData = window.AME_DEMO_DATA;
 const MORNING_DIGEST_URL = "artifacts/ame-proof-morning-digest.html";
+const LEADERSHIP_BRIEF_URL = "artifacts/ame-proof-daily-briefing.html";
+const DIGEST_RECORD_STORAGE_KEY = "ameDigestRecordId";
+const EXECUTIVE_LEAD_STORAGE_KEY = "ameExecutiveLeadId";
+const TRANSIENT_LEAD_STORAGE_KEY = "ameTransientDigestLead";
 
 if (!appData) {
   document.body.innerHTML = `
@@ -553,11 +557,44 @@ function pulseMerxResult() {
   });
 }
 
-function persistDigestRecord(recordId) {
+function persistStorageValue(key, value) {
   try {
-    window.localStorage.setItem("ameDigestRecordId", recordId);
+    if (value === null || value === undefined || value === "") {
+      window.localStorage.removeItem(key);
+      return;
+    }
+
+    if (typeof value === "string") {
+      window.localStorage.setItem(key, value);
+      return;
+    }
+
+    window.localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
     // Ignore storage failures in file:// mode and keep the demo moving.
+  }
+}
+
+function persistDigestRecord(recordId) {
+  persistStorageValue(DIGEST_RECORD_STORAGE_KEY, recordId);
+}
+
+function persistExecutiveLead(recordId) {
+  persistStorageValue(EXECUTIVE_LEAD_STORAGE_KEY, recordId);
+}
+
+function persistTransientLead(lead) {
+  persistStorageValue(TRANSIENT_LEAD_STORAGE_KEY, lead || null);
+}
+
+function getStoredTransientLead() {
+  try {
+    const raw = window.localStorage.getItem(TRANSIENT_LEAD_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && parsed.id ? parsed : null;
+  } catch (error) {
+    return null;
   }
 }
 
@@ -567,6 +604,15 @@ function openMorningDigestPage() {
     if (handled) return;
   }
   window.open(MORNING_DIGEST_URL, "_blank", "noopener,noreferrer");
+}
+
+function openLeadershipBriefPage(recordId = state.digestRecordId) {
+  if (recordId) persistExecutiveLead(recordId);
+  if (typeof window.AMEGuidedOpenPagePreview === "function") {
+    const handled = window.AMEGuidedOpenPagePreview(LEADERSHIP_BRIEF_URL, "Leadership Brief");
+    if (handled) return;
+  }
+  window.open(LEADERSHIP_BRIEF_URL, "_blank", "noopener,noreferrer");
 }
 
 function flashPanel(element) {
@@ -626,7 +672,7 @@ function renderSignalSteps() {
 
   const steps = [
     {
-      label: "Select Signal",
+      label: "Select Project Signal",
       detail: state.selectedRecordId ? "Signal chosen" : "Choose one record",
       status: state.selectedRecordId ? "is-complete" : "is-active",
     },
@@ -765,8 +811,8 @@ function renderMerxSteps() {
     },
     {
       label: "Review Fields",
-      detail: hasNotice ? "Extraction ready" : "Waiting for notice",
-      status: hasNotice ? "is-active" : "",
+      detail: hasNotice ? "Fields extracted" : "Waiting for notice",
+      status: hasNotice ? "is-complete" : "",
     },
     {
       label: "Generate Recommendation",
@@ -846,6 +892,103 @@ function renderMerxToolbarState() {
 
 function getActiveMerxText() {
   return getActiveMerxNotice()?.rawText || "";
+}
+
+function getRecommendedOfficeName(location) {
+  const normalized = String(location || "").toLowerCase();
+  if (/(victoria|saanich)/.test(normalized)) return "Victoria Office";
+  if (/(kelowna|merritt|kamloops|interior)/.test(normalized)) return "Kelowna Satellite Office";
+  if (/(nanaimo|courtenay|comox|island)/.test(normalized)) return "Nanaimo Satellite Office";
+  return "Vancouver Office";
+}
+
+function getMerxAssetType(analysis) {
+  const hits = analysis?.hits || [];
+
+  if (hits.some((item) => /(aquatic|pool)/.test(item))) return "Pool / Aquatic Centre";
+  if (hits.includes("community centre")) return "Community Centre";
+  if (hits.some((item) => /(mechanical|ahu|boiler|chiller|hvac|cooling coil|heat recovery|heat exchanger|commissioning)/.test(item))) {
+    return "Mechanical Systems";
+  }
+
+  return "Procurement Notice";
+}
+
+function buildMerxWhyItMatters(analysis, displayHits) {
+  const hitText = displayHits.length ? displayHits.join(", ") : "the imported scope";
+
+  if (analysis.priorityKey === "priority") {
+    return `This real public procurement notice is already in market and gives AME a fast qualification signal around ${hitText}.`;
+  }
+
+  if (analysis.priorityKey === "watch") {
+    return `This imported notice may fit AME through ${hitText}, but the team should validate scope and delivery path before briefing leadership.`;
+  }
+
+  return `This imported notice is better treated as context unless the watch profile changes, even though it still provides a live read on ${hitText}.`;
+}
+
+function buildMerxTransientLead() {
+  const notice = getActiveMerxNotice();
+  const rawText = getActiveMerxText();
+
+  if (!notice || !rawText) return null;
+
+  const parsed = parseMerxInput(rawText);
+  const analysis = analyzeText(rawText, "procurement", "merx_import");
+  const noticeState = getMerxNoticeState(notice);
+  const displayHits = formatDisplayList(analysis.hits);
+  const summary = notice.summary || `${parsed.subject} routed from the intake lane.`;
+
+  return {
+    id: `merx-${notice.id}`,
+    title: parsed.subject,
+    entity: parsed.buyer,
+    location: parsed.location,
+    priorityKey: analysis.priorityKey,
+    priorityLabel: analysis.priorityLabel,
+    score: analysis.score,
+    stageLabel: "procurement",
+    assetType: getMerxAssetType(analysis),
+    summary,
+    sourceExcerpt: summary,
+    whyItMatters: buildMerxWhyItMatters(analysis, displayHits),
+    action: analysis.action,
+    goToMarketPlay: "Use intake speed to confirm fit, identify the right office, and align preferred partners before the field crowds in.",
+    estimatedScope: summary,
+    classification: analysis.classification,
+    sourceKey: "merx-import",
+    sourceUrl: parsed.sourceUrl || notice.sourceUrl,
+    keywordHits: analysis.hits,
+    ameServiceLines: analysis.serviceLines,
+    evidence: [
+      `Imported from ${parsed.sourceName || notice.sourceName || "a public procurement notice"} through the AME intake lane.`,
+      `Buyer: ${parsed.buyer} | Location: ${parsed.location}.`,
+      `Closing: ${parsed.closing}.`,
+    ],
+    sourceLabel: "Imported Notice",
+    recommendedOffice: getRecommendedOfficeName(parsed.location),
+    noticeState: noticeState.label,
+  };
+}
+
+function routeMerxLead(destination = "digest") {
+  const transientLead = buildMerxTransientLead();
+  if (!transientLead) return;
+
+  state.digestRecordId = transientLead.id;
+  persistTransientLead(transientLead);
+  persistDigestRecord(transientLead.id);
+  persistExecutiveLead(transientLead.id);
+  renderSignalSteps();
+  renderArtifact();
+
+  if (destination === "leadership") {
+    openLeadershipBriefPage(transientLead.id);
+    return;
+  }
+
+  openMorningDigestPage();
 }
 
 function getPriorityBadge(score) {
@@ -942,6 +1085,13 @@ function analyzeText(text, stage = "procurement", category = "municipal_public_p
 }
 
 function getSourceMeta(sourceKey) {
+  if (sourceKey === "merx-import") {
+    return {
+      label: "Imported Notice",
+      cardClass: "source-import",
+    };
+  }
+
   if (sourceKey === "municipal-meeting-linked") {
     return {
       label: "Meeting-Linked Doc",
@@ -1133,6 +1283,7 @@ function selectDigestRecord(recordId, shouldScroll = false) {
   state.selectedRecordId = recordId;
   state.digestRecordId = recordId;
   persistDigestRecord(recordId);
+  persistExecutiveLead(recordId);
   renderSignalSteps();
   renderRecordGrid();
   renderSignalInspector();
@@ -1776,13 +1927,27 @@ function renderMerxResult() {
     </div>
     <div class="detail-block">
       <p class="detail-label">Source backing this notice</p>
-      <a class="digest-link" href="${esc(parsed.sourceUrl || notice.sourceUrl)}" target="_blank" rel="noreferrer">Open public source notice</a>
+      <div class="record-inline-actions">
+        <a class="digest-link" href="${esc(parsed.sourceUrl || notice.sourceUrl)}" target="_blank" rel="noreferrer">Open public source notice</a>
+        <button class="digest-link digest-link-primary" type="button" data-route-merx="digest">Send To Morning Digest</button>
+        <button class="digest-link" type="button" data-route-merx="leadership">Route To Leadership Brief</button>
+      </div>
+    </div>
+    <div class="detail-block merx-note">
+      <p class="detail-label">Decision flow</p>
+      <p>This imported notice now follows the same AME path as a municipal signal: qualify it here, send it into the morning digest for triage, then route it into the leadership brief for ownership.</p>
     </div>
     <details class="merx-details">
       <summary>Show Normalized Lead Payload (the cleaned structured data passed into the scoring pipeline)</summary>
       <pre class="merx-json">${esc(JSON.stringify(normalizedLead, null, 2))}</pre>
     </details>
   `;
+
+  merxResult.querySelectorAll("[data-route-merx]").forEach((button) => {
+    button.addEventListener("click", () => {
+      routeMerxLead(button.getAttribute("data-route-merx"));
+    });
+  });
 }
 
 function renderBriefingTable() {
@@ -1843,10 +2008,12 @@ function renderArtifact() {
   const briefedPriorityCount = appData.briefing.priorityLeads.length;
   const briefedWatchCount = appData.briefing.watchlist.length;
   const fallbackTitle = appData.briefing.priorityLeads[0]?.title;
-  const focusRecord = appData.processedRecords.find((record) => record.id === state.digestRecordId)
+  const transientLead = getStoredTransientLead();
+  const focusRecord = (transientLead && transientLead.id === state.digestRecordId ? transientLead : null)
+    || appData.processedRecords.find((record) => record.id === state.digestRecordId)
     || appData.processedRecords.find((record) => record.title === fallbackTitle)
     || appData.processedRecords[0];
-  const focusSource = getSourceMeta(focusRecord?.sourceKey || "");
+  const focusSource = focusRecord?.sourceLabel ? { label: focusRecord.sourceLabel } : getSourceMeta(focusRecord?.sourceKey || "");
   const focusEvidence = (focusRecord?.evidence || [])
     .slice(0, 3)
     .map((item) => `<li>${esc(item)}</li>`)
@@ -1882,8 +2049,8 @@ function renderArtifact() {
         <article class="flow-pill-card is-active"><span class="flow-pill-number">3</span><div class="flow-pill-copy"><strong>Open Brief</strong><span>Use the leadership handoff</span></div></article>
       </div>
       <div class="digest-actions">
-        <a class="digest-link digest-link-primary" href="artifacts/ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Open Leadership Brief</a>
-        <button class="digest-link" type="button" data-nav-target="feed">Back To Signal Board</button>
+        <button class="digest-link digest-link-primary" type="button" data-open-brief="${esc(focusRecord?.id || "")}">Open Leadership Brief</button>
+        <button class="digest-link" type="button" data-nav-target="feed">Back To Project Signals</button>
       </div>
     </article>
 
@@ -1936,7 +2103,7 @@ function renderArtifact() {
       </div>
       <div class="digest-actions">
         ${focusRecord?.sourceUrl ? `<a class="digest-link digest-link-primary" href="${esc(focusRecord.sourceUrl)}" target="_blank" rel="noreferrer">Open official source</a>` : ""}
-        <a class="digest-link" href="artifacts/ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Open Leadership Handoff</a>
+        <button class="digest-link" type="button" data-open-brief="${esc(focusRecord?.id || "")}">Open Leadership Brief</button>
         <button class="digest-link" type="button" data-nav-target="feed">Inspect On Board</button>
       </div>
     </article>
@@ -1950,6 +2117,12 @@ function renderArtifact() {
         return;
       }
       setActiveSection(target, true);
+    });
+  });
+
+  artifactPreview.querySelectorAll("[data-open-brief]").forEach((button) => {
+    button.addEventListener("click", () => {
+      openLeadershipBriefPage(button.getAttribute("data-open-brief") || state.digestRecordId);
     });
   });
 }
