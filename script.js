@@ -685,12 +685,12 @@ function renderSignalInspector() {
   signalInspector.innerHTML = `
     <article class="inspector-card">
       <div class="inspector-head">
-        <div>
-          <p class="section-tag">Selected Signal</p>
-          <h4>${esc(record.title)}</h4>
-          <p class="record-meta">${esc(record.entity)} - ${esc(record.location)}</p>
+        <div class="inspector-hero">
+          <p class="section-tag inspector-kicker">Selected Signal</p>
+          <h4 class="inspector-title">${esc(record.title)}</h4>
+          <p class="record-meta inspector-meta">${esc(record.entity)} - ${esc(record.location)}</p>
         </div>
-        <div class="chip-row">
+        <div class="chip-row inspector-head-chips">
           <span class="source-badge">${esc(sourceMeta.label)}</span>
           <span class="pill priority-${esc(record.priorityKey)}">${esc(record.priorityLabel)}</span>
           <span class="pill">Score ${esc(record.score)}</span>

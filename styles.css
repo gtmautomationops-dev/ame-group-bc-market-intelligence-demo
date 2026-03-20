@@ -3050,19 +3050,64 @@ body {
 
 .inspector-card {
   display: grid;
-  gap: 0.85rem;
-  padding: 1rem;
-  border: 1px solid rgba(11, 28, 48, 0.09);
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 18px 34px rgba(11, 28, 48, 0.07);
+  gap: 1rem;
+  padding: 1.05rem;
+  border: 1px solid rgba(15, 102, 176, 0.14);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(250, 252, 255, 0.98), rgba(242, 247, 255, 0.96));
+  box-shadow: 0 22px 36px rgba(11, 28, 48, 0.09);
 }
 
 .inspector-head {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.8rem;
+  gap: 1rem;
+  padding: 1rem 1.05rem;
+  border-radius: 22px;
+  border: 1px solid rgba(15, 102, 176, 0.14);
+  background: linear-gradient(135deg, rgba(15, 102, 176, 0.1), rgba(173, 202, 69, 0.16));
+}
+
+.inspector-hero {
+  display: grid;
+  gap: 0.38rem;
+}
+
+.inspector-kicker {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  color: #5a7600;
+  font-weight: 800;
+}
+
+.inspector-title {
+  margin: 0;
+  font-size: clamp(1.45rem, 2.05vw, 1.95rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: #10233a;
+}
+
+.inspector-meta {
+  font-size: 0.98rem;
+  color: #42566d;
+  font-weight: 600;
+}
+
+.inspector-head-chips {
+  justify-content: flex-end;
+  align-content: flex-start;
+}
+
+.inspector-head-chips .pill,
+.inspector-head-chips .source-badge {
+  min-height: 2.2rem;
+  padding-inline: 0.8rem;
+  font-weight: 700;
 }
 
 .inspector-grid {
@@ -3077,6 +3122,31 @@ body {
 
 .detail-block-wide {
   min-height: 0;
+}
+
+.inspector-card .detail-block {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(15, 102, 176, 0.12);
+  box-shadow: 0 10px 18px rgba(11, 28, 48, 0.04);
+}
+
+.inspector-card .detail-label {
+  margin-bottom: 0.55rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
+  color: #567088;
+  font-weight: 800;
+}
+
+.inspector-card .detail-block p,
+.inspector-card .detail-list {
+  color: #304153;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.inspector-card .detail-list li + li {
+  margin-top: 0.42rem;
 }
 
 .detail-list-wrap {
