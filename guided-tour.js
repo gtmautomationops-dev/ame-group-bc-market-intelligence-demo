@@ -36,7 +36,7 @@
       kicker: "Step 2 of 6",
       title: "Inspect a live signal",
       body: "Click Inspect Signal on a real municipal lead. This opens the selected lead and turns public text into a review surface your team can actually use.",
-      hint: "Click the highlighted Inspect Signal button to continue.",
+      hint: "Click the highlighted Inspect Signal button, or press Next to continue.",
       selector: "#recordGrid [data-inspect-record]",
       section: "feed",
       advanceOn: "click",
@@ -58,7 +58,7 @@
       kicker: "Step 4 of 6",
       title: "Move into MERX Intake",
       body: "Now switch to the intake lane. This is where real public procurement notices get qualified quickly once they reach market.",
-      hint: "Click the highlighted MERX Intake tab to continue.",
+      hint: "Click the highlighted MERX Intake tab, or press Next to continue.",
       selector: '[data-section-target="merx"]',
       advanceOn: "click",
     },
@@ -66,7 +66,7 @@
       kicker: "Step 5 of 6",
       title: "Generate a recommendation",
       body: "Once a notice is selected, this button scores fit for AME, suggests likely service lines, and recommends the next action. That lets AME move faster than competitors who are still reading the notice manually.",
-      hint: "Click Generate Recommendation to continue.",
+      hint: "Click Generate Recommendation, or press Next to continue.",
       selector: "#classifyMerx",
       section: "merx",
       advanceOn: "click",
@@ -214,7 +214,7 @@
       hintEl.textContent = step.hint || "";
       backButton.disabled = index === 0;
       nextButton.textContent = step.finalStep ? "Finish" : "Next";
-      nextButton.disabled = step.advanceOn === "click";
+      nextButton.disabled = false;
 
       updateSpotlight(target);
       attachAdvanceOn(target, step);
