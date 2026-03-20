@@ -3298,6 +3298,10 @@ body {
   text-align: left;
 }
 
+.guided-tour-progress-item:disabled {
+  cursor: not-allowed;
+}
+
 .guided-tour-progress-item.is-active {
   border-color: rgba(15, 102, 176, 0.18);
   background: rgba(15, 102, 176, 0.09);
@@ -3308,6 +3312,10 @@ body {
   border-color: rgba(173, 202, 69, 0.24);
   background: rgba(173, 202, 69, 0.12);
   color: #23324a;
+}
+
+.guided-tour-progress-item.is-locked {
+  opacity: 0.46;
 }
 
 .guided-tour-progress-number {

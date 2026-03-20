@@ -127,10 +127,11 @@
     progressEl.innerHTML = steps.map((step, stepIndex) => {
       const isComplete = state.completedSteps.has(stepIndex);
       const isActive = stepIndex === index;
+      const isLocked = stepIndex > index && !state.completedSteps.has(stepIndex - 1);
       const marker = isComplete ? "&check;" : String(stepIndex + 1);
 
       return `
-        <button class="guided-tour-progress-item ${isActive ? "is-active" : ""} ${isComplete ? "is-complete" : ""}" type="button" data-tour-step="${stepIndex}">
+        <button class="guided-tour-progress-item ${isActive ? "is-active" : ""} ${isComplete ? "is-complete" : ""} ${isLocked ? "is-locked" : ""}" type="button" data-tour-step="${stepIndex}" ${isLocked ? "disabled" : ""}>
           <span class="guided-tour-progress-number">${marker}</span>
           <span class="guided-tour-progress-copy">${step.title}</span>
         </button>
@@ -249,7 +250,8 @@
     valueEl.textContent = value || "";
 
     backButton.disabled = state.stepIndex === 0;
-    nextButton.textContent = step.finalStep ? "Finish" : (step.advanceOn === "click" && !isComplete ? "Skip Ahead" : "Next");
+    nextButton.textContent = step.finalStep ? "Finish" : "Next";
+    nextButton.disabled = Boolean(step.advanceOn === "click" && !isComplete);
     showMeButton.textContent = step.finalStep ? "Open Brief" : (step.advanceOn === "click" ? (isComplete ? "Replay Step" : "Try It For Me") : "Focus Here");
     showMeButton.disabled = false;
   }
@@ -375,6 +377,8 @@
       finishTour();
       return;
     }
+
+    if (nextButton.disabled) return;
 
     advance();
   });
