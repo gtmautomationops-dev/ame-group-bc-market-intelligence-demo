@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260319-28" />
+  <link rel="stylesheet" href="styles.css?v=20260319-30" />
 </head>
 <body class="guided-demo-page" data-guided-demo="true">
   <header class="shell-topbar">
@@ -47,8 +47,39 @@
     </div>
   </header>
 
-  <div class="dashboard-shell">
-    <main class="shell-canvas">
+  <div class="dashboard-shell guided-dashboard-shell">
+    <aside id="guidedTourCard" class="guided-tour-card guided-tour-rail" role="dialog" aria-live="polite" aria-label="Guided walkthrough">
+      <div class="guided-tour-toolbar">
+        <div>
+          <p class="section-tag">Self-Guided Walkthrough</p>
+          <p id="guidedTourStep" class="guided-tour-step-pill">Step 1 of 14</p>
+        </div>
+        <button id="startGuidedTour" class="ghost-button compact" type="button">Restart</button>
+      </div>
+      <h3 id="guidedTourTitle">Start on the dashboard</h3>
+      <p id="guidedTourBody" class="guided-tour-body"></p>
+      <div class="guided-tour-panel-wrap">
+        <section class="guided-tour-panel">
+          <p class="section-tag guided-tour-panel-label">Do This Now</p>
+          <p id="guidedTourHint" class="guided-tour-hint"></p>
+        </section>
+        <section class="guided-tour-panel">
+          <p class="section-tag guided-tour-panel-label">Why It Matters</p>
+          <p id="guidedTourValue" class="guided-tour-value"></p>
+        </section>
+      </div>
+      <div id="guidedTourStatus" class="guided-tour-status">Follow the step on the right. The guide will unlock Continue as soon as the action is completed.</div>
+      <div id="guidedTourProgress" class="guided-tour-progress"></div>
+      <div class="guided-tour-actions">
+        <button id="guidedTourBack" class="ghost-button" type="button">Back</button>
+        <button id="guidedTourShowMe" class="ghost-button" type="button">Show Me</button>
+        <button id="guidedTourNext" class="primary-button" type="button">Continue</button>
+        <button id="guidedTourSkip" class="record-inline-link compact" type="button">Finish</button>
+      </div>
+    </aside>
+
+    <div class="guided-demo-main">
+      <main class="shell-canvas">
       <section class="welcome-panel panel">
         <div class="welcome-copy">
           <h2>AME Opportunity Radar</h2>
@@ -76,18 +107,6 @@
             <span class="metric-chip-label">Notice Library</span>
             <strong id="heroMerxCount">0</strong>
           </div>
-        </div>
-      </section>
-
-      <section class="guided-tour-banner panel">
-        <div>
-          <p class="section-tag">Self-Guided Demo</p>
-          <h3>Follow the walkthrough and try the workflow yourself</h3>
-          <p class="lede">This version removes the guesswork. Every step tells the viewer exactly what to click, shows the result in place, and explains why that feature matters to AME.</p>
-        </div>
-        <div class="guided-tour-banner-actions">
-          <button id="startGuidedTour" class="primary-button" type="button">Start Guided Tour</button>
-          <a class="ghost-button" href="index.html">Open Standard Dashboard</a>
         </div>
       </section>
 
@@ -206,34 +225,8 @@
           <article id="workflowMeta" class="workflow-card workflow-meta"></article>
         </div>
       </section>
-    </main>
-  </div>
-
-  <div id="guidedTourLayer" class="guided-tour-layer" hidden>
-    <div class="guided-tour-backdrop"></div>
-    <div id="guidedTourSpotlight" class="guided-tour-spotlight"></div>
-    <aside id="guidedTourCard" class="guided-tour-card" role="dialog" aria-live="polite" aria-label="Guided walkthrough">
-      <p id="guidedTourStep" class="section-tag guided-tour-step">Guided Tour</p>
-      <h3 id="guidedTourTitle">Start Guided Tour</h3>
-      <p id="guidedTourBody" class="guided-tour-body"></p>
-      <div id="guidedTourProgress" class="guided-tour-progress"></div>
-      <div class="guided-tour-panel-wrap">
-        <section class="guided-tour-panel">
-          <p class="section-tag guided-tour-panel-label">Do This Now</p>
-          <p id="guidedTourHint" class="guided-tour-hint"></p>
-        </section>
-        <section class="guided-tour-panel">
-          <p class="section-tag guided-tour-panel-label">Why It Matters</p>
-          <p id="guidedTourValue" class="guided-tour-value"></p>
-        </section>
-      </div>
-      <div class="guided-tour-actions">
-        <button id="guidedTourBack" class="ghost-button" type="button">Back</button>
-        <button id="guidedTourShowMe" class="ghost-button" type="button">Show Me</button>
-        <button id="guidedTourNext" class="primary-button" type="button">Next</button>
-        <button id="guidedTourSkip" class="record-inline-link compact" type="button">Skip Tour</button>
-      </div>
-    </aside>
+      </main>
+    </div>
   </div>
 
   <div id="guidedPreviewModal" class="guided-preview-modal" hidden>
@@ -257,8 +250,8 @@
     </section>
   </div>
 
-  <script src="data/ame-proof-app-data.js?v=20260319-28"></script>
-  <script src="script.js?v=20260319-28"></script>
-  <script src="guided-tour.js?v=20260319-28"></script>
+  <script src="data/ame-proof-app-data.js?v=20260319-30"></script>
+  <script src="script.js?v=20260319-30"></script>
+  <script src="guided-tour.js?v=20260319-30"></script>
 </body>
 </html>
