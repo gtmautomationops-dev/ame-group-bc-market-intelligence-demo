@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260319-32" />
+  <link rel="stylesheet" href="styles.css?v=20260320-03" />
 </head>
 <body>
   <header class="shell-topbar">
@@ -52,7 +52,7 @@
       <section class="welcome-panel panel">
         <div class="welcome-copy">
           <h2>AME Opportunity Radar</h2>
-          <p class="lede">This demo dashboard brings together verified BC municipal signals and real public procurement notices so AME Group can scan quickly, qualify faster, and move the strongest leads into action before the competition.</p>
+          <p class="lede">This demo dashboard brings together verified BC municipal signals, earlier owner-side project indicators, and real public procurement notices so AME Group can scan quickly, qualify faster, and move the strongest leads into action before the competition.</p>
           <div class="compact-actions">
             <button class="ghost-button hero-button" type="button" data-nav-target="feed">Open Project Signals</button>
             <button class="primary-button hero-button" type="button" data-nav-target="merx">Open MERX Intake</button>
@@ -73,9 +73,41 @@
             <strong id="heroPriorityCount">0 Priority Leads</strong>
           </div>
           <div class="metric-chip">
+            <span class="metric-chip-label">Early Signals</span>
+            <strong id="heroEarlyCount">0 Early Signals</strong>
+          </div>
+          <div class="metric-chip">
             <span class="metric-chip-label">Notice Library</span>
             <strong id="heroMerxCount">0</strong>
           </div>
+        </div>
+      </section>
+
+      <section class="early-radar-panel panel">
+        <div class="section-head section-head-stack">
+          <div>
+            <p class="section-tag">Early Signal Radar</p>
+            <h3>See the signals AME can catch before broad procurement visibility</h3>
+          </div>
+        </div>
+        <div class="early-radar-intro">
+          <p>These are the owner-side signals that surface before inbox noise takes over. Use them to build partner alignment earlier, map likely decision points, and move before formal procurement crowds the field.</p>
+        </div>
+        <div class="early-radar-layout">
+          <section class="early-radar-column">
+            <div class="early-radar-column-head">
+              <p class="detail-label">Early signals in the current board</p>
+              <p class="empty-copy">Click one to jump straight into Project Signals and inspect the verified source.</p>
+            </div>
+            <div id="earlySignalGrid" class="early-signal-grid"></div>
+          </section>
+          <section class="early-radar-column">
+            <div class="early-radar-column-head">
+              <p class="detail-label">Suggested monitoring cadence</p>
+              <p class="empty-copy">Limited-scope monitoring model for the source types AME can prove in this demo today.</p>
+            </div>
+            <div id="monitoringSourceGrid" class="monitoring-source-grid"></div>
+          </section>
         </div>
       </section>
 
@@ -198,7 +230,7 @@
     </main>
   </div>
 
-  <script src="data/ame-proof-app-data.js?v=20260320-02"></script>
-  <script src="script.js?v=20260320-02"></script>
+  <script src="data/ame-proof-app-data.js?v=20260320-03"></script>
+  <script src="script.js?v=20260320-03"></script>
 </body>
 </html>

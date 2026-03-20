@@ -36,6 +36,33 @@ const priorityOptions = [
   { key: "peripheral", label: "Peripheral" },
 ];
 
+const sourceMonitorProfiles = [
+  {
+    key: "municipal-meeting-linked",
+    label: "Meeting-Linked Documents",
+    cadenceLabel: "Daily + meeting-day checks",
+    watchLabel: "Council agendas, committee packets, and minutes",
+    whyEarly: "These records often surface capital intent before broad procurement visibility.",
+    roleLabel: "Earliest owner-side signal",
+  },
+  {
+    key: "municipal-public-records",
+    label: "Owner Project Pages",
+    cadenceLabel: "Every 6 hours",
+    watchLabel: "Project pages, owner news, and recreation strategy updates",
+    whyEarly: "Owner-side page changes usually move ahead of inbox-based notice tools.",
+    roleLabel: "Planning + funding movement",
+  },
+  {
+    key: "public-notices",
+    label: "Public Procurement Notices",
+    cadenceLabel: "Every 4 hours",
+    watchLabel: "Bids and tenders platforms and public procurement listings",
+    whyEarly: "Not the earliest source, but the fastest qualification lane once a notice goes live.",
+    roleLabel: "Fast qualification lane",
+  },
+];
+
 const keywordRules = [
   ["aquatic centre", 30],
   ["crystal pool", 26],
@@ -369,6 +396,9 @@ const heroLastRun = document.getElementById("heroLastRun");
 const heroLastChecked = document.getElementById("heroLastChecked");
 const heroMerxCount = document.getElementById("heroMerxCount");
 const heroPriorityCount = document.getElementById("heroPriorityCount");
+const heroEarlyCount = document.getElementById("heroEarlyCount");
+const earlySignalGrid = document.getElementById("earlySignalGrid");
+const monitoringSourceGrid = document.getElementById("monitoringSourceGrid");
 const runHistorySummary = document.getElementById("runHistorySummary");
 const runHistoryList = document.getElementById("runHistoryList");
 const workspaceTabs = [...document.querySelectorAll("[data-section-target]")];
@@ -436,6 +466,68 @@ function getRecordStageKey(record) {
 
 function getRecordFirstSeenValue(record) {
   return record.observedAt || record.effectiveDate || record.publishedAt || record.lastVerifiedAt || appData.generatedOn;
+}
+
+function isEarlySignalRecord(record) {
+  const stageKey = getRecordStageKey(record);
+  return record.sourceKey === "municipal-meeting-linked" || ["planning", "funding", "monitoring"].includes(stageKey);
+}
+
+function getMonitorProfileForRecord(record) {
+  if (record.sourceKey === "municipal-meeting-linked") {
+    return sourceMonitorProfiles.find((profile) => profile.key === "municipal-meeting-linked");
+  }
+
+  return sourceMonitorProfiles.find((profile) => profile.key === "municipal-public-records");
+}
+
+function getEarlySignalReason(record) {
+  const stageKey = getRecordStageKey(record);
+
+  if (record.sourceKey === "municipal-meeting-linked") {
+    return "Meeting-linked material can reveal owner direction before formal procurement notices surface.";
+  }
+
+  if (stageKey === "planning") {
+    return "Planning-stage owner updates let AME position before procurement and partner lists harden.";
+  }
+
+  if (stageKey === "funding") {
+    return "Funding movement is an early indicator that scope is getting closer to delivery and partner conversations should start now.";
+  }
+
+  if (stageKey === "monitoring") {
+    return "Monitoring-stage owner updates keep AME close enough to move when the next procurement step appears.";
+  }
+
+  return "This owner-side signal surfaced before broad procurement visibility and is worth monitoring closely.";
+}
+
+function getEarlySignalSortRank(record) {
+  const stageKey = getRecordStageKey(record);
+
+  if (record.sourceKey === "municipal-meeting-linked") return 0;
+  if (stageKey === "planning") return 1;
+  if (stageKey === "funding") return 2;
+  if (stageKey === "monitoring") return 3;
+  return 4;
+}
+
+function getEarlySignalRecords() {
+  return appData.processedRecords
+    .filter((record) => isEarlySignalRecord(record))
+    .sort((left, right) => {
+      const rankDelta = getEarlySignalSortRank(left) - getEarlySignalSortRank(right);
+      if (rankDelta !== 0) return rankDelta;
+      if (right.score !== left.score) return right.score - left.score;
+
+      const leftDate = parseDateValue(getRecordFirstSeenValue(left));
+      const rightDate = parseDateValue(getRecordFirstSeenValue(right));
+      if (!leftDate && !rightDate) return 0;
+      if (!leftDate) return 1;
+      if (!rightDate) return -1;
+      return rightDate.getTime() - leftDate.getTime();
+    });
 }
 
 function getRecordTimingSignals(record) {
@@ -1224,8 +1316,10 @@ function filterRecords({
 function renderTruthStrip() {
   const merxBuckets = getMerxNoticeBuckets();
   const meetingLinkedCount = appData.processedRecords.filter((record) => record.sourceKey === "municipal-meeting-linked").length;
+  const earlySignalCount = getEarlySignalRecords().length;
   const items = [
     ["Signals tracked", appData.processedRecords.length, "Municipal records currently loaded into the board."],
+    ["Early signals", earlySignalCount, "Owner-side signals that surface before broad procurement visibility."],
     ["Priority leads", appData.briefing.totals.priorityCount, "High-fit opportunities scored for AME."],
     ["Meeting-linked docs", meetingLinkedCount, "Council-linked records surfaced before broad market visibility."],
     ["Recent notices", merxBuckets.recent.length, "Recent public procurement notices ready to run through the intake lane."],
@@ -1244,12 +1338,14 @@ function renderShellSnapshot() {
   const merxBuckets = getMerxNoticeBuckets();
   const lastCheckedValue = formatDate(appData.truthModel.lastVerifiedAt || appData.generatedOn);
   const priorityCount = appData.briefing.totals.priorityCount;
+  const earlySignalCount = getEarlySignalRecords().length;
   const latestRunLabel = appData.runLog?.latestRun?.label || "Not yet rebuilt";
 
   if (heroLastRun) heroLastRun.textContent = latestRunLabel;
   if (heroLastChecked) heroLastChecked.textContent = lastCheckedValue;
   if (heroMerxCount) heroMerxCount.textContent = `${merxBuckets.recent.length} Recent Notices`;
   if (heroPriorityCount) heroPriorityCount.textContent = `${priorityCount} Priority Leads`;
+  if (heroEarlyCount) heroEarlyCount.textContent = `${earlySignalCount} Early Signals`;
 }
 
 function renderRunHistory() {
@@ -1351,6 +1447,7 @@ function selectDigestRecord(recordId, shouldScroll = false) {
   renderSignalSteps();
   renderRecordGrid();
   renderSignalInspector();
+  renderEarlySignalRadar();
   if (briefingTable && artifactPreview) {
     setActiveSection("briefing", shouldScroll);
     renderBriefingTable();
@@ -1367,6 +1464,7 @@ function routeSelectedSignalToLeadership(recordId, shouldOpen = true) {
   renderSignalSteps();
   renderRecordGrid();
   renderSignalInspector();
+  renderEarlySignalRadar();
   renderBriefingTable();
   renderArtifact();
   if (shouldOpen) {
@@ -1382,6 +1480,7 @@ function selectRecord(recordId, options = {}) {
   renderSignalSteps();
   renderRecordGrid();
   renderSignalInspector();
+  renderEarlySignalRadar();
   renderBriefingTable();
   renderArtifact();
   if (shouldScroll && state.selectedRecordId && !focusInspector) {
@@ -1506,6 +1605,88 @@ function renderFilterWorkbench() {
     button.addEventListener("click", () => {
       state.priority = button.getAttribute("data-priority-chip");
       rerenderFeed();
+    });
+  });
+}
+
+function renderEarlySignalRadar() {
+  if (!earlySignalGrid || !monitoringSourceGrid) return;
+
+  const earlyRecords = getEarlySignalRecords().slice(0, 5);
+  const merxBuckets = getMerxNoticeBuckets();
+
+  if (!earlyRecords.length) {
+    earlySignalGrid.innerHTML = `
+      <article class="early-signal-card early-signal-card-empty">
+        <p class="section-tag">No early signals</p>
+        <h4>Nothing in the current dataset is classified as an early owner-side signal.</h4>
+        <p class="empty-copy">As soon as planning-stage or meeting-linked records appear, they will surface here automatically.</p>
+      </article>
+    `;
+  } else {
+    earlySignalGrid.innerHTML = earlyRecords.map((record) => {
+      const sourceMeta = getSourceMeta(record.sourceKey);
+      const monitorProfile = getMonitorProfileForRecord(record);
+      const firstSeenLabel = formatDate(getRecordFirstSeenValue(record));
+      const stageLabel = formatDisplayLabel(record.stageLabel);
+      const isActive = record.id === state.selectedRecordId;
+
+      return `
+        <article class="early-signal-card ${sourceMeta.cardClass} ${isActive ? "is-active" : ""}">
+          <div class="card-topline">
+            <span class="source-badge">${esc(sourceMeta.label)}</span>
+            <span class="pill priority-${esc(record.priorityKey)}">${esc(record.priorityLabel)}</span>
+            <span class="pill signal-early">Early Signal</span>
+          </div>
+          <h4>${esc(record.title)}</h4>
+          <p class="record-meta">${esc(record.entity)} - ${esc(record.location)}</p>
+          <p class="record-fact">${esc(getEarlySignalReason(record))}</p>
+          <div class="chip-row">
+            <span class="pill">${esc(stageLabel)}</span>
+            <span class="pill">${esc(monitorProfile.cadenceLabel)}</span>
+            <span class="pill">First Seen ${esc(firstSeenLabel)}</span>
+          </div>
+          <div class="early-signal-card-note">
+            <strong>Monitor:</strong> ${esc(monitorProfile.watchLabel)}
+          </div>
+          <div class="record-inline-actions">
+            <button class="record-inline-link primary compact" type="button" data-early-inspect="${esc(record.id)}">Inspect In Project Signals</button>
+            <a class="record-inline-link compact" href="${esc(record.sourceUrl)}" target="_blank" rel="noreferrer">Open Official Source</a>
+          </div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  monitoringSourceGrid.innerHTML = sourceMonitorProfiles.map((profile) => {
+    const sourceCount = profile.key === "public-notices"
+      ? merxBuckets.recent.length
+      : appData.processedRecords.filter((record) => record.sourceKey === profile.key).length;
+
+    return `
+      <article class="monitoring-source-card">
+        <div class="monitoring-source-head">
+          <p class="detail-label">${esc(profile.label)}</p>
+          <span class="pill signal-date">${esc(profile.cadenceLabel)}</span>
+        </div>
+        <h4>${esc(profile.roleLabel)}</h4>
+        <p class="monitoring-source-copy">${esc(profile.whyEarly)}</p>
+        <div class="monitoring-source-block">
+          <strong>Watch</strong>
+          <span>${esc(profile.watchLabel)}</span>
+        </div>
+        <div class="chip-row">
+          <span class="pill">Live examples ${esc(sourceCount)}</span>
+          <span class="pill">${esc(profile.cadenceLabel)}</span>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  earlySignalGrid.querySelectorAll("[data-early-inspect]").forEach((button) => {
+    button.addEventListener("click", () => {
+      applyQuickFilter({ source: "all", priority: "all", query: "" });
+      selectRecord(button.getAttribute("data-early-inspect"), { shouldScroll: true, focusInspector: true });
     });
   });
 }
@@ -2218,6 +2399,7 @@ function rerenderFeed() {
   renderSignalSteps();
   renderRecordGrid();
   renderSignalInspector();
+  renderEarlySignalRadar();
 }
 
 searchFilter.addEventListener("input", (event) => {
@@ -2281,6 +2463,7 @@ jumpButtons.forEach((button) => {
 renderTruthStrip();
 renderShellSnapshot();
 renderRunHistory();
+renderEarlySignalRadar();
 renderFeaturedCards();
 renderFilterWorkbench();
 renderSignalSteps();
