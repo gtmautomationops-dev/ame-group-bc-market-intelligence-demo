@@ -3220,7 +3220,7 @@ body {
 .guided-tour-card {
   position: fixed;
   z-index: 1802;
-  width: min(380px, calc(100vw - 2rem));
+  width: min(440px, calc(100vw - 2rem));
   padding: 1.1rem 1.1rem 1rem;
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.24);
@@ -3243,7 +3243,8 @@ body {
 }
 
 .guided-tour-body,
-.guided-tour-hint {
+.guided-tour-hint,
+.guided-tour-value {
   margin: 0;
   color: #42566d;
   line-height: 1.55;
@@ -3259,6 +3260,70 @@ body {
   flex-wrap: wrap;
   gap: 0.65rem;
   align-items: center;
+}
+
+.guided-tour-panel-wrap {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.guided-tour-panel {
+  padding: 0.85rem 0.9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 102, 176, 0.12);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.guided-tour-panel-label {
+  margin-bottom: 0.45rem;
+  color: #567088;
+}
+
+.guided-tour-progress {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.guided-tour-progress-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border-radius: 16px;
+  border: 1px solid rgba(11, 28, 48, 0.08);
+  background: rgba(247, 250, 255, 0.78);
+  color: #42566d;
+  text-align: left;
+}
+
+.guided-tour-progress-item.is-active {
+  border-color: rgba(15, 102, 176, 0.18);
+  background: rgba(15, 102, 176, 0.09);
+  color: #0b1c30;
+}
+
+.guided-tour-progress-number {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(11, 28, 48, 0.07);
+  font-weight: 800;
+  color: #0b1c30;
+}
+
+.guided-tour-progress-item.is-active .guided-tour-progress-number {
+  background: rgba(173, 202, 69, 0.22);
+  color: #5a7600;
+}
+
+.guided-tour-progress-copy {
+  font-size: 0.92rem;
+  line-height: 1.25;
 }
 
 .tour-target-active {

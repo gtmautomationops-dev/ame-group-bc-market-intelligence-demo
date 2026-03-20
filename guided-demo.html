@@ -216,17 +216,28 @@
       <p id="guidedTourStep" class="section-tag guided-tour-step">Guided Tour</p>
       <h3 id="guidedTourTitle">Start Guided Tour</h3>
       <p id="guidedTourBody" class="guided-tour-body"></p>
-      <p id="guidedTourHint" class="guided-tour-hint"></p>
+      <div id="guidedTourProgress" class="guided-tour-progress"></div>
+      <div class="guided-tour-panel-wrap">
+        <section class="guided-tour-panel">
+          <p class="section-tag guided-tour-panel-label">Do This Now</p>
+          <p id="guidedTourHint" class="guided-tour-hint"></p>
+        </section>
+        <section class="guided-tour-panel">
+          <p class="section-tag guided-tour-panel-label">Why It Matters</p>
+          <p id="guidedTourValue" class="guided-tour-value"></p>
+        </section>
+      </div>
       <div class="guided-tour-actions">
         <button id="guidedTourBack" class="ghost-button" type="button">Back</button>
+        <button id="guidedTourShowMe" class="ghost-button" type="button">Show Me</button>
         <button id="guidedTourNext" class="primary-button" type="button">Next</button>
         <button id="guidedTourSkip" class="record-inline-link compact" type="button">Skip Tour</button>
       </div>
     </aside>
   </div>
 
-  <script src="data/ame-proof-app-data.js?v=20260319-21"></script>
-  <script src="script.js?v=20260319-21"></script>
-  <script src="guided-tour.js?v=20260319-21"></script>
+  <script src="data/ame-proof-app-data.js?v=20260319-22"></script>
+  <script src="script.js?v=20260319-22"></script>
+  <script src="guided-tour.js?v=20260319-22"></script>
 </body>
 </html>
