@@ -375,6 +375,10 @@
     previewFrame.src = "about:blank";
   }
 
+  function isTourRunning() {
+    return !tourRoot.hidden && tourRoot.classList.contains("is-active");
+  }
+
   function openPreview(url, title) {
     previewLabel.textContent = "Guided Preview";
     previewTitle.textContent = title;
@@ -386,11 +390,15 @@
     return true;
   }
 
-  window.AMEGuidedOpenPagePreview = (url, title = "Preview") => openPreview(url, title);
+  window.AMEGuidedOpenPagePreview = (url, title = "Preview") => {
+    if (!isTourRunning()) return false;
+    return openPreview(url, title);
+  };
 
   function interceptPreviewLinks() {
     document.querySelectorAll(".top-cta-briefing, .top-cta-digest").forEach((link) => {
       link.addEventListener("click", (event) => {
+        if (!isTourRunning()) return;
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
         event.preventDefault();
         openPreview(link.getAttribute("href"), link.textContent.trim());
@@ -690,6 +698,8 @@
   skipButton.addEventListener("click", finishTour);
   previewClose.addEventListener("click", closePreview);
   previewCloseX.addEventListener("click", closePreview);
+
+  closePreview();
 
   window.addEventListener("resize", () => {
     if (state.currentTarget && !tourRoot.hidden) {

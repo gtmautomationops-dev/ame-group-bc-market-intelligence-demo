@@ -3265,6 +3265,11 @@ body {
   display: none !important;
 }
 
+.guided-tour-layer[hidden],
+.guided-preview-modal[hidden] {
+  display: none !important;
+}
+
 .guided-tour-actions .primary-button:disabled {
   opacity: 0.38;
 }
