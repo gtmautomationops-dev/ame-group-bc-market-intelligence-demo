@@ -790,6 +790,13 @@ h2 {
   color: var(--ink);
 }
 
+.source-badge:not(.chip-button),
+.pill:not(.chip-button) {
+  border-radius: 10px;
+  padding: 0.38rem 0.68rem;
+  font-weight: 700;
+}
+
 .chip-button {
   cursor: pointer;
   transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
