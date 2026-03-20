@@ -1072,10 +1072,23 @@
     const leadCards = Array.from(document.querySelectorAll(".brief-card[data-lead-id]"));
     const loadButtons = Array.from(document.querySelectorAll(".js-load-lead"));
 
+    function getLeadParam() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("lead") || "";
+      } catch (error) {
+        return "";
+      }
+    }
+
+    const routeLeadId = getLeadParam();
     let selectedLeadId = executiveLeads[0] ? executiveLeads[0].id : "";
+    if (routeLeadId && executiveLeads.some(function (lead) { return lead.id === routeLeadId; })) {
+      selectedLeadId = routeLeadId;
+    }
     try {
       const storedLeadId = window.localStorage.getItem(storedExecutiveLeadKey);
-      if (storedLeadId && executiveLeads.some(function (lead) { return lead.id === storedLeadId; })) {
+      if (!routeLeadId && storedLeadId && executiveLeads.some(function (lead) { return lead.id === storedLeadId; })) {
         selectedLeadId = storedLeadId;
       }
     } catch (error) {

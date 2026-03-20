@@ -449,12 +449,25 @@
       }
     }
 
-    function openLeadershipBrief(recordId) {
+    function getLeadParam() {
       try {
-        if (recordId) window.localStorage.setItem(executiveStorageKey, recordId);
+        const params = new URLSearchParams(window.location.search);
+        return params.get("lead") || "";
+      } catch (error) {
+        return "";
+      }
+    }
+
+    function openLeadershipBrief(recordId) {
+      const targetRecordId = recordId || activeRecordId || "";
+      try {
+        if (targetRecordId) window.localStorage.setItem(executiveStorageKey, targetRecordId);
       } catch (error) {
       }
-      window.open(leadershipBriefUrl, "_blank", "noopener,noreferrer");
+      const url = targetRecordId
+        ? leadershipBriefUrl + "?lead=" + encodeURIComponent(targetRecordId)
+        : leadershipBriefUrl;
+      window.open(url, "_blank", "noopener,noreferrer");
     }
 
     function getRecordByTitle(title) {
@@ -482,15 +495,23 @@
         return collection.findIndex(function (item) { return item.id === record.id; }) === index;
       });
 
-    let activeRecordId = defaultDigestRecordId;
+    const routeLeadId = getLeadParam();
+    let activeRecordId = routeLeadId || defaultDigestRecordId;
     try {
-      activeRecordId = window.localStorage.getItem(storageKey) || defaultDigestRecordId;
+      activeRecordId = routeLeadId || window.localStorage.getItem(storageKey) || defaultDigestRecordId;
     } catch (error) {
-      activeRecordId = defaultDigestRecordId;
+      activeRecordId = routeLeadId || defaultDigestRecordId;
     }
 
     if (!digestRecords.some(function (record) { return record.id === activeRecordId; })) {
       activeRecordId = digestRecords[0] ? digestRecords[0].id : null;
+    }
+
+    if (routeLeadId && activeRecordId === routeLeadId) {
+      try {
+        window.localStorage.setItem(storageKey, routeLeadId);
+      } catch (error) {
+      }
     }
 
     function renderQueueSummary() {

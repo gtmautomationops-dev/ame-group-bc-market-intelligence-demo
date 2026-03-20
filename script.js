@@ -329,11 +329,13 @@ const state = {
   activeSection: "feed",
   selectedRecordId: null,
   digestRecordId: initialDigestRecord?.id || null,
+  signalRouteTarget: "",
   workflowId: verifiedWorkflows[0]?.id || null,
   workflowStage: "raw",
   playTimer: null,
   selectedMerxNoticeId: null,
   merxAnalyzed: false,
+  merxRouteTarget: "",
 };
 
 const truthStrip = document.getElementById("truthStrip");
@@ -598,21 +600,30 @@ function getStoredTransientLead() {
   }
 }
 
-function openMorningDigestPage() {
+function buildRouteUrl(baseUrl, recordId) {
+  if (!recordId) return baseUrl;
+  const separator = baseUrl.includes("?") ? "&" : "?";
+  return `${baseUrl}${separator}lead=${encodeURIComponent(recordId)}`;
+}
+
+function openMorningDigestPage(recordId = state.digestRecordId) {
+  if (recordId) persistDigestRecord(recordId);
+  const digestUrl = buildRouteUrl(MORNING_DIGEST_URL, recordId);
   if (typeof window.AMEGuidedOpenPagePreview === "function") {
-    const handled = window.AMEGuidedOpenPagePreview(MORNING_DIGEST_URL, "Morning Digest");
+    const handled = window.AMEGuidedOpenPagePreview(digestUrl, "Morning Digest");
     if (handled) return;
   }
-  window.open(MORNING_DIGEST_URL, "_blank", "noopener,noreferrer");
+  window.open(digestUrl, "_blank", "noopener,noreferrer");
 }
 
 function openLeadershipBriefPage(recordId = state.digestRecordId) {
   if (recordId) persistExecutiveLead(recordId);
+  const briefingUrl = buildRouteUrl(LEADERSHIP_BRIEF_URL, recordId);
   if (typeof window.AMEGuidedOpenPagePreview === "function") {
-    const handled = window.AMEGuidedOpenPagePreview(LEADERSHIP_BRIEF_URL, "Leadership Brief");
+    const handled = window.AMEGuidedOpenPagePreview(briefingUrl, "Leadership Brief");
     if (handled) return;
   }
-  window.open(LEADERSHIP_BRIEF_URL, "_blank", "noopener,noreferrer");
+  window.open(briefingUrl, "_blank", "noopener,noreferrer");
 }
 
 function flashPanel(element) {
@@ -667,8 +678,38 @@ function getScoreDrivers(record) {
   return drivers;
 }
 
+function getSignalRouteStepState() {
+  if (!state.selectedRecordId) {
+    return {
+      detail: "Ready after inspection",
+      status: "",
+    };
+  }
+
+  if (state.signalRouteTarget === "leadership") {
+    return {
+      detail: "Leadership brief routed",
+      status: "is-complete",
+    };
+  }
+
+  if (state.signalRouteTarget === "digest" && state.digestRecordId === state.selectedRecordId) {
+    return {
+      detail: "Morning digest updated",
+      status: "is-complete",
+    };
+  }
+
+  return {
+    detail: "Choose Morning Digest or Leadership Brief",
+    status: "is-active",
+  };
+}
+
 function renderSignalSteps() {
   if (!signalSteps) return;
+
+  const routeStep = getSignalRouteStepState();
 
   const steps = [
     {
@@ -679,12 +720,12 @@ function renderSignalSteps() {
     {
       label: "Inspect Evidence",
       detail: state.selectedRecordId ? "Inspector populated" : "Waiting for selection",
-      status: state.selectedRecordId ? "is-active" : "",
+      status: state.selectedRecordId ? "is-complete" : "",
     },
     {
-      label: "Send To Digest",
-      detail: state.selectedRecordId && state.digestRecordId === state.selectedRecordId ? "Digest updated" : "Ready when selected",
-      status: state.selectedRecordId && state.digestRecordId === state.selectedRecordId ? "is-complete" : "",
+      label: "Route To Morning Digest / Leadership Brief",
+      detail: routeStep.detail,
+      status: routeStep.status,
     },
   ];
 
@@ -786,8 +827,9 @@ function renderSignalInspector() {
         <ul class="detail-list">${evidenceItems}</ul>
       </details>
       <div class="record-inline-actions">
-        <a class="record-inline-link primary" href="${esc(record.sourceUrl)}" target="_blank" rel="noreferrer">Open Official Source</a>
-        <button class="record-inline-link" type="button" data-open-digest="${esc(record.id)}">Send To Morning Digest</button>
+        <a class="record-inline-link action-blue" href="${esc(record.sourceUrl)}" target="_blank" rel="noreferrer" data-source-proof-inspector="${esc(record.id)}">Open Official Source</a>
+        <button class="record-inline-link action-grey" type="button" data-open-digest="${esc(record.id)}">Send To Morning Digest</button>
+        <button class="record-inline-link action-green" type="button" data-open-brief="${esc(record.id)}">Route To Leadership Brief</button>
       </div>
     </article>
   `;
@@ -797,12 +839,19 @@ function renderSignalInspector() {
       selectDigestRecord(button.getAttribute("data-open-digest"), true);
     });
   });
+
+  signalInspector.querySelectorAll("[data-open-brief]").forEach((button) => {
+    button.addEventListener("click", () => {
+      routeSelectedSignalToLeadership(button.getAttribute("data-open-brief"), true);
+    });
+  });
 }
 
 function renderMerxSteps() {
   if (!merxSteps) return;
 
   const hasNotice = Boolean(state.selectedMerxNoticeId);
+  const hasRoute = Boolean(state.merxRouteTarget);
   const steps = [
     {
       label: "Select Notice",
@@ -818,6 +867,17 @@ function renderMerxSteps() {
       label: "Generate Recommendation",
       detail: state.merxAnalyzed ? "AME recommendation built" : (hasNotice ? "Click Generate Recommendation" : "Waiting for notice"),
       status: state.merxAnalyzed ? "is-complete" : (hasNotice ? "is-active" : ""),
+    },
+    {
+      label: "Route To Morning Digest / Leadership Brief",
+      detail: !state.merxAnalyzed
+        ? "Ready after recommendation"
+        : (state.merxRouteTarget === "leadership"
+          ? "Leadership brief routed"
+          : (state.merxRouteTarget === "digest"
+            ? "Morning digest updated"
+            : "Choose Morning Digest or Leadership Brief")),
+      status: hasRoute ? "is-complete" : (state.merxAnalyzed ? "is-active" : ""),
     },
   ];
 
@@ -977,10 +1037,13 @@ function routeMerxLead(destination = "digest") {
   if (!transientLead) return;
 
   state.digestRecordId = transientLead.id;
+  state.merxRouteTarget = destination;
   persistTransientLead(transientLead);
   persistDigestRecord(transientLead.id);
   persistExecutiveLead(transientLead.id);
   renderSignalSteps();
+  renderMerxSteps();
+  renderMerxResult();
   renderArtifact();
 
   if (destination === "leadership") {
@@ -988,7 +1051,7 @@ function routeMerxLead(destination = "digest") {
     return;
   }
 
-  openMorningDigestPage();
+  openMorningDigestPage(transientLead.id);
 }
 
 function getPriorityBadge(score) {
@@ -1282,6 +1345,7 @@ function setActiveSection(section, shouldScroll = true) {
 function selectDigestRecord(recordId, shouldScroll = false) {
   state.selectedRecordId = recordId;
   state.digestRecordId = recordId;
+  state.signalRouteTarget = "digest";
   persistDigestRecord(recordId);
   persistExecutiveLead(recordId);
   renderSignalSteps();
@@ -1292,13 +1356,28 @@ function selectDigestRecord(recordId, shouldScroll = false) {
     renderBriefingTable();
     renderArtifact();
   } else if (shouldScroll) {
-    openMorningDigestPage();
+    openMorningDigestPage(recordId);
+  }
+}
+
+function routeSelectedSignalToLeadership(recordId, shouldOpen = true) {
+  state.selectedRecordId = recordId;
+  state.signalRouteTarget = "leadership";
+  persistExecutiveLead(recordId);
+  renderSignalSteps();
+  renderRecordGrid();
+  renderSignalInspector();
+  renderBriefingTable();
+  renderArtifact();
+  if (shouldOpen) {
+    openLeadershipBriefPage(recordId);
   }
 }
 
 function selectRecord(recordId, options = {}) {
   const { shouldScroll = false, focusInspector = false } = options;
   state.selectedRecordId = recordId;
+  state.signalRouteTarget = recordId === state.digestRecordId ? "digest" : "";
   setActiveSection("feed", shouldScroll);
   renderSignalSteps();
   renderRecordGrid();
@@ -1482,7 +1561,7 @@ function renderRecordGrid() {
         </div>
         <div class="record-card-actions">
           <button class="record-inline-link primary compact" type="button" data-inspect-record="${esc(record.id)}">Inspect Signal</button>
-          <a class="record-inline-link compact" href="${esc(record.sourceUrl)}" target="_blank" rel="noreferrer">Open Source</a>
+          <a class="record-inline-link compact" href="${esc(record.sourceUrl)}" target="_blank" rel="noreferrer" data-source-proof-card="${esc(record.id)}">Open Source</a>
         </div>
       </article>
     `;
@@ -1748,6 +1827,7 @@ function renderMerxOptions() {
     button.addEventListener("click", () => {
       state.selectedMerxNoticeId = button.getAttribute("data-merx-notice");
       state.merxAnalyzed = false;
+      state.merxRouteTarget = "";
       renderMerxOptions();
       renderMerxSteps();
       renderMerxRaw();
@@ -1786,7 +1866,7 @@ function renderMerxRaw() {
       <p class="detail-label">Notice summary</p>
       <p>${esc(notice.summary)}</p>
       <p class="detail-note">${esc(noticeState.explainer)}</p>
-      <a class="detail-link" href="${esc(notice.sourceUrl)}" target="_blank" rel="noreferrer">Open source notice</a>
+      <a class="detail-link" href="${esc(notice.sourceUrl)}" target="_blank" rel="noreferrer" data-source-proof-merx-raw="${esc(notice.id)}">Open source notice</a>
     </div>
     <details class="merx-details">
       <summary>Show Raw Imported Notice (the exact notice text pulled into the intake)</summary>
@@ -1928,9 +2008,9 @@ function renderMerxResult() {
     <div class="detail-block">
       <p class="detail-label">Source backing this notice</p>
       <div class="record-inline-actions">
-        <a class="digest-link" href="${esc(parsed.sourceUrl || notice.sourceUrl)}" target="_blank" rel="noreferrer">Open public source notice</a>
-        <button class="digest-link digest-link-primary" type="button" data-route-merx="digest">Send To Morning Digest</button>
-        <button class="digest-link" type="button" data-route-merx="leadership">Route To Leadership Brief</button>
+        <a class="record-inline-link action-blue" href="${esc(parsed.sourceUrl || notice.sourceUrl)}" target="_blank" rel="noreferrer" data-source-proof-merx="${esc(notice.id)}">Open Official Source</a>
+        <button class="record-inline-link action-grey" type="button" data-route-merx="digest">Send To Morning Digest</button>
+        <button class="record-inline-link action-green" type="button" data-route-merx="leadership">Route To Leadership Brief</button>
       </div>
     </div>
     <div class="detail-block merx-note">
@@ -2177,6 +2257,7 @@ classifyMerx.addEventListener("click", () => {
 clearMerx.addEventListener("click", () => {
   state.selectedMerxNoticeId = null;
   state.merxAnalyzed = false;
+  state.merxRouteTarget = "";
   renderMerxOptions();
   renderMerxSteps();
   renderMerxRaw();
