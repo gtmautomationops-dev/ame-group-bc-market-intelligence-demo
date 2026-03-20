@@ -785,6 +785,7 @@ h2 {
   color: var(--ink);
   text-decoration: none;
   font-weight: 600;
+  cursor: pointer;
   transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, background 150ms ease, color 150ms ease;
 }
 
@@ -1187,6 +1188,7 @@ h2 {
   background: rgba(173, 202, 69, 0.2);
   color: #5e7000;
   font-weight: 700;
+  cursor: pointer;
 }
 
 .digest-link-primary {
