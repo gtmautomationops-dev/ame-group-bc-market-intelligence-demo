@@ -4,6 +4,7 @@ const LEADERSHIP_BRIEF_URL = "artifacts/ame-proof-daily-briefing.html";
 const DIGEST_RECORD_STORAGE_KEY = "ameDigestRecordId";
 const EXECUTIVE_LEAD_STORAGE_KEY = "ameExecutiveLeadId";
 const TRANSIENT_LEAD_STORAGE_KEY = "ameTransientDigestLead";
+const BCBID_BROWSE_URL = "https://bcbid.gov.bc.ca/page.aspx/en/rfp/request_browse_public";
 
 if (!appData) {
   document.body.innerHTML = `
@@ -336,6 +337,158 @@ const realImportNotices = [
   },
 ];
 
+const bcBidSnapshot = {
+  checkedAtLabel: "Mar 20, 2026",
+  checkedAtDetail: "Live snapshot checked from the BC Bid public browse page on Mar 20, 2026.",
+  newest: [
+    {
+      id: "226887",
+      title: "RFI-2026-03-20-CRE Residential Rental",
+      commodity: "Request for Information",
+      opportunityType: "Request for Information (BPS)",
+      issueDate: "2026-03-20 3:08:07 PM",
+      closeDate: "2026-03-30 4:30:00 PM",
+      issuingOrganization: "Northern Health Authority",
+      location: "Northern BC",
+      summary: "Current public-browse example showing a same-day BC Bid posting from Northern Health.",
+      sourceUrl: BCBID_BROWSE_URL,
+      sourceMode: "latest",
+    },
+    {
+      id: "8557P",
+      title: "Property Management Service for Childcare Facilities",
+      commodity: "Property management services",
+      opportunityType: "Request for Proposal (BPS)",
+      issueDate: "2026-03-20 3:00:00 PM",
+      closeDate: "2026-04-17 3:00:00 PM",
+      issuingOrganization: "City of Richmond",
+      location: "Richmond, BC",
+      summary: "A fresh owner-side facilities opportunity posted on BC Bid the same day as the live snapshot.",
+      sourceUrl: BCBID_BROWSE_URL,
+      sourceMode: "latest",
+    },
+    {
+      id: "226712",
+      title: "Emergency Equipment Outfitting for Vancouver Fire Rescue Services Battalion Chief Vehicles",
+      commodity: "Emergency equipment outfitting",
+      opportunityType: "Request for Proposal (BPS)",
+      issueDate: "2026-03-20 3:00:00 PM",
+      closeDate: "2026-04-20 3:00:00 PM",
+      issuingOrganization: "City of Vancouver",
+      location: "Vancouver, BC",
+      summary: "A current City of Vancouver public posting included here to prove the platform can surface truly new BC Bid activity.",
+      sourceUrl: BCBID_BROWSE_URL,
+      sourceMode: "latest",
+    },
+    {
+      id: "226886",
+      title: "Secure E-Device for E-Service's and Electronic Disclosure",
+      commodity: "Notice of Intent",
+      opportunityType: "Notice of Intent",
+      issueDate: "2026-03-20 2:50:13 PM",
+      closeDate: "2026-03-30 3:30:00 PM",
+      issuingOrganization: "Ministry of Public Safety and Solicitor General",
+      location: "Victoria, BC",
+      summary: "A same-day provincial posting that demonstrates freshness even when the opportunity is not an AME fit.",
+      sourceUrl: BCBID_BROWSE_URL,
+      sourceMode: "latest",
+    },
+    {
+      id: "2026-P010",
+      title: "Rose Valley Dam Spillway Options Assessment Phase 2",
+      commodity: "Engineering and infrastructure assessment",
+      opportunityType: "Request for Proposal (BPS)",
+      issueDate: "2026-03-20 2:00:11 PM",
+      closeDate: "2026-04-16 2:00:00 PM",
+      issuingOrganization: "City of West Kelowna",
+      location: "West Kelowna, BC",
+      summary: "A live municipal engineering assessment example from the newest BC Bid public list.",
+      sourceUrl: BCBID_BROWSE_URL,
+      sourceMode: "latest",
+    },
+    {
+      id: "226709",
+      title: "PA26007 - Supply of Software-as-a-Service (SaaS) Subscriptions",
+      commodity: "Software subscriptions",
+      opportunityType: "Request for Quotation (BPS)",
+      issueDate: "2026-03-20 2:00:00 PM",
+      closeDate: "2026-04-03 2:00:00 PM",
+      issuingOrganization: "Capital Regional District",
+      location: "Victoria, BC",
+      summary: "A current CRD posting that stays in the watch section as a low-fit control example.",
+      sourceUrl: BCBID_BROWSE_URL,
+      sourceMode: "latest",
+    },
+  ],
+  boiler: [
+    {
+      id: "224762",
+      title: "ITT 24414-M Harry Sayers Elementary Boiler Plant Upgrade",
+      commodity: "Boilers",
+      opportunityType: "Request for Proposal (BPS)",
+      issueDate: "2026-02-06 1:32:37 PM",
+      closeDate: "2026-03-25 2:00:00 PM",
+      issuingOrganization: "School District 34 Abbotsford",
+      location: "Abbotsford, BC",
+      summary: "Boiler plant upgrade opportunity surfaced from a live BC Bid keyword search for boiler.",
+      sourceUrl: "https://bcbid.gov.bc.ca/page.aspx/en/bpm/process_manage_extranet/226882",
+      sourceMode: "keyword",
+    },
+    {
+      id: "226317",
+      title: "ITT-2026-003 Glenrosa Middle School Chiller & Boiler Upgrade",
+      commodity: "Boiler maintenance service",
+      opportunityType: "Invitation to Tender (BPS)",
+      issueDate: "2026-03-10 1:32:45 PM",
+      closeDate: "2026-03-26 2:00:00 PM",
+      issuingOrganization: "School District 23 Central Okanagan",
+      location: "West Kelowna, BC",
+      summary: "Chiller and boiler upgrade opportunity captured when the watch term boiler is used on BC Bid.",
+      sourceUrl: "https://bcbid.gov.bc.ca/page.aspx/en/bpm/process_manage_extranet/226317",
+      sourceMode: "keyword",
+    },
+    {
+      id: "225445",
+      title: "26 - 02 Boiler Replacement LCS",
+      commodity: "Boilers",
+      opportunityType: "Negotiated Request for Proposal (BPS)",
+      issueDate: "2026-02-20 11:35:00 AM",
+      closeDate: "2026-03-25 2:00:00 PM",
+      issuingOrganization: "School District 79 Cowichan Valley",
+      location: "Cowichan Valley, BC",
+      summary: "A live boiler replacement procurement example from the BC Bid public browse search results.",
+      sourceUrl: "https://bcbid.gov.bc.ca/page.aspx/en/bpm/process_manage_extranet/225445",
+      sourceMode: "keyword",
+    },
+    {
+      id: "225543",
+      title: "6213 Sema:th Boiler Upgrade (24403-M)",
+      commodity: "Boilers",
+      opportunityType: "Request for Quotation (BPS)",
+      issueDate: "2026-02-23 2:55:28 PM",
+      closeDate: "2026-03-24 2:00:00 PM",
+      issuingOrganization: "School District 34 Abbotsford",
+      location: "Abbotsford, BC",
+      summary: "A second Abbotsford boiler opportunity that proves the keyword watch can surface a cluster of related work.",
+      sourceUrl: "https://bcbid.gov.bc.ca/page.aspx/en/bpm/process_manage_extranet/226098",
+      sourceMode: "keyword",
+    },
+    {
+      id: "225310",
+      title: "E260-00 VGH Willow Boilers Replacement",
+      commodity: "Hospital construction service",
+      opportunityType: "Invitation to Tender (BPS)",
+      issueDate: "2026-02-18 1:09:32 PM",
+      closeDate: "2026-03-31 3:00:00 PM",
+      issuingOrganization: "Fraser Health Authority / Vancouver Coastal Health Authority",
+      location: "Vancouver, BC",
+      summary: "Hospital boilers replacement opportunity that shows how a boiler query can surface health-sector work, not only schools.",
+      sourceUrl: "https://bcbid.gov.bc.ca/page.aspx/en/bpm/process_manage_extranet/225310",
+      sourceMode: "keyword",
+    },
+  ],
+};
+
 const verifiedWorkflows = appData.proofWorkflows.filter((workflow) => workflow.verificationStatus === "verified-public");
 const featuredRecords = [...appData.processedRecords]
   .sort((left, right) => {
@@ -355,6 +508,9 @@ const state = {
   query: "",
   activeSection: "feed",
   selectedRecordId: null,
+  selectedBcbidOpportunityId: null,
+  bcbidAnalyzed: false,
+  bcbidRouteTarget: "",
   digestRecordId: initialDigestRecord?.id || null,
   signalRouteTarget: "",
   workflowId: verifiedWorkflows[0]?.id || null,
@@ -373,6 +529,12 @@ const filterStatus = document.getElementById("filterStatus");
 const recordGrid = document.getElementById("recordGrid");
 const signalInspector = document.getElementById("signalInspector");
 const signalSteps = document.getElementById("signalSteps");
+const bcbidOptions = document.getElementById("bcbidOptions");
+const bcbidFields = document.getElementById("bcbidFields");
+const bcbidResult = document.getElementById("bcbidResult");
+const bcbidSteps = document.getElementById("bcbidSteps");
+const bcbidStatus = document.getElementById("bcbidStatus");
+const showBcbidBoiler = document.getElementById("showBcbidBoiler");
 const artifactPreview = document.getElementById("artifactPreview");
 const workflowSelect = document.getElementById("workflowSelect");
 const stageButtons = document.getElementById("stageButtons");
@@ -633,6 +795,86 @@ function getMerxNoticeBuckets() {
     }
     return buckets;
   }, { recent: [], reference: [] });
+}
+
+function getBcbidSourceGroups() {
+  return [
+    {
+      key: "newest",
+      title: "Newest public opportunities",
+      copy: "Fresh examples pulled from the public browse page to prove the watch surface is current.",
+      records: bcBidSnapshot.newest,
+    },
+    {
+      key: "boiler",
+      title: "Boiler keyword watch",
+      copy: "This is what the platform can surface when the watch term boiler is used against the public BC Bid page.",
+      records: bcBidSnapshot.boiler,
+    },
+  ];
+}
+
+function matchesBcbidQuery(record, query) {
+  if (!query) return true;
+
+  const haystack = [
+    record.id,
+    record.title,
+    record.commodity,
+    record.opportunityType,
+    record.issuingOrganization,
+    record.location,
+    record.summary,
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  return haystack.includes(query);
+}
+
+function getAllBcbidRecords() {
+  const collection = new Map();
+
+  getBcbidSourceGroups().forEach((group) => {
+    group.records.forEach((record) => {
+      const existing = collection.get(record.id);
+      if (existing) {
+        existing.groupKeys = [...new Set([...(existing.groupKeys || []), group.key])];
+      } else {
+        collection.set(record.id, { ...record, groupKeys: [group.key] });
+      }
+    });
+  });
+
+  return [...collection.values()];
+}
+
+function getFilteredBcbidGroups(query = state.query.trim().toLowerCase()) {
+  return getBcbidSourceGroups()
+    .map((group) => ({
+      ...group,
+      records: group.records.filter((record) => matchesBcbidQuery(record, query)),
+    }))
+    .filter((group) => group.records.length);
+}
+
+function getActiveBcbidRecord() {
+  return getAllBcbidRecords().find((record) => record.id === state.selectedBcbidOpportunityId) || null;
+}
+
+function getBcbidAnalysisText(record) {
+  return [
+    record.title,
+    record.commodity,
+    record.opportunityType,
+    record.issuingOrganization,
+    record.location,
+    record.summary,
+  ].join(" | ");
+}
+
+function getBcbidDisplaySource(record) {
+  return record.sourceMode === "keyword" ? "BC Bid keyword watch" : "BC Bid newest-opportunity snapshot";
 }
 
 function inferLocationFromText(text) {
@@ -1124,6 +1366,49 @@ function buildMerxTransientLead() {
   };
 }
 
+function buildBcbidTransientLead() {
+  const record = getActiveBcbidRecord();
+  if (!record) return null;
+
+  const analysis = analyzeText(getBcbidAnalysisText(record), "procurement", "merx_import");
+  const displayHits = formatDisplayList(analysis.hits);
+
+  return {
+    id: `bcbid-${record.id}`,
+    title: record.title,
+    entity: record.issuingOrganization,
+    location: record.location,
+    priorityKey: analysis.priorityKey,
+    priorityLabel: analysis.priorityLabel,
+    score: analysis.score,
+    stageLabel: "procurement",
+    assetType: displayHits.some((item) => /(Boiler|Chiller|Mechanical|HVAC|Cooling Coil)/.test(item))
+      ? "Mechanical Systems"
+      : "Public Procurement Notice",
+    summary: record.summary,
+    sourceExcerpt: record.summary,
+    whyItMatters: record.sourceMode === "keyword"
+      ? `Live BC Bid keyword-watch result showing how a search like boiler surfaces public procurement signals AME can qualify quickly.`
+      : `Live BC Bid newest-opportunity snapshot showing the platform can surface current public opportunities, not only older saved examples.`,
+    action: analysis.action,
+    goToMarketPlay: "Use the live public signal to qualify fit quickly, then decide whether it belongs in AME's daily triage or leadership routing.",
+    estimatedScope: record.summary,
+    classification: analysis.classification,
+    sourceKey: "merx-import",
+    sourceUrl: record.sourceUrl,
+    keywordHits: analysis.hits,
+    ameServiceLines: analysis.serviceLines,
+    evidence: [
+      `${getBcbidDisplaySource(record)} checked on ${bcBidSnapshot.checkedAtLabel}.`,
+      `Organization: ${record.issuingOrganization} | Location: ${record.location}.`,
+      `Issue: ${record.issueDate} | Close: ${record.closeDate}.`,
+    ],
+    sourceLabel: "BC Bid Watch",
+    recommendedOffice: getRecommendedOfficeName(record.location),
+    noticeState: record.sourceMode === "keyword" ? "Keyword watch match" : "Newest BC Bid example",
+  };
+}
+
 function routeMerxLead(destination = "digest") {
   const transientLead = buildMerxTransientLead();
   if (!transientLead) return;
@@ -1137,6 +1422,26 @@ function routeMerxLead(destination = "digest") {
   renderMerxSteps();
   renderMerxResult();
   renderArtifact();
+
+  if (destination === "leadership") {
+    openLeadershipBriefPage(transientLead.id);
+    return;
+  }
+
+  openMorningDigestPage(transientLead.id);
+}
+
+function routeBcbidLead(destination = "digest") {
+  const transientLead = buildBcbidTransientLead();
+  if (!transientLead) return;
+
+  state.digestRecordId = transientLead.id;
+  state.bcbidRouteTarget = destination;
+  persistTransientLead(transientLead);
+  persistDigestRecord(transientLead.id);
+  persistExecutiveLead(transientLead.id);
+  renderBcbidSteps();
+  renderBcbidResult();
 
   if (destination === "leadership") {
     openLeadershipBriefPage(transientLead.id);
@@ -1319,6 +1624,7 @@ function renderTruthStrip() {
   const earlySignalCount = getEarlySignalRecords().length;
   const items = [
     ["Signals tracked", appData.processedRecords.length, "Municipal records currently loaded into the board."],
+    ["BC Bid watch", getAllBcbidRecords().length, "Current public-browse snapshot plus a live boiler keyword watch."],
     ["Early signals", earlySignalCount, "Owner-side signals that surface before broad procurement visibility."],
     ["Priority leads", appData.briefing.totals.priorityCount, "High-fit opportunities scored for AME."],
     ["Meeting-linked docs", meetingLinkedCount, "Council-linked records surfaced before broad market visibility."],
@@ -1343,7 +1649,7 @@ function renderShellSnapshot() {
 
   if (heroLastRun) heroLastRun.textContent = latestRunLabel;
   if (heroLastChecked) heroLastChecked.textContent = lastCheckedValue;
-  if (heroMerxCount) heroMerxCount.textContent = `${merxBuckets.recent.length} Recent Notices`;
+  if (heroMerxCount) heroMerxCount.textContent = `${merxBuckets.recent.length} MERX / ${bcBidSnapshot.newest.length} BC Bid`;
   if (heroPriorityCount) heroPriorityCount.textContent = `${priorityCount} Priority Leads`;
   if (heroEarlyCount) heroEarlyCount.textContent = `${earlySignalCount} Early Signals`;
 }
@@ -2211,6 +2517,263 @@ function renderMerxResult() {
   });
 }
 
+function renderBcbidSteps() {
+  if (!bcbidSteps) return;
+
+  const hasSelection = Boolean(state.selectedBcbidOpportunityId);
+  const hasRoute = Boolean(state.bcbidRouteTarget);
+  const steps = [
+    {
+      label: "Select BC Bid Opportunity",
+      detail: hasSelection ? "Opportunity loaded" : "Choose a current public opportunity",
+      status: hasSelection ? "is-complete" : "is-active",
+    },
+    {
+      label: "Review Snapshot",
+      detail: hasSelection ? "Fields extracted" : "Waiting for selection",
+      status: hasSelection ? "is-complete" : "",
+    },
+    {
+      label: "Generate Recommendation",
+      detail: state.bcbidAnalyzed ? "AME recommendation built" : (hasSelection ? "Click Generate Recommendation" : "Waiting for selection"),
+      status: state.bcbidAnalyzed ? "is-complete" : (hasSelection ? "is-active" : ""),
+    },
+    {
+      label: "Route To Morning Digest / Leadership Brief",
+      detail: !state.bcbidAnalyzed
+        ? "Ready after recommendation"
+        : (state.bcbidRouteTarget === "leadership"
+          ? "Leadership brief routed"
+          : (state.bcbidRouteTarget === "digest"
+            ? "Morning digest updated"
+            : "Choose Morning Digest or Leadership Brief")),
+      status: hasRoute ? "is-complete" : (state.bcbidAnalyzed ? "is-active" : ""),
+    },
+  ];
+
+  bcbidSteps.innerHTML = steps.map((step, index) => `
+    <article class="flow-pill-card ${step.status}">
+      <span class="flow-pill-number">${index + 1}</span>
+      <div class="flow-pill-copy">
+        <strong>${esc(step.label)}</strong>
+        <span>${esc(step.detail)}</span>
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderBcbidOptions() {
+  if (!bcbidOptions) return;
+
+  const query = state.query.trim().toLowerCase();
+  const groups = getFilteredBcbidGroups(query);
+
+  if (bcbidStatus) {
+    if (!query) {
+      bcbidStatus.textContent = `Newest public opportunities plus a live boiler keyword watch from BC Bid, checked ${bcBidSnapshot.checkedAtLabel}.`;
+    } else {
+      const total = groups.reduce((sum, group) => sum + group.records.length, 0);
+      bcbidStatus.textContent = `${total} BC Bid result${total === 1 ? "" : "s"} match "${query}".`;
+    }
+  }
+
+  if (!groups.length) {
+    bcbidOptions.innerHTML = `
+      <article class="record-card record-card-empty">
+        <p class="section-tag">No BC Bid matches</p>
+        <h4 class="empty-title">No current BC Bid opportunities match this search.</h4>
+        <p class="empty-copy">Try a broader term like mechanical, pool, boiler, or Richmond.</p>
+      </article>
+    `;
+    return;
+  }
+
+  bcbidOptions.innerHTML = groups.map((group) => `
+    <section class="merx-library-group">
+      <div class="merx-group-head">
+        <div>
+          <p class="detail-label">${esc(group.title)}</p>
+          <p class="empty-copy">${esc(group.copy)}</p>
+        </div>
+        <span class="pill ${group.key === "boiler" ? "signal-verified" : "signal-date"}">${esc(group.records.length)}</span>
+      </div>
+      <div class="merx-group-list">
+        ${group.records.map((record) => {
+          const isActive = record.id === state.selectedBcbidOpportunityId;
+          const analysis = analyzeText(getBcbidAnalysisText(record), "procurement", "merx_import");
+          const primaryService = analysis.serviceLines[0] || "General Review";
+          const stateLabel = record.sourceMode === "keyword" ? "Boiler watch match" : "Newest example";
+          const stateTone = record.sourceMode === "keyword" ? "signal-verified" : "signal-date";
+
+          return `
+            <button class="merx-demo-card ${isActive ? "is-active" : ""}" type="button" data-bcbid-record="${esc(record.id)}">
+              <p class="section-tag">${esc(stateLabel)}</p>
+              <h4>${esc(record.title)}</h4>
+              <p class="merx-meta">${esc(record.issuingOrganization)} | ${esc(record.location)}</p>
+              <p class="merx-summary">${esc(record.summary)}</p>
+              <div class="chip-row">
+                <span class="pill priority-${esc(analysis.priorityKey)}">${esc(analysis.priorityLabel)}</span>
+                <span class="pill">Score ${esc(analysis.score)}</span>
+                <span class="pill">${esc(formatDisplayLabel(primaryService))}</span>
+              </div>
+              <div class="merx-card-footer">
+                <span class="pill ${stateTone}">${esc(formatDate(record.closeDate))}</span>
+                <span class="merx-card-action">${isActive ? "Selected" : "Select Opportunity"}</span>
+              </div>
+            </button>
+          `;
+        }).join("")}
+      </div>
+    </section>
+  `).join("");
+
+  bcbidOptions.querySelectorAll("[data-bcbid-record]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.selectedBcbidOpportunityId = button.getAttribute("data-bcbid-record");
+      state.bcbidAnalyzed = false;
+      state.bcbidRouteTarget = "";
+      renderBcbidOptions();
+      renderBcbidSteps();
+      renderBcbidFields();
+      renderBcbidResult();
+      flashPanel(bcbidFields);
+    });
+  });
+}
+
+function renderBcbidFields() {
+  if (!bcbidFields) return;
+
+  const record = getActiveBcbidRecord();
+
+  if (!record) {
+    bcbidFields.innerHTML = `
+      <p class="section-tag">BC Bid snapshot</p>
+      <h4>Waiting for a current public opportunity</h4>
+      <p class="empty-copy">Select a newest BC Bid opportunity or a boiler keyword match to review the extracted snapshot.</p>
+    `;
+    return;
+  }
+
+  const displaySource = getBcbidDisplaySource(record);
+
+  bcbidFields.innerHTML = `
+    <p class="section-tag">Step 2 - Review Snapshot</p>
+    <h4>Detected values from the selected BC Bid opportunity</h4>
+    <div class="chip-row">
+      <span class="pill ${esc(record.sourceMode === "keyword" ? "signal-verified" : "signal-date")}">${esc(displaySource)}</span>
+      <span class="pill">Checked ${esc(bcBidSnapshot.checkedAtLabel)}</span>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-block"><p class="detail-label">Opportunity</p><p>${esc(record.title)}</p></div>
+      <div class="detail-block"><p class="detail-label">Organization</p><p>${esc(record.issuingOrganization)}</p></div>
+      <div class="detail-block"><p class="detail-label">Location</p><p>${esc(record.location)}</p></div>
+      <div class="detail-block"><p class="detail-label">Close date</p><p>${esc(formatDate(record.closeDate))}</p></div>
+    </div>
+    <div class="detail-block">
+      <p class="detail-label">Opportunity type</p>
+      <p>${esc(record.opportunityType)}</p>
+    </div>
+    <div class="detail-block">
+      <p class="detail-label">Commodity / watch term</p>
+      <div class="chip-row">
+        <span class="pill">${esc(formatDisplayLabel(record.commodity))}</span>
+        ${record.sourceMode === "keyword" ? `<span class="pill signal-verified">Boiler watch</span>` : ""}
+      </div>
+    </div>
+  `;
+}
+
+function renderBcbidResult() {
+  if (!bcbidResult) return;
+
+  const record = getActiveBcbidRecord();
+  bcbidResult.classList.remove("is-recommendation-panel", "is-pending-panel");
+
+  if (!record) {
+    bcbidResult.classList.add("is-pending-panel");
+    bcbidResult.innerHTML = `
+      <p class="section-tag">AME Recommendation</p>
+      <h4>Choose a BC Bid opportunity to run through the watch lane</h4>
+      <p class="empty-copy">This section proves two things: the platform can show current public opportunities, and a search term like boiler can surface live mechanical work immediately.</p>
+    `;
+    return;
+  }
+
+  if (!state.bcbidAnalyzed) {
+    bcbidResult.classList.add("is-pending-panel");
+    bcbidResult.innerHTML = `
+      <p class="section-tag">Step 3 - Generate Recommendation</p>
+      <h4>${esc(record.title)}</h4>
+      <p class="empty-copy">The current BC Bid snapshot is loaded. Click <strong>Generate Recommendation</strong> to score the opportunity for AME and route it into the same decision flow as Project Signals and MERX Intake.</p>
+      <div class="record-inline-actions">
+        <button class="record-inline-link primary" type="button" data-inline-bcbid="true">Generate Recommendation</button>
+      </div>
+    `;
+
+    bcbidResult.querySelectorAll("[data-inline-bcbid]").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.bcbidAnalyzed = true;
+        renderBcbidSteps();
+        renderBcbidResult();
+        flashPanel(bcbidResult);
+      });
+    });
+    return;
+  }
+
+  const analysis = analyzeText(getBcbidAnalysisText(record), "procurement", "merx_import");
+  const displayHits = formatDisplayList(analysis.hits);
+
+  bcbidResult.classList.add("is-recommendation-panel");
+  bcbidResult.innerHTML = `
+    <div class="merx-status">Recommendation generated</div>
+    <p class="section-tag">Step 3 - AME Recommendation</p>
+    <h4>${esc(record.title)}</h4>
+    <p class="empty-copy">${esc(record.issuingOrganization)} | ${esc(record.location)} | closes ${esc(formatDate(record.closeDate))}</p>
+    <div class="chip-row">
+      <span class="pill ${esc(record.sourceMode === "keyword" ? "signal-verified" : "signal-date")}">${esc(getBcbidDisplaySource(record))}</span>
+      <span class="pill priority-${esc(analysis.priorityKey)}">${esc(analysis.priorityLabel)}</span>
+      <span class="pill">Score ${esc(analysis.score)}</span>
+      <span class="pill">${esc(analysis.classification)}</span>
+    </div>
+    <div class="record-expanded-grid">
+      <div class="detail-block">
+        <p class="detail-label">Why it fits</p>
+        <p>${esc(displayHits.join(", ") || "No strong keyword hits detected")}</p>
+      </div>
+      <div class="detail-block">
+        <p class="detail-label">Suggested service lines</p>
+        <p>${esc(analysis.serviceLines.join(", ") || "No clear AME fit")}</p>
+      </div>
+    </div>
+    <div class="detail-block">
+      <p class="detail-label">Recommended AME move</p>
+      <p>${esc(analysis.action)}</p>
+    </div>
+    <div class="detail-block merx-note">
+      <p class="detail-label">Why this matters</p>
+      <p>${esc(record.sourceMode === "keyword"
+        ? "This proves the watch term boiler surfaces live public opportunities that AME can qualify immediately."
+        : "This proves the platform can surface truly current BC Bid public opportunities, not only static older examples.")}</p>
+    </div>
+    <div class="detail-block">
+      <p class="detail-label">Source backing this opportunity</p>
+      <div class="record-inline-actions">
+        <a class="record-inline-link action-blue" href="${esc(record.sourceUrl)}" target="_blank" rel="noreferrer">Open Official Source</a>
+        <button class="record-inline-link action-grey" type="button" data-route-bcbid="digest">Send To Morning Digest</button>
+        <button class="record-inline-link action-green" type="button" data-route-bcbid="leadership">Route To Leadership Brief</button>
+      </div>
+    </div>
+  `;
+
+  bcbidResult.querySelectorAll("[data-route-bcbid]").forEach((button) => {
+    button.addEventListener("click", () => {
+      routeBcbidLead(button.getAttribute("data-route-bcbid"));
+    });
+  });
+}
+
 function renderBriefingTable() {
   if (!briefingTable) return;
 
@@ -2400,13 +2963,37 @@ function rerenderFeed() {
   renderRecordGrid();
   renderSignalInspector();
   renderEarlySignalRadar();
+  rerenderBcbid();
+}
+
+function rerenderBcbid() {
+  const visibleIds = getFilteredBcbidGroups()
+    .flatMap((group) => group.records.map((record) => record.id));
+
+  if (state.selectedBcbidOpportunityId && !visibleIds.includes(state.selectedBcbidOpportunityId)) {
+    state.selectedBcbidOpportunityId = null;
+    state.bcbidAnalyzed = false;
+    state.bcbidRouteTarget = "";
+  }
+
+  renderBcbidOptions();
+  renderBcbidSteps();
+  renderBcbidFields();
+  renderBcbidResult();
 }
 
 searchFilter.addEventListener("input", (event) => {
   state.query = event.target.value;
-  if (state.activeSection !== "feed") {
+  const normalized = state.query.trim().toLowerCase();
+  const feedMatches = filterRecords({ source: state.source, priority: state.priority, query: normalized }).length;
+  const bcbidMatches = getFilteredBcbidGroups(normalized).reduce((sum, group) => sum + group.records.length, 0);
+
+  if (normalized.includes("boiler") || (!feedMatches && bcbidMatches)) {
+    setActiveSection("bcbid", true);
+  } else if (state.activeSection !== "feed") {
     setActiveSection("feed", true);
   }
+
   rerenderFeed();
 });
 
@@ -2460,6 +3047,15 @@ jumpButtons.forEach((button) => {
   });
 });
 
+if (showBcbidBoiler) {
+  showBcbidBoiler.addEventListener("click", () => {
+    state.query = "boiler";
+    searchFilter.value = "boiler";
+    setActiveSection("bcbid", true);
+    rerenderFeed();
+  });
+}
+
 renderTruthStrip();
 renderShellSnapshot();
 renderRunHistory();
@@ -2471,6 +3067,10 @@ renderRecordGrid();
 renderSignalInspector();
 renderWorkflowControls();
 renderWorkflowView();
+renderBcbidOptions();
+renderBcbidSteps();
+renderBcbidFields();
+renderBcbidResult();
 renderMerxOptions();
 renderMerxSteps();
 renderMerxRaw();

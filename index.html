@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260320-03" />
+  <link rel="stylesheet" href="styles.css?v=20260320-05" />
 </head>
 <body>
   <header class="shell-topbar">
@@ -31,6 +31,7 @@
 
     <nav class="shell-topbar-nav" aria-label="Primary sections">
       <button class="top-nav-link is-active" type="button" data-section-target="feed">Project Signals</button>
+      <button class="top-nav-link" type="button" data-section-target="bcbid">BC Bid Watch</button>
       <button class="top-nav-link" type="button" data-section-target="merx">MERX Intake</button>
       <button class="top-nav-link" type="button" data-section-target="workflow">How It Works</button>
     </nav>
@@ -38,7 +39,7 @@
     <div class="shell-topbar-actions">
       <label class="topbar-search" aria-label="Search project signals">
         <span class="search-label">Search signals</span>
-        <input id="searchFilter" type="search" placeholder="Search city, project, or keyword" />
+        <input id="searchFilter" type="search" placeholder="Search city, project, keyword, or boiler" />
       </label>
       <div class="topbar-cta-stack">
         <a class="ghost-button top-cta top-cta-briefing" href="artifacts/ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Leadership Brief</a>
@@ -55,6 +56,7 @@
           <p class="lede">This demo dashboard brings together verified BC municipal signals, earlier owner-side project indicators, and real public procurement notices so AME Group can scan quickly, qualify faster, and move the strongest leads into action before the competition.</p>
           <div class="compact-actions">
             <button class="ghost-button hero-button" type="button" data-nav-target="feed">Open Project Signals</button>
+            <button class="ghost-button hero-button" type="button" data-nav-target="bcbid">Open BC Bid Watch</button>
             <button class="primary-button hero-button" type="button" data-nav-target="merx">Open MERX Intake</button>
           </div>
         </div>
@@ -159,6 +161,39 @@
         </div>
       </section>
 
+      <section id="workspaceBcbid" class="workspace-panel panel" data-section="bcbid">
+        <div class="section-head section-head-stack">
+          <div>
+            <p class="section-tag">BC Bid Watch</p>
+            <h3>Newest public opportunities and live keyword watch</h3>
+          </div>
+          <div class="workflow-actions">
+            <button id="showBcbidBoiler" class="ghost-button" type="button">Show Boiler Results</button>
+          </div>
+        </div>
+
+        <div class="merx-strip">
+          <span class="merx-strip-pill">Live snapshot checked Mar 20, 2026</span>
+          <span class="merx-strip-copy">This section mirrors the intake pattern using BC Bid public-browse examples. It proves freshness with current public opportunities and shows what AME sees when the search term is <strong>boiler</strong>.</span>
+        </div>
+
+        <div id="bcbidSteps" class="flow-strip merx-steps"></div>
+
+        <div class="merx-board">
+          <section class="merx-library">
+            <div class="merx-library-head">
+              <p class="detail-label">BC Bid opportunity list</p>
+              <p id="bcbidStatus" class="empty-copy">Newest public opportunities and a boiler keyword watch from the public browse page.</p>
+            </div>
+            <div id="bcbidOptions" class="merx-notice-list"></div>
+          </section>
+          <section class="merx-detail-stack">
+            <div id="bcbidFields" class="sandbox-result"></div>
+            <div id="bcbidResult" class="sandbox-result"></div>
+          </section>
+        </div>
+      </section>
+
       <section id="workspaceMerx" class="workspace-panel panel" data-section="merx">
         <div class="section-head section-head-stack">
           <div>
@@ -230,7 +265,7 @@
     </main>
   </div>
 
-  <script src="data/ame-proof-app-data.js?v=20260320-03"></script>
-  <script src="script.js?v=20260320-03"></script>
+  <script src="data/ame-proof-app-data.js?v=20260320-05"></script>
+  <script src="script.js?v=20260320-05"></script>
 </body>
 </html>
