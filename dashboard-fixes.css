@@ -1,0 +1,81 @@
+/* ═══════════════════════════════════════════════════════
+   DASHBOARD FIXES — drop-in override
+   Add to index.html:
+   <link rel="stylesheet" href="dashboard-fixes.css" />
+   (after the existing styles.css link)
+   ═══════════════════════════════════════════════════════ */
+
+/* ── 1. EARLY SIGNAL RADAR — compact, not a lecture ── */
+.early-radar-panel {
+  gap: 0.6rem;
+}
+
+.early-radar-summary {
+  gap: 0.5rem;
+}
+
+.early-radar-summary-copy {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  max-width: 48rem;
+}
+
+.early-radar-column-head {
+  font-size: 0.72rem;
+}
+
+/* Tighter signal cards */
+.monitoring-source-card {
+  padding: 0.7rem 0.85rem;
+}
+
+.monitoring-source-grid {
+  gap: 0.6rem;
+}
+
+/* ── 2. ACTION ROUTING — less visual weight ── */
+.route-outcomes-panel {
+  padding: 0.7rem 0.85rem;
+}
+
+.route-outcomes-grid {
+  gap: 0.5rem;
+}
+
+/* ── 3. FLOW PILLS — tighter strip ── */
+.flow-strip {
+  gap: 0.4rem;
+}
+
+.flow-pill-card {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.78rem;
+}
+
+/* ── 4. GENERAL SPACING — reduce dead space ── */
+.panel {
+  padding: 1.1rem 1.25rem;
+}
+
+.section-head {
+  margin-bottom: 0.8rem;
+}
+
+.section-head h3 {
+  font-size: 1.05rem;
+}
+
+/* ── 5. RECORD GRID — tighter cards ── */
+.record-grid {
+  gap: 0.65rem;
+}
+
+/* ── 6. WELCOME PANEL — less vertical padding ── */
+.welcome-panel {
+  padding: 1.25rem 1.5rem;
+}
+
+.welcome-copy .lede {
+  font-size: 0.9rem;
+  line-height: 1.55;
+}

@@ -1,0 +1,167 @@
+/* ═══════════════════════════════════════════════════════
+   GUIDED DEMO FIXES — drop-in override
+   Add to guided-demo.html:
+   <link rel="stylesheet" href="guided-fixes.css" />
+   (after the existing styles.css link)
+   ═══════════════════════════════════════════════════════ */
+
+/* ── 1. SIDEBAR SCROLL FIX ──
+   The rail was clipping content because inner elements
+   competed for height. Force the rail to scroll properly
+   and give the content room to breathe.
+*/
+.guided-demo-page .guided-tour-card.guided-tour-rail {
+  max-height: calc(100vh - 7.5rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.guided-demo-page .guided-tour-panel-wrap {
+  flex-shrink: 0;
+}
+
+.guided-demo-page .guided-tour-outline {
+  flex-shrink: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.guided-demo-page .guided-tour-outline[open] {
+  overflow: visible;
+}
+
+.guided-demo-page .guided-tour-progress {
+  max-height: 28vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.guided-demo-page .guided-tour-actions {
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  background: inherit;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(11, 28, 48, 0.06);
+  margin-top: auto;
+}
+
+/* ── 2. STRONGER ORANGE SPOTLIGHT ──
+   The old highlight was 34% opacity on a 4px ring.
+   Now it's a solid 6px ring with a pulsing glow and
+   a page-wide dimming overlay so the target POPS.
+*/
+.guided-demo-page .tour-target-active {
+  position: relative !important;
+  z-index: 82 !important;
+  box-shadow:
+    0 0 0 6px rgba(245, 124, 0, 0.55),
+    0 0 0 14px rgba(245, 124, 0, 0.18),
+    0 12px 40px rgba(245, 124, 0, 0.30) !important;
+  border-radius: 16px;
+  scroll-margin-top: 8rem;
+  animation: spotlightPulse 1.8s ease-in-out infinite !important;
+}
+
+@keyframes spotlightPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 6px rgba(245, 124, 0, 0.55),
+      0 0 0 14px rgba(245, 124, 0, 0.18),
+      0 12px 40px rgba(245, 124, 0, 0.30);
+  }
+  50% {
+    box-shadow:
+      0 0 0 8px rgba(245, 124, 0, 0.65),
+      0 0 0 20px rgba(245, 124, 0, 0.12),
+      0 12px 48px rgba(245, 124, 0, 0.36);
+  }
+}
+
+/* Dimming overlay behind target — makes the active element unmissable */
+.guided-demo-page .guided-demo-main::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 9, 14, 0.25);
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.guided-demo-page.has-active-target .guided-demo-main::before {
+  opacity: 1;
+}
+
+/* ── 3. STRONGER ACTION CUE (ORANGE PILL) ──
+   Bigger, bolder, with a bounce animation so it
+   actually draws the eye.
+*/
+.guided-action-cue {
+  min-height: 2.8rem;
+  padding: 0.8rem 1.3rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, #e65100, #ff9100) !important;
+  box-shadow:
+    0 0 0 4px rgba(245, 124, 0, 0.30),
+    0 20px 40px rgba(245, 124, 0, 0.35) !important;
+  animation: cueBounce 1.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes cueBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* ── 4. TIGHTER SIDEBAR CONTENT ──
+   Less padding, more compact panels so more
+   content fits without scrolling on 1080p screens.
+*/
+.guided-demo-page .guided-tour-card.guided-tour-rail {
+  padding: 0.85rem;
+  gap: 0.6rem;
+}
+
+.guided-demo-page .guided-tour-card h3 {
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.guided-demo-page .guided-tour-body,
+.guided-demo-page .guided-tour-hint,
+.guided-demo-page .guided-tour-value {
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.guided-demo-page .guided-tour-panel {
+  padding: 0.6rem 0.7rem;
+}
+
+.guided-demo-page .guided-tour-status {
+  font-size: 0.78rem;
+  padding: 0.5rem 0.7rem;
+}
+
+/* ── 5. PREVIEW MODAL — less detached ──
+   Makes the preview actually feel like part of the
+   workflow instead of a floating popup.
+*/
+.guided-demo-page .guided-preview-card {
+  max-width: 720px;
+  max-height: calc(100vh - 10rem);
+  overflow-y: auto;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1180px) {
+  .guided-demo-page .guided-tour-card.guided-tour-rail {
+    max-height: calc(100vh - 7rem);
+  }
+}
