@@ -180,7 +180,7 @@
     }
     .hero-stat-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
       gap: 0.8rem;
     }
     .hero-actions {
@@ -287,14 +287,30 @@
       border: 1px solid var(--line);
       border-radius: 20px;
       background: #f7faff;
-      padding: 0.9rem 1rem;
+      padding: 0.95rem 1rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        "value label"
+        "value note";
+      gap: 0.18rem 0.9rem;
+      align-items: start;
+    }
+    .metric > .eyebrow {
+      grid-area: label;
+      margin-top: 0.15rem;
     }
     .metric strong {
+      grid-area: value;
       display: block;
-      font-size: 1.85rem;
+      font-size: 2.2rem;
       line-height: 1;
-      margin-top: 0.35rem;
+      margin-top: 0;
       color: var(--blue);
+    }
+    .metric > p:not(.eyebrow) {
+      grid-area: note;
+      margin: 0;
     }
     .metric.watch strong { color: var(--green); }
     .content-grid {

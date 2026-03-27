@@ -4284,32 +4284,19 @@ body {
 
 .early-radar-panel {
   display: grid;
-  gap: 1rem;
+  gap: 0.9rem;
 }
 
-.early-radar-intro {
-  margin-top: 0;
-  padding: 0 0.1rem;
+.early-radar-summary {
+  display: grid;
+  gap: 0.75rem;
 }
 
-.early-radar-intro p {
+.early-radar-summary-copy {
   margin: 0;
-  max-width: 64rem;
+  max-width: 56rem;
   color: #42566d;
-  line-height: 1.58;
-}
-
-.early-radar-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
-  gap: 1rem;
-  align-items: start;
-}
-
-.early-radar-column {
-  display: grid;
-  gap: 0.8rem;
-  align-content: start;
+  line-height: 1.5;
 }
 
 .early-radar-column-head {
@@ -4318,18 +4305,22 @@ body {
 }
 
 .early-radar-column-head .empty-copy {
-  max-width: 34rem;
+  max-width: 44rem;
 }
 
 .early-signal-grid,
 .monitoring-source-grid {
   display: grid;
-  gap: 0.8rem;
+  gap: 0.75rem;
   align-content: start;
 }
 
+.early-signal-grid {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
 .monitoring-source-grid {
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .early-signal-card,
@@ -4374,11 +4365,22 @@ body {
   line-height: 1.5;
 }
 
+.early-signal-card .record-inline-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.early-signal-card .record-inline-link.compact {
+  justify-content: center;
+}
+
 .monitoring-source-card {
   display: grid;
-  gap: 0.8rem;
+  gap: 0.55rem;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 250, 255, 0.96));
   min-height: 0;
+  padding: 0.9rem 1rem;
 }
 
 .monitoring-source-head {
@@ -4393,13 +4395,20 @@ body {
   margin: 0;
 }
 
+.monitoring-source-title {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.2;
+  color: #0b1c30;
+}
+
 .monitoring-source-block {
   display: grid;
   gap: 0.28rem;
-  padding: 0.82rem 0.9rem;
+  padding: 0.72rem 0.8rem;
   border-radius: 16px;
-  background: rgba(173, 202, 69, 0.09);
-  border: 1px solid rgba(173, 202, 69, 0.22);
+  background: rgba(246, 249, 255, 0.96);
+  border: 1px solid rgba(15, 102, 176, 0.08);
 }
 
 .monitoring-source-block strong {
@@ -4407,7 +4416,7 @@ body {
   font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #5a7600;
+  color: #0f5f97;
 }
 
 .merx-strip-bcbid {
@@ -4482,7 +4491,7 @@ body {
 }
 
 @media (max-width: 1180px) {
-  .early-radar-layout {
+  .monitoring-source-grid {
     grid-template-columns: 1fr;
   }
 

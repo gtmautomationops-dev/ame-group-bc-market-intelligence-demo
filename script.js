@@ -2127,7 +2127,7 @@ function renderEarlySignalRadar() {
             <strong>Monitor:</strong> ${esc(monitorProfile.watchLabel)}
           </div>
           <div class="record-inline-actions">
-            <button class="record-inline-link primary compact" type="button" data-early-inspect="${esc(record.id)}">Inspect On BC Project Intelligence Dashboard</button>
+            <button class="record-inline-link primary compact" type="button" data-early-inspect="${esc(record.id)}">Inspect On Dashboard</button>
             <a class="record-inline-link compact" href="${esc(record.sourceUrl)}" target="_blank" rel="noreferrer">Open Official Source</a>
           </div>
         </article>
@@ -2146,15 +2146,14 @@ function renderEarlySignalRadar() {
           <p class="detail-label">${esc(profile.label)}</p>
           <span class="pill signal-date">${esc(profile.cadenceLabel)}</span>
         </div>
-        <h4>${esc(profile.roleLabel)}</h4>
-        <p class="monitoring-source-copy">${esc(profile.whyEarly)}</p>
+        <h4 class="monitoring-source-title">${esc(profile.roleLabel)}</h4>
         <div class="monitoring-source-block">
           <strong>Watch</strong>
           <span>${esc(profile.watchLabel)}</span>
         </div>
         <div class="chip-row">
-          <span class="pill">Live examples ${esc(sourceCount)}</span>
-          <span class="pill">${esc(profile.cadenceLabel)}</span>
+          <span class="pill">Examples ${esc(sourceCount)}</span>
+          <span class="pill">Earlier than tender</span>
         </div>
       </article>
     `;
