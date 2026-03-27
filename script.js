@@ -498,8 +498,24 @@ const featuredRecords = [...appData.processedRecords]
     return rightDate.localeCompare(leftDate);
   })
   .slice(0, 4);
-const initialDigestRecord = appData.processedRecords.find((record) => record.title === appData.briefing.priorityLeads[0]?.title)
+function getStoredRecordId(storageKey) {
+  try {
+    return window.localStorage.getItem(storageKey) || null;
+  } catch (error) {
+    return null;
+  }
+}
+
+const storedDigestRecordId = getStoredRecordId(DIGEST_RECORD_STORAGE_KEY);
+const storedExecutiveLeadId = getStoredRecordId(EXECUTIVE_LEAD_STORAGE_KEY);
+
+const initialDigestRecord = appData.processedRecords.find((record) => record.id === storedDigestRecordId)
+  || appData.processedRecords.find((record) => record.title === appData.briefing.priorityLeads[0]?.title)
   || appData.processedRecords[0]
+  || null;
+
+const initialExecutiveRecord = appData.processedRecords.find((record) => record.id === storedExecutiveLeadId)
+  || initialDigestRecord
   || null;
 
 const state = {
@@ -512,6 +528,7 @@ const state = {
   bcbidAnalyzed: false,
   bcbidRouteTarget: "",
   digestRecordId: initialDigestRecord?.id || null,
+  executiveLeadId: initialExecutiveRecord?.id || initialDigestRecord?.id || null,
   signalRouteTarget: "",
   workflowId: verifiedWorkflows[0]?.id || null,
   workflowStage: "raw",
@@ -519,6 +536,8 @@ const state = {
   selectedMerxNoticeId: null,
   merxAnalyzed: false,
   merxRouteTarget: "",
+  digestPreviewLead: initialDigestRecord || null,
+  executivePreviewLead: initialExecutiveRecord || initialDigestRecord || null,
 };
 
 const truthStrip = document.getElementById("truthStrip");
@@ -534,7 +553,6 @@ const bcbidFields = document.getElementById("bcbidFields");
 const bcbidResult = document.getElementById("bcbidResult");
 const bcbidSteps = document.getElementById("bcbidSteps");
 const bcbidStatus = document.getElementById("bcbidStatus");
-const showBcbidBoiler = document.getElementById("showBcbidBoiler");
 const artifactPreview = document.getElementById("artifactPreview");
 const workflowSelect = document.getElementById("workflowSelect");
 const stageButtons = document.getElementById("stageButtons");
@@ -563,6 +581,11 @@ const earlySignalGrid = document.getElementById("earlySignalGrid");
 const monitoringSourceGrid = document.getElementById("monitoringSourceGrid");
 const runHistorySummary = document.getElementById("runHistorySummary");
 const runHistoryList = document.getElementById("runHistoryList");
+const dashboardDigestPreview = document.getElementById("dashboardDigestPreview");
+const dashboardLeadershipPreview = document.getElementById("dashboardLeadershipPreview");
+const topCtaBriefing = document.getElementById("topCtaBriefing");
+const topCtaDigest = document.getElementById("topCtaDigest");
+const feedOpenDigest = document.getElementById("feedOpenDigest");
 const workspaceTabs = [...document.querySelectorAll("[data-section-target]")];
 const jumpButtons = [...document.querySelectorAll("[data-nav-target]")];
 const workspacePanels = [...document.querySelectorAll(".workspace-panel")];
@@ -934,15 +957,31 @@ function getStoredTransientLead() {
   }
 }
 
-function buildRouteUrl(baseUrl, recordId) {
-  if (!recordId) return baseUrl;
-  const separator = baseUrl.includes("?") ? "&" : "?";
-  return `${baseUrl}${separator}lead=${encodeURIComponent(recordId)}`;
+function getKnownLead(recordId, explicitLead = null) {
+  if (explicitLead?.id === recordId) return explicitLead;
+
+  const transientLead = getStoredTransientLead();
+  if (transientLead?.id === recordId) return transientLead;
+
+  return appData.processedRecords.find((record) => record.id === recordId) || null;
 }
 
-function openMorningDigestPage(recordId = state.digestRecordId) {
+function buildRouteUrl(baseUrl, recordId, leadPayload = null) {
+  const params = new URLSearchParams();
+  if (recordId) params.set("lead", recordId);
+  if (leadPayload && leadPayload.id) {
+    params.set("payload", JSON.stringify(leadPayload));
+  }
+  const query = params.toString();
+  if (!query) return baseUrl;
+  const separator = baseUrl.includes("?") ? "&" : "?";
+  return `${baseUrl}${separator}${query}`;
+}
+
+function openMorningDigestPage(recordId = state.digestRecordId, leadPayload = null) {
   if (recordId) persistDigestRecord(recordId);
-  const digestUrl = buildRouteUrl(MORNING_DIGEST_URL, recordId);
+  if (leadPayload?.id) persistTransientLead(leadPayload);
+  const digestUrl = buildRouteUrl(MORNING_DIGEST_URL, recordId, leadPayload);
   if (typeof window.AMEGuidedOpenPagePreview === "function") {
     const handled = window.AMEGuidedOpenPagePreview(digestUrl, "Morning Digest");
     if (handled) return;
@@ -950,9 +989,10 @@ function openMorningDigestPage(recordId = state.digestRecordId) {
   window.open(digestUrl, "_blank", "noopener,noreferrer");
 }
 
-function openLeadershipBriefPage(recordId = state.digestRecordId) {
+function openLeadershipBriefPage(recordId = state.digestRecordId, leadPayload = null) {
   if (recordId) persistExecutiveLead(recordId);
-  const briefingUrl = buildRouteUrl(LEADERSHIP_BRIEF_URL, recordId);
+  if (leadPayload?.id) persistTransientLead(leadPayload);
+  const briefingUrl = buildRouteUrl(LEADERSHIP_BRIEF_URL, recordId, leadPayload);
   if (typeof window.AMEGuidedOpenPagePreview === "function") {
     const handled = window.AMEGuidedOpenPagePreview(briefingUrl, "Leadership Brief");
     if (handled) return;
@@ -1181,6 +1221,106 @@ function renderSignalInspector() {
   });
 }
 
+function renderActionRoutingPreview() {
+  if (!dashboardDigestPreview || !dashboardLeadershipPreview) return;
+
+  const digestLead = getKnownLead(state.digestRecordId, state.digestPreviewLead);
+  const executiveLead = getKnownLead(state.executiveLeadId, state.executivePreviewLead);
+
+  const renderRouteCard = (lead, type) => {
+    const isDigest = type === "digest";
+    const title = isDigest ? "Morning Digest" : "Leadership Brief";
+    const kicker = isDigest ? "Daily triage route" : "Executive action route";
+    const description = isDigest
+      ? "This is the running shortlist view AME can use to review the strongest signals without rescanning the dashboard."
+      : "This is the executive handoff AME can use to assign an owner, route the right office, and draft the next move.";
+    const openLabel = isDigest ? "Open Morning Digest" : "Open Leadership Brief";
+    const openAttr = isDigest ? `data-open-route-digest="${esc(lead?.id || "")}"` : `data-open-route-brief="${esc(lead?.id || "")}"`;
+    const sourceMeta = lead?.sourceLabel ? { label: lead.sourceLabel } : getSourceMeta(lead?.sourceKey || "");
+
+    if (!lead) {
+      return `
+        <p class="section-tag">${esc(kicker)}</p>
+        <h4>${esc(title)}</h4>
+        <p class="empty-copy">${esc(description)}</p>
+        <div class="detail-block route-outcome-empty">
+          <p class="detail-label">Waiting for a routed lead</p>
+          <p>Send a project signal, BC Bid opportunity, or MERX notice here to make the workflow visible on the dashboard before opening the full page.</p>
+        </div>
+      `;
+    }
+
+    return `
+      <p class="section-tag">${esc(kicker)}</p>
+      <h4>${esc(title)}</h4>
+      <p class="empty-copy">${esc(description)}</p>
+      <div class="chip-row">
+        <span class="source-badge">${esc(sourceMeta.label || "Project Signal")}</span>
+        <span class="pill priority-${esc(lead.priorityKey || "watch")}">${esc(lead.priorityLabel || "Watch")}</span>
+        <span class="pill">${esc(formatDisplayLabel(lead.stageLabel || "Stage"))}</span>
+      </div>
+      <div class="route-outcome-summary">
+        <strong>${esc(lead.title)}</strong>
+        <span>${esc(lead.entity || "")}${lead?.entity ? " - " : ""}${esc(lead.location || "")}</span>
+      </div>
+      <div class="detail-block">
+        <p class="detail-label">${isDigest ? "Why it matters today" : "Ownership-ready next move"}</p>
+        <p>${esc(lead.whyItMatters || lead.summary || "No summary available.")}</p>
+      </div>
+      <div class="detail-block">
+        <p class="detail-label">Recommended action</p>
+        <p>${esc(lead.action || "Review the source and decide the next AME move.")}</p>
+      </div>
+      <div class="record-inline-actions">
+        <button class="record-inline-link action-blue" type="button" ${openAttr}>${esc(openLabel)}</button>
+        <button class="record-inline-link action-grey" type="button" data-nav-target="feed">Back To BC Project Intelligence Dashboard</button>
+      </div>
+    `;
+  };
+
+  dashboardDigestPreview.innerHTML = renderRouteCard(digestLead, "digest");
+  dashboardLeadershipPreview.innerHTML = renderRouteCard(executiveLead, "leadership");
+
+  dashboardDigestPreview.querySelectorAll("[data-open-route-digest]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const recordId = button.getAttribute("data-open-route-digest");
+      openMorningDigestPage(recordId || state.digestRecordId, getKnownLead(recordId, state.digestPreviewLead));
+    });
+  });
+
+  dashboardLeadershipPreview.querySelectorAll("[data-open-route-brief]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const recordId = button.getAttribute("data-open-route-brief");
+      openLeadershipBriefPage(recordId || state.executiveLeadId, getKnownLead(recordId, state.executivePreviewLead));
+    });
+  });
+
+  [dashboardDigestPreview, dashboardLeadershipPreview].forEach((panel) => {
+    panel.querySelectorAll("[data-nav-target]").forEach((button) => {
+      button.addEventListener("click", () => {
+        setActiveSection(button.getAttribute("data-nav-target"), true);
+      });
+    });
+  });
+
+  syncDashboardLinks();
+}
+
+function syncDashboardLinks() {
+  const digestLead = getKnownLead(state.digestRecordId, state.digestPreviewLead);
+  const executiveLead = getKnownLead(state.executiveLeadId, state.executivePreviewLead);
+  const digestHref = buildRouteUrl(MORNING_DIGEST_URL, state.digestRecordId, digestLead);
+  const briefingHref = buildRouteUrl(LEADERSHIP_BRIEF_URL, state.executiveLeadId, executiveLead);
+
+  [topCtaDigest, feedOpenDigest].filter(Boolean).forEach((link) => {
+    link.href = digestHref;
+  });
+
+  [topCtaBriefing].filter(Boolean).forEach((link) => {
+    link.href = briefingHref;
+  });
+}
+
 function renderMerxSteps() {
   if (!merxSteps) return;
 
@@ -1394,7 +1534,7 @@ function buildBcbidTransientLead() {
     goToMarketPlay: "Use the live public signal to qualify fit quickly, then decide whether it belongs in AME's daily triage or leadership routing.",
     estimatedScope: record.summary,
     classification: analysis.classification,
-    sourceKey: "merx-import",
+    sourceKey: "bcbid-watch",
     sourceUrl: record.sourceUrl,
     keywordHits: analysis.hits,
     ameServiceLines: analysis.serviceLines,
@@ -1413,42 +1553,62 @@ function routeMerxLead(destination = "digest") {
   const transientLead = buildMerxTransientLead();
   if (!transientLead) return;
 
-  state.digestRecordId = transientLead.id;
+  if (destination === "leadership") {
+    state.executiveLeadId = transientLead.id;
+    state.executivePreviewLead = transientLead;
+  } else {
+    state.digestRecordId = transientLead.id;
+    state.digestPreviewLead = transientLead;
+  }
   state.merxRouteTarget = destination;
   persistTransientLead(transientLead);
-  persistDigestRecord(transientLead.id);
-  persistExecutiveLead(transientLead.id);
+  if (destination === "leadership") {
+    persistExecutiveLead(transientLead.id);
+  } else {
+    persistDigestRecord(transientLead.id);
+  }
   renderSignalSteps();
   renderMerxSteps();
   renderMerxResult();
+  renderActionRoutingPreview();
   renderArtifact();
 
   if (destination === "leadership") {
-    openLeadershipBriefPage(transientLead.id);
+    openLeadershipBriefPage(transientLead.id, transientLead);
     return;
   }
 
-  openMorningDigestPage(transientLead.id);
+  openMorningDigestPage(transientLead.id, transientLead);
 }
 
 function routeBcbidLead(destination = "digest") {
   const transientLead = buildBcbidTransientLead();
   if (!transientLead) return;
 
-  state.digestRecordId = transientLead.id;
+  if (destination === "leadership") {
+    state.executiveLeadId = transientLead.id;
+    state.executivePreviewLead = transientLead;
+  } else {
+    state.digestRecordId = transientLead.id;
+    state.digestPreviewLead = transientLead;
+  }
   state.bcbidRouteTarget = destination;
   persistTransientLead(transientLead);
-  persistDigestRecord(transientLead.id);
-  persistExecutiveLead(transientLead.id);
+  if (destination === "leadership") {
+    persistExecutiveLead(transientLead.id);
+  } else {
+    persistDigestRecord(transientLead.id);
+  }
   renderBcbidSteps();
   renderBcbidResult();
+  renderActionRoutingPreview();
 
   if (destination === "leadership") {
-    openLeadershipBriefPage(transientLead.id);
+    openLeadershipBriefPage(transientLead.id, transientLead);
     return;
   }
 
-  openMorningDigestPage(transientLead.id);
+  openMorningDigestPage(transientLead.id, transientLead);
 }
 
 function getPriorityBadge(score) {
@@ -1545,6 +1705,13 @@ function analyzeText(text, stage = "procurement", category = "municipal_public_p
 }
 
 function getSourceMeta(sourceKey) {
+  if (sourceKey === "bcbid-watch") {
+    return {
+      label: "BC Bid Watch",
+      cardClass: "source-public",
+    };
+  }
+
   if (sourceKey === "merx-import") {
     return {
       label: "Imported Notice",
@@ -1747,13 +1914,14 @@ function setActiveSection(section, shouldScroll = true) {
 function selectDigestRecord(recordId, shouldScroll = false) {
   state.selectedRecordId = recordId;
   state.digestRecordId = recordId;
+  state.digestPreviewLead = getKnownLead(recordId);
   state.signalRouteTarget = "digest";
   persistDigestRecord(recordId);
-  persistExecutiveLead(recordId);
   renderSignalSteps();
   renderRecordGrid();
   renderSignalInspector();
   renderEarlySignalRadar();
+  renderActionRoutingPreview();
   if (briefingTable && artifactPreview) {
     setActiveSection("briefing", shouldScroll);
     renderBriefingTable();
@@ -1765,12 +1933,15 @@ function selectDigestRecord(recordId, shouldScroll = false) {
 
 function routeSelectedSignalToLeadership(recordId, shouldOpen = true) {
   state.selectedRecordId = recordId;
+  state.executiveLeadId = recordId;
+  state.executivePreviewLead = getKnownLead(recordId);
   state.signalRouteTarget = "leadership";
   persistExecutiveLead(recordId);
   renderSignalSteps();
   renderRecordGrid();
   renderSignalInspector();
   renderEarlySignalRadar();
+  renderActionRoutingPreview();
   renderBriefingTable();
   renderArtifact();
   if (shouldOpen) {
@@ -1956,7 +2127,7 @@ function renderEarlySignalRadar() {
             <strong>Monitor:</strong> ${esc(monitorProfile.watchLabel)}
           </div>
           <div class="record-inline-actions">
-            <button class="record-inline-link primary compact" type="button" data-early-inspect="${esc(record.id)}">Inspect In Project Signals</button>
+            <button class="record-inline-link primary compact" type="button" data-early-inspect="${esc(record.id)}">Inspect On BC Project Intelligence Dashboard</button>
             <a class="record-inline-link compact" href="${esc(record.sourceUrl)}" target="_blank" rel="noreferrer">Open Official Source</a>
           </div>
         </article>
@@ -2705,7 +2876,7 @@ function renderBcbidResult() {
     bcbidResult.innerHTML = `
       <p class="section-tag">Step 3 - Generate Recommendation</p>
       <h4>${esc(record.title)}</h4>
-      <p class="empty-copy">The current BC Bid snapshot is loaded. Click <strong>Generate Recommendation</strong> to score the opportunity for AME and route it into the same decision flow as Project Signals and MERX Intake.</p>
+      <p class="empty-copy">The current BC Bid snapshot is loaded. Click <strong>Generate Recommendation</strong> to score the opportunity for AME and route it into the same decision flow as the BC Project Intelligence Dashboard and MERX Intake.</p>
       <div class="record-inline-actions">
         <button class="record-inline-link primary" type="button" data-inline-bcbid="true">Generate Recommendation</button>
       </div>
@@ -2874,7 +3045,7 @@ function renderArtifact() {
       </div>
       <div class="digest-actions">
         <button class="digest-link digest-link-primary" type="button" data-open-brief="${esc(focusRecord?.id || "")}">Open Leadership Brief</button>
-        <button class="digest-link" type="button" data-nav-target="feed">Back To Project Signals</button>
+        <button class="digest-link" type="button" data-nav-target="feed">Back To BC Project Intelligence Dashboard</button>
       </div>
     </article>
 
@@ -2928,7 +3099,7 @@ function renderArtifact() {
       <div class="digest-actions">
         ${focusRecord?.sourceUrl ? `<a class="digest-link digest-link-primary" href="${esc(focusRecord.sourceUrl)}" target="_blank" rel="noreferrer">Open official source</a>` : ""}
         <button class="digest-link" type="button" data-open-brief="${esc(focusRecord?.id || "")}">Open Leadership Brief</button>
-        <button class="digest-link" type="button" data-nav-target="feed">Inspect On Board</button>
+        <button class="digest-link" type="button" data-nav-target="feed">Back To BC Project Intelligence Dashboard</button>
       </div>
     </article>
   `;
@@ -2946,7 +3117,7 @@ function renderArtifact() {
 
   artifactPreview.querySelectorAll("[data-open-brief]").forEach((button) => {
     button.addEventListener("click", () => {
-      openLeadershipBriefPage(button.getAttribute("data-open-brief") || state.digestRecordId);
+      openLeadershipBriefPage(button.getAttribute("data-open-brief") || state.digestRecordId, focusRecord || null);
     });
   });
 }
@@ -2963,6 +3134,7 @@ function rerenderFeed() {
   renderRecordGrid();
   renderSignalInspector();
   renderEarlySignalRadar();
+  renderActionRoutingPreview();
   rerenderBcbid();
 }
 
@@ -2980,6 +3152,7 @@ function rerenderBcbid() {
   renderBcbidSteps();
   renderBcbidFields();
   renderBcbidResult();
+  renderActionRoutingPreview();
 }
 
 searchFilter.addEventListener("input", (event) => {
@@ -3047,15 +3220,6 @@ jumpButtons.forEach((button) => {
   });
 });
 
-if (showBcbidBoiler) {
-  showBcbidBoiler.addEventListener("click", () => {
-    state.query = "boiler";
-    searchFilter.value = "boiler";
-    setActiveSection("bcbid", true);
-    rerenderFeed();
-  });
-}
-
 renderTruthStrip();
 renderShellSnapshot();
 renderRunHistory();
@@ -3079,4 +3243,5 @@ renderMerxResult();
 renderMerxToolbarState();
 renderBriefingTable();
 renderArtifact();
+renderActionRoutingPreview();
 initSectionObserver();

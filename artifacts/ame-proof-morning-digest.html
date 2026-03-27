@@ -332,12 +332,12 @@
         </div>
       </div>
       <nav class="nav" aria-label="Digest navigation">
-        <a href="../index.html" target="_blank" rel="noreferrer">Project Signals</a>
+        <a href="../index.html" target="_blank" rel="noreferrer">BC Project Intelligence Dashboard</a>
         <a class="is-active" href="#">Morning Digest</a>
         <a href="./ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Leadership Brief</a>
       </nav>
       <div class="topbar-actions">
-        <a class="link-pill" href="../index.html" target="_blank" rel="noreferrer">Back To Project Signals</a>
+        <a class="link-pill" href="../index.html" target="_blank" rel="noreferrer">Back To BC Project Intelligence Dashboard</a>
         <button class="link-pill primary" type="button" data-open-brief>Open Leadership Brief</button>
       </div>
     </div>
@@ -348,7 +348,7 @@
       <p class="eyebrow">Morning Digest</p>
       <div>
         <h1>AME morning review surface for March 18, 2026</h1>
-        <p>This is the separate shortlist page AME can use to review the day's strongest signals without scrolling through the full Project Signals view.</p>
+        <p>This is the separate shortlist page AME can use to review the day's strongest signals without scrolling through the full BC Project Intelligence Dashboard.</p>
       </div>
       <div class="hero-stats">
         <article class="metric">
@@ -389,7 +389,7 @@
           <p>Once the team agrees on the lead order here, move to the leadership brief for the shareable follow-up artifact.</p>
           <div class="actions-row">
             <button class="link-pill primary" type="button" data-open-brief>Open Leadership Brief</button>
-            <a class="link-pill" href="../index.html" target="_blank" rel="noreferrer">Return To Project Signals</a>
+            <a class="link-pill" href="../index.html" target="_blank" rel="noreferrer">Return To BC Project Intelligence Dashboard</a>
           </div>
         </section>
       </aside>
@@ -434,8 +434,21 @@
     }
 
     function getSourceLabel(sourceKey) {
+      if (sourceKey === "bcbid-watch") return "BC Bid Watch";
       if (sourceKey === "merx-import") return "Imported Notice";
       return sourceKey === "municipal-meeting-linked" ? "Meeting-Linked Doc" : "Public Page";
+    }
+
+    function readPayloadLead() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const raw = params.get("payload");
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return parsed && parsed.id ? parsed : null;
+      } catch (error) {
+        return null;
+      }
     }
 
     function readTransientLead() {
@@ -460,12 +473,16 @@
 
     function openLeadershipBrief(recordId) {
       const targetRecordId = recordId || activeRecordId || "";
+      const targetRecord = digestRecords.find(function (record) { return record.id === targetRecordId; }) || null;
       try {
         if (targetRecordId) window.localStorage.setItem(executiveStorageKey, targetRecordId);
       } catch (error) {
       }
-      const url = targetRecordId
-        ? leadershipBriefUrl + "?lead=" + encodeURIComponent(targetRecordId)
+      const params = new URLSearchParams();
+      if (targetRecordId) params.set("lead", targetRecordId);
+      if (targetRecord && targetRecord.id) params.set("payload", JSON.stringify(targetRecord));
+      const url = params.toString()
+        ? leadershipBriefUrl + "?" + params.toString()
         : leadershipBriefUrl;
       window.open(url, "_blank", "noopener,noreferrer");
     }
@@ -486,7 +503,7 @@
       return drivers;
     }
 
-    const transientLead = readTransientLead();
+    const transientLead = readPayloadLead() || readTransientLead();
     const digestRecords = []
       .concat(transientLead ? [transientLead] : [])
       .concat(appData.briefing.priorityLeads.map(function (row) { return getRecordByTitle(row.title); }).filter(Boolean))

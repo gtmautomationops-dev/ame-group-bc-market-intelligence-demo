@@ -575,7 +575,7 @@
       </div>
       <nav class="brief-nav" aria-label="Brief navigation">
         <a class="is-active" href="#">Leadership Brief</a>
-        <a href="../index.html" target="_blank" rel="noreferrer">Project Signals</a>
+        <a href="../index.html" target="_blank" rel="noreferrer">BC Project Intelligence Dashboard</a>
         <a href="./ame-proof-morning-digest.html" target="_blank" rel="noreferrer">Morning Digest</a>
       </nav>
       <div class="topbar-actions">
@@ -617,7 +617,7 @@
         <div class="hero-actions">
           <a class="brief-link" href="./ame-proof-morning-digest.html" target="_blank" rel="noreferrer">Open Morning Digest</a>
           <a class="brief-link muted-link" href="#executiveActionConsole">Jump To Executive Console</a>
-          <a class="brief-link muted-link" href="../index.html" target="_blank" rel="noreferrer">Back To Project Signals</a>
+          <a class="brief-link muted-link" href="../index.html" target="_blank" rel="noreferrer">Back To BC Project Intelligence Dashboard</a>
         </div>
       </article>
     </section>
@@ -826,7 +826,7 @@
   <div class="action">Hold for background context only.</div>
   <div class="spotlight-actions">
     <a class="brief-link" href="https://www.surrey.ca/news-events/news/contract-direct-access-road-future-newton-community-centre-goes-council" target="_blank" rel="noreferrer">Open Source</a>
-    <a class="brief-link muted-link" href="../index.html" target="_blank" rel="noreferrer">Open Project Signals</a>
+    <a class="brief-link muted-link" href="../index.html" target="_blank" rel="noreferrer">Open BC Project Intelligence Dashboard</a>
   </div>
 </section>
 
@@ -836,7 +836,7 @@
           </div>
           <div class="source-note">
             <ul>
-              <li>Project Signals cards link directly to official public sources.</li>
+              <li>BC Project Intelligence Dashboard cards link directly to official public sources.</li>
 <li>Meeting-linked records help surface civic projects before broader market visibility.</li>
 <li>The MERX alert intake flow is designed for approved alert imports such as saved-search emails or CSV exports.</li>
             </ul>
@@ -995,6 +995,18 @@
     const storedExecutiveLeadKey = "ameExecutiveLeadId";
     const transientLeadStorageKey = "ameTransientDigestLead";
     const baseExecutiveLeads = [{"id":"proof-003","title":"Burnaby civic update says Burnaby Lake Recreation Complex is past 50% completion","entity":"City of Burnaby","location":"Burnaby, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Construction","asset":"Recreation Complex","whyItMatters":"The project is in delivery and still relevant for downstream packages, specialist scopes, and relationship mapping around aquatic centre, pool, aquatic.","action":"Map likely packages, local partners, and probable follow-on scopes for AME pursuit.","serviceLines":["Mechanical Design","Commissioning","Energy + Sustainability"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.burnaby.ca/our-city/news/2026-03-09/burnabys-once-generation-civic-building-program-reaches-50-completion"},{"id":"proof-006","title":"Crystal Pool project page says construction management procurement is underway","entity":"City of Victoria","location":"Victoria, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Procurement","asset":"Pool / Aquatic Centre","whyItMatters":"This record is already in procurement-facing motion and contains direct signals around aquatic centre, crystal pool, pool.","action":"Track council or owner procurement milestones and identify likely consultant or trade entry points.","serviceLines":["Mechanical Design","Fire Suppression Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Victoria Office","sourceUrl":"https://www.victoria.ca/city-government/projects/crystal-pool-replacement-project"},{"id":"proof-009","title":"Park Board gives greenlight to Vancouver Aquatic Centre renewal","entity":"City of Vancouver","location":"Vancouver, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Planning","asset":"Aquatic Centre","whyItMatters":"The project is pre-construction but clearly aligned with AME\u0027s watch profile through aquatic centre, vancouver aquatic centre, pool.","action":"Monitor the project for next-phase design, enabling works, or management procurements.","serviceLines":["Mechanical Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://vancouver.ca/news-calendar/green-light-for-vancouver-aquatic-centre-renewal-april-1.aspx"},{"id":"proof-004","title":"Newton Community Centre page lists 50-metre pool and early-2026 design-build target","entity":"City of Surrey","location":"Surrey, BC","priority":"Priority","priorityKey":"priority","score":88,"stage":"Planning","asset":"Community Centre / Aquatic Centre","whyItMatters":"The project is pre-construction but clearly aligned with AME\u0027s watch profile through pool, aquatic, construction.","action":"Monitor the project for next-phase design, enabling works, or management procurements.","serviceLines":["Mechanical Design","Fire Suppression Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.surrey.ca/about-surrey/capital-projects/newton-community-centre"},{"id":"proof-005","title":"Contract for direct-access road to future Newton Community Centre goes before council","entity":"City of Surrey","location":"Surrey, BC","priority":"Watch","priorityKey":"watch","score":70,"stage":"Procurement","asset":"Community Centre Enabling Works","whyItMatters":"This record is already in procurement-facing motion and contains direct signals around aquatic, construction, community centre.","action":"Hold for background context only.","serviceLines":["Mechanical Design","Fire Suppression Design","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.surrey.ca/news-events/news/contract-direct-access-road-future-newton-community-centre-goes-council"}];
+    function readPayloadLead() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const raw = params.get("payload");
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return parsed && parsed.id ? parsed : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
     function readTransientLead() {
       try {
         const raw = window.localStorage.getItem(transientLeadStorageKey);
@@ -1027,7 +1039,7 @@
       };
     }
 
-    const transientExecutiveLead = normalizeExecutiveLead(readTransientLead());
+    const transientExecutiveLead = normalizeExecutiveLead(readPayloadLead() || readTransientLead());
     const executiveLeads = transientExecutiveLead
       ? [transientExecutiveLead].concat(baseExecutiveLeads.filter(function (lead) { return lead.id !== transientExecutiveLead.id; }))
       : baseExecutiveLeads;
@@ -1278,8 +1290,8 @@
 
       summaryPanel.innerHTML = ''
         + '<p class="detail-label">Executive Assignment</p>'
-        + (lead && lead.sourceKey === "merx-import"
-          ? '<div class="hero-meta"><span class="mini-pill priority">MERX Intake Route</span><span class="mini-pill">Imported Notice</span></div>'
+        + (lead && (lead.sourceKey === "merx-import" || lead.sourceKey === "bcbid-watch")
+          ? '<div class="hero-meta"><span class="mini-pill priority">' + esc(lead.sourceKey === "bcbid-watch" ? "BC Bid Route" : "MERX Intake Route") + '</span><span class="mini-pill">' + esc(lead.sourceKey === "bcbid-watch" ? "BC Bid Watch" : "Imported Notice") + '</span></div>'
           : '')
         + '<div class="console-summary-grid">'
         +   '<div class="summary-item"><span class="detail-kicker">Lead</span><strong>' + esc(lead ? lead.title : "No lead selected") + '</strong></div>'
