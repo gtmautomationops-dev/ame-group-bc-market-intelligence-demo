@@ -578,11 +578,9 @@ const heroMerxCount = document.getElementById("heroMerxCount");
 const heroPriorityCount = document.getElementById("heroPriorityCount");
 const heroEarlyCount = document.getElementById("heroEarlyCount");
 const earlySignalGrid = document.getElementById("earlySignalGrid");
-const monitoringSourceGrid = document.getElementById("monitoringSourceGrid");
+const earlyCadenceStrip = document.getElementById("earlyCadenceStrip");
 const runHistorySummary = document.getElementById("runHistorySummary");
 const runHistoryList = document.getElementById("runHistoryList");
-const dashboardDigestPreview = document.getElementById("dashboardDigestPreview");
-const dashboardLeadershipPreview = document.getElementById("dashboardLeadershipPreview");
 const topCtaBriefing = document.getElementById("topCtaBriefing");
 const topCtaDigest = document.getElementById("topCtaDigest");
 const feedOpenDigest = document.getElementById("feedOpenDigest");
@@ -820,19 +818,34 @@ function getMerxNoticeBuckets() {
   }, { recent: [], reference: [] });
 }
 
-function getBcbidSourceGroups() {
+function getBcbidSourceGroups(query = state.query.trim().toLowerCase()) {
+  if (!query) {
+    return [
+      {
+        key: "newest",
+        title: "Newest public opportunities",
+        copy: `Fresh public-browse examples checked ${bcBidSnapshot.checkedAtLabel}.`,
+        records: bcBidSnapshot.newest,
+      },
+    ];
+  }
+
+  const combined = new Map();
+  bcBidSnapshot.newest
+    .concat(bcBidSnapshot.boiler)
+    .filter((record) => matchesBcbidQuery(record, query))
+    .forEach((record) => {
+      combined.set(record.id, record);
+    });
+
+  if (!combined.size) return [];
+
   return [
     {
-      key: "newest",
-      title: "Newest public opportunities",
-      copy: "Fresh examples pulled from the public browse page to prove the watch surface is current.",
-      records: bcBidSnapshot.newest,
-    },
-    {
-      key: "boiler",
-      title: "Boiler keyword watch",
-      copy: "This is what the platform can surface when the watch term boiler is used against the public BC Bid page.",
-      records: bcBidSnapshot.boiler,
+      key: "search",
+      title: `BC Bid results for "${query}"`,
+      copy: "Current BC Bid matches surfaced through the shared dashboard search.",
+      records: [...combined.values()],
     },
   ];
 }
@@ -858,22 +871,20 @@ function matchesBcbidQuery(record, query) {
 function getAllBcbidRecords() {
   const collection = new Map();
 
-  getBcbidSourceGroups().forEach((group) => {
-    group.records.forEach((record) => {
-      const existing = collection.get(record.id);
-      if (existing) {
-        existing.groupKeys = [...new Set([...(existing.groupKeys || []), group.key])];
-      } else {
-        collection.set(record.id, { ...record, groupKeys: [group.key] });
-      }
-    });
+  bcBidSnapshot.newest.concat(bcBidSnapshot.boiler).forEach((record) => {
+    const existing = collection.get(record.id);
+    if (existing) {
+      existing.groupKeys = [...new Set([...(existing.groupKeys || []), record.sourceMode || "newest"])];
+    } else {
+      collection.set(record.id, { ...record, groupKeys: [record.sourceMode || "newest"] });
+    }
   });
 
   return [...collection.values()];
 }
 
 function getFilteredBcbidGroups(query = state.query.trim().toLowerCase()) {
-  return getBcbidSourceGroups()
+  return getBcbidSourceGroups(query)
     .map((group) => ({
       ...group,
       records: group.records.filter((record) => matchesBcbidQuery(record, query)),
@@ -897,7 +908,7 @@ function getBcbidAnalysisText(record) {
 }
 
 function getBcbidDisplaySource(record) {
-  return record.sourceMode === "keyword" ? "BC Bid keyword watch" : "BC Bid newest-opportunity snapshot";
+  return record.sourceMode === "keyword" ? "BC Bid search match" : "BC Bid public-browse snapshot";
 }
 
 function inferLocationFromText(text) {
@@ -1222,87 +1233,6 @@ function renderSignalInspector() {
 }
 
 function renderActionRoutingPreview() {
-  if (!dashboardDigestPreview || !dashboardLeadershipPreview) return;
-
-  const digestLead = getKnownLead(state.digestRecordId, state.digestPreviewLead);
-  const executiveLead = getKnownLead(state.executiveLeadId, state.executivePreviewLead);
-
-  const renderRouteCard = (lead, type) => {
-    const isDigest = type === "digest";
-    const title = isDigest ? "Morning Digest" : "Leadership Brief";
-    const kicker = isDigest ? "Daily triage route" : "Executive action route";
-    const description = isDigest
-      ? "This is the running shortlist view AME can use to review the strongest signals without rescanning the dashboard."
-      : "This is the executive handoff AME can use to assign an owner, route the right office, and draft the next move.";
-    const openLabel = isDigest ? "Open Morning Digest" : "Open Leadership Brief";
-    const openAttr = isDigest ? `data-open-route-digest="${esc(lead?.id || "")}"` : `data-open-route-brief="${esc(lead?.id || "")}"`;
-    const sourceMeta = lead?.sourceLabel ? { label: lead.sourceLabel } : getSourceMeta(lead?.sourceKey || "");
-
-    if (!lead) {
-      return `
-        <p class="section-tag">${esc(kicker)}</p>
-        <h4>${esc(title)}</h4>
-        <p class="empty-copy">${esc(description)}</p>
-        <div class="detail-block route-outcome-empty">
-          <p class="detail-label">Waiting for a routed lead</p>
-          <p>Send a project signal, BC Bid opportunity, or MERX notice here to make the workflow visible on the dashboard before opening the full page.</p>
-        </div>
-      `;
-    }
-
-    return `
-      <p class="section-tag">${esc(kicker)}</p>
-      <h4>${esc(title)}</h4>
-      <p class="empty-copy">${esc(description)}</p>
-      <div class="chip-row">
-        <span class="source-badge">${esc(sourceMeta.label || "Project Signal")}</span>
-        <span class="pill priority-${esc(lead.priorityKey || "watch")}">${esc(lead.priorityLabel || "Watch")}</span>
-        <span class="pill">${esc(formatDisplayLabel(lead.stageLabel || "Stage"))}</span>
-      </div>
-      <div class="route-outcome-summary">
-        <strong>${esc(lead.title)}</strong>
-        <span>${esc(lead.entity || "")}${lead?.entity ? " - " : ""}${esc(lead.location || "")}</span>
-      </div>
-      <div class="detail-block">
-        <p class="detail-label">${isDigest ? "Why it matters today" : "Ownership-ready next move"}</p>
-        <p>${esc(lead.whyItMatters || lead.summary || "No summary available.")}</p>
-      </div>
-      <div class="detail-block">
-        <p class="detail-label">Recommended action</p>
-        <p>${esc(lead.action || "Review the source and decide the next AME move.")}</p>
-      </div>
-      <div class="record-inline-actions">
-        <button class="record-inline-link action-blue" type="button" ${openAttr}>${esc(openLabel)}</button>
-        <button class="record-inline-link action-grey" type="button" data-nav-target="feed">Back To BC Project Intelligence Dashboard</button>
-      </div>
-    `;
-  };
-
-  dashboardDigestPreview.innerHTML = renderRouteCard(digestLead, "digest");
-  dashboardLeadershipPreview.innerHTML = renderRouteCard(executiveLead, "leadership");
-
-  dashboardDigestPreview.querySelectorAll("[data-open-route-digest]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const recordId = button.getAttribute("data-open-route-digest");
-      openMorningDigestPage(recordId || state.digestRecordId, getKnownLead(recordId, state.digestPreviewLead));
-    });
-  });
-
-  dashboardLeadershipPreview.querySelectorAll("[data-open-route-brief]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const recordId = button.getAttribute("data-open-route-brief");
-      openLeadershipBriefPage(recordId || state.executiveLeadId, getKnownLead(recordId, state.executivePreviewLead));
-    });
-  });
-
-  [dashboardDigestPreview, dashboardLeadershipPreview].forEach((panel) => {
-    panel.querySelectorAll("[data-nav-target]").forEach((button) => {
-      button.addEventListener("click", () => {
-        setActiveSection(button.getAttribute("data-nav-target"), true);
-      });
-    });
-  });
-
   syncDashboardLinks();
 }
 
@@ -1528,7 +1458,7 @@ function buildBcbidTransientLead() {
     summary: record.summary,
     sourceExcerpt: record.summary,
     whyItMatters: record.sourceMode === "keyword"
-      ? `Live BC Bid keyword-watch result showing how a search like boiler surfaces public procurement signals AME can qualify quickly.`
+    ? `Current BC Bid search result surfaced from the public browse flow and ready for AME qualification.`
       : `Live BC Bid newest-opportunity snapshot showing the platform can surface current public opportunities, not only older saved examples.`,
     action: analysis.action,
     goToMarketPlay: "Use the live public signal to qualify fit quickly, then decide whether it belongs in AME's daily triage or leadership routing.",
@@ -1545,7 +1475,7 @@ function buildBcbidTransientLead() {
     ],
     sourceLabel: "BC Bid Watch",
     recommendedOffice: getRecommendedOfficeName(record.location),
-    noticeState: record.sourceMode === "keyword" ? "Keyword watch match" : "Newest BC Bid example",
+  noticeState: record.sourceMode === "keyword" ? "Search result" : "Newest BC Bid example",
   };
 }
 
@@ -1791,7 +1721,7 @@ function renderTruthStrip() {
   const earlySignalCount = getEarlySignalRecords().length;
   const items = [
     ["Signals tracked", appData.processedRecords.length, "Municipal records currently loaded into the board."],
-    ["BC Bid watch", getAllBcbidRecords().length, "Current public-browse snapshot plus a live boiler keyword watch."],
+    ["BC Bid watch", getAllBcbidRecords().length, "Current BC Bid public opportunities scored for AME relevance."],
     ["Early signals", earlySignalCount, "Owner-side signals that surface before broad procurement visibility."],
     ["Priority leads", appData.briefing.totals.priorityCount, "High-fit opportunities scored for AME."],
     ["Meeting-linked docs", meetingLinkedCount, "Council-linked records surfaced before broad market visibility."],
@@ -2087,10 +2017,9 @@ function renderFilterWorkbench() {
 }
 
 function renderEarlySignalRadar() {
-  if (!earlySignalGrid || !monitoringSourceGrid) return;
+  if (!earlySignalGrid || !earlyCadenceStrip) return;
 
   const earlyRecords = getEarlySignalRecords().slice(0, 5);
-  const merxBuckets = getMerxNoticeBuckets();
 
   if (!earlyRecords.length) {
     earlySignalGrid.innerHTML = `
@@ -2135,29 +2064,16 @@ function renderEarlySignalRadar() {
     }).join("");
   }
 
-  monitoringSourceGrid.innerHTML = sourceMonitorProfiles.map((profile) => {
-    const sourceCount = profile.key === "public-notices"
-      ? merxBuckets.recent.length
-      : appData.processedRecords.filter((record) => record.sourceKey === profile.key).length;
-
-    return `
-      <article class="monitoring-source-card">
-        <div class="monitoring-source-head">
-          <p class="detail-label">${esc(profile.label)}</p>
-          <span class="pill signal-date">${esc(profile.cadenceLabel)}</span>
-        </div>
-        <h4 class="monitoring-source-title">${esc(profile.roleLabel)}</h4>
-        <div class="monitoring-source-block">
-          <strong>Watch</strong>
-          <span>${esc(profile.watchLabel)}</span>
-        </div>
-        <div class="chip-row">
-          <span class="pill">Examples ${esc(sourceCount)}</span>
-          <span class="pill">Earlier than tender</span>
-        </div>
-      </article>
-    `;
-  }).join("");
+  earlyCadenceStrip.innerHTML = sourceMonitorProfiles.map((profile) => `
+    <article class="early-cadence-card">
+      <div class="early-cadence-meta">
+        <span class="source-badge">${esc(profile.label)}</span>
+        <span class="pill signal-date">${esc(profile.cadenceLabel)}</span>
+      </div>
+      <h4>${esc(profile.roleLabel)}</h4>
+      <p class="early-cadence-copy">${esc(profile.watchLabel)}</p>
+    </article>
+  `).join("");
 
   earlySignalGrid.querySelectorAll("[data-early-inspect]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -2740,7 +2656,7 @@ function renderBcbidOptions() {
 
   if (bcbidStatus) {
     if (!query) {
-      bcbidStatus.textContent = `Newest public opportunities plus a live boiler keyword watch from BC Bid, checked ${bcBidSnapshot.checkedAtLabel}.`;
+  bcbidStatus.textContent = `Current BC Bid public opportunities checked ${bcBidSnapshot.checkedAtLabel}.`;
     } else {
       const total = groups.reduce((sum, group) => sum + group.records.length, 0);
       bcbidStatus.textContent = `${total} BC Bid result${total === 1 ? "" : "s"} match "${query}".`;
@@ -2752,7 +2668,7 @@ function renderBcbidOptions() {
       <article class="record-card record-card-empty">
         <p class="section-tag">No BC Bid matches</p>
         <h4 class="empty-title">No current BC Bid opportunities match this search.</h4>
-        <p class="empty-copy">Try a broader term like mechanical, pool, boiler, or Richmond.</p>
+        <p class="empty-copy">Try a broader term like mechanical, pool, Richmond, or community centre.</p>
       </article>
     `;
     return;
@@ -2772,7 +2688,7 @@ function renderBcbidOptions() {
           const isActive = record.id === state.selectedBcbidOpportunityId;
           const analysis = analyzeText(getBcbidAnalysisText(record), "procurement", "merx_import");
           const primaryService = analysis.serviceLines[0] || "General Review";
-          const stateLabel = record.sourceMode === "keyword" ? "Boiler watch match" : "Newest example";
+      const stateLabel = record.sourceMode === "keyword" ? "Search result" : "Newest example";
           const stateTone = record.sourceMode === "keyword" ? "signal-verified" : "signal-date";
 
           return `
@@ -2820,7 +2736,7 @@ function renderBcbidFields() {
     bcbidFields.innerHTML = `
       <p class="section-tag">BC Bid snapshot</p>
       <h4>Waiting for a current public opportunity</h4>
-      <p class="empty-copy">Select a newest BC Bid opportunity or a boiler keyword match to review the extracted snapshot.</p>
+      <p class="empty-copy">Select a current BC Bid opportunity to review the extracted snapshot.</p>
     `;
     return;
   }
@@ -2848,7 +2764,7 @@ function renderBcbidFields() {
       <p class="detail-label">Commodity / watch term</p>
       <div class="chip-row">
         <span class="pill">${esc(formatDisplayLabel(record.commodity))}</span>
-        ${record.sourceMode === "keyword" ? `<span class="pill signal-verified">Boiler watch</span>` : ""}
+        ${record.sourceMode === "keyword" ? `<span class="pill signal-verified">Search result</span>` : ""}
       </div>
     </div>
   `;
@@ -2864,8 +2780,8 @@ function renderBcbidResult() {
     bcbidResult.classList.add("is-pending-panel");
     bcbidResult.innerHTML = `
       <p class="section-tag">AME Recommendation</p>
-      <h4>Choose a BC Bid opportunity to run through the watch lane</h4>
-      <p class="empty-copy">This section proves two things: the platform can show current public opportunities, and a search term like boiler can surface live mechanical work immediately.</p>
+      <h4>Choose a BC Bid opportunity to run through the intake flow</h4>
+      <p class="empty-copy">This section shows current BC Bid public opportunities moving through the same AME qualification and routing workflow.</p>
     `;
     return;
   }
@@ -2924,7 +2840,7 @@ function renderBcbidResult() {
     <div class="detail-block merx-note">
       <p class="detail-label">Why this matters</p>
       <p>${esc(record.sourceMode === "keyword"
-        ? "This proves the watch term boiler surfaces live public opportunities that AME can qualify immediately."
+      ? "This shows a current BC Bid search result AME can qualify immediately."
         : "This proves the platform can surface truly current BC Bid public opportunities, not only static older examples.")}</p>
     </div>
     <div class="detail-block">
@@ -3160,7 +3076,7 @@ searchFilter.addEventListener("input", (event) => {
   const feedMatches = filterRecords({ source: state.source, priority: state.priority, query: normalized }).length;
   const bcbidMatches = getFilteredBcbidGroups(normalized).reduce((sum, group) => sum + group.records.length, 0);
 
-  if (normalized.includes("boiler") || (!feedMatches && bcbidMatches)) {
+  if (!feedMatches && bcbidMatches) {
     setActiveSection("bcbid", true);
   } else if (state.activeSection !== "feed") {
     setActiveSection("feed", true);

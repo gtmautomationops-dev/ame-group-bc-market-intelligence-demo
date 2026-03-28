@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260327-03" />
-<link rel="stylesheet" href="dashboard-fixes.css" />
+  <link rel="stylesheet" href="styles.css?v=20260327-05" />
+  <link rel="stylesheet" href="dashboard-fixes.css?v=20260327-04" />
 </head>
 <body>
   <header class="shell-topbar">
@@ -40,7 +40,7 @@
     <div class="shell-topbar-actions">
       <label class="topbar-search" aria-label="Search project signals">
         <span class="search-label">Search signals</span>
-        <input id="searchFilter" type="search" placeholder="Search city, project, keyword, or boiler" />
+        <input id="searchFilter" type="search" placeholder="Search city, project, or keyword" />
       </label>
       <div class="topbar-cta-stack">
         <a id="topCtaBriefing" class="ghost-button top-cta top-cta-briefing" href="artifacts/ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Leadership Brief</a>
@@ -90,16 +90,11 @@
         <div class="section-head section-head-stack">
           <div>
             <p class="section-tag">Early Signal Radar</p>
-            <h3>See the owner-side signals that surface before formal procurement visibility</h3>
+            <h3>Catch owner-side movement before formal procurement hits the market</h3>
           </div>
         </div>
-        <div class="early-radar-summary">
-          <p class="early-radar-summary-copy">Use these examples to show where AME can get ahead of broad procurement notices, and how often the watch layer needs to check those source types.</p>
-          <div id="monitoringSourceGrid" class="monitoring-source-grid"></div>
-        </div>
-        <div class="early-radar-column-head">
-          <p class="detail-label">Live early examples</p>
-          <p class="empty-copy">Inspect the source, then route the lead into Morning Digest or Leadership Brief from the main dashboard flow.</p>
+        <div class="early-radar-intro">
+          <p class="early-radar-summary-copy">Owner-side signals that surface before formal procurement - giving AME earlier positioning.</p>
         </div>
         <div id="earlySignalGrid" class="early-signal-grid"></div>
       </section>
@@ -156,13 +151,13 @@
         <div class="section-head section-head-stack">
           <div>
             <p class="section-tag">BC Bid Watch</p>
-            <h3>Current public opportunities with the same AME scoring and routing flow</h3>
+            <h3>Current BC Bid opportunities with the same intake, scoring, and routing flow</h3>
           </div>
         </div>
 
         <div class="merx-strip merx-strip-bcbid">
           <span class="merx-strip-pill">Live snapshot checked Mar 20, 2026</span>
-          <span class="merx-strip-copy">This section mirrors MERX Intake using current BC Bid public-browse examples. Use the main search bar above for terms like <strong>boiler</strong>, then route the strongest matches into Morning Digest or Leadership Brief.</span>
+          <span class="merx-strip-copy">This section mirrors the MERX workflow using live BC Bid public-browse examples. Search from the main bar above, then review, score, and route the strongest current opportunities into Morning Digest or Leadership Brief.</span>
         </div>
 
         <div id="bcbidSteps" class="flow-strip merx-steps"></div>
@@ -171,7 +166,7 @@
           <section class="merx-library">
             <div class="merx-library-head">
               <p class="detail-label">BC Bid opportunity list</p>
-              <p id="bcbidStatus" class="empty-copy">Newest public opportunities and a boiler keyword watch from the public browse page.</p>
+              <p id="bcbidStatus" class="empty-copy">Current BC Bid public opportunities scored for AME relevance.</p>
             </div>
             <div id="bcbidOptions" class="merx-notice-list"></div>
           </section>
@@ -217,20 +212,6 @@
         </div>
       </section>
 
-      <section id="workspaceRoutes" class="workspace-panel panel route-outcomes-panel" data-section="routes">
-        <div class="section-head section-head-stack">
-          <div>
-            <p class="section-tag">Action Routing</p>
-            <h3>See routed leads land in the morning and executive workflows</h3>
-          </div>
-        </div>
-
-        <div class="route-outcomes-grid">
-          <section id="dashboardDigestPreview" class="route-outcome-card"></section>
-          <section id="dashboardLeadershipPreview" class="route-outcome-card"></section>
-        </div>
-      </section>
-
       <section id="workspaceWorkflow" class="workspace-panel panel" data-section="workflow">
         <div class="section-head section-head-stack">
           <div>
@@ -267,7 +248,7 @@
     </main>
   </div>
 
-  <script src="data/ame-proof-app-data.js?v=20260327-03"></script>
-  <script src="script.js?v=20260327-03"></script>
+  <script src="data/ame-proof-app-data.js?v=20260327-05"></script>
+  <script src="script.js?v=20260327-05"></script>
 </body>
 </html>
