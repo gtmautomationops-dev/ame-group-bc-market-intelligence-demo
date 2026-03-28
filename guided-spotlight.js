@@ -1,11 +1,16 @@
-/* Spotlight dimmer — watches for tour-target-active and
-   toggles the page dimming overlay. Drop-in, no dependencies. */
-(function(){
-  var page = document.querySelector('.guided-demo-page');
+/* Spotlight dimmer for guided demo */
+(function () {
+  var page = document.querySelector(".guided-demo-page");
   if (!page) return;
-  var obs = new MutationObserver(function(){
-    var hasTarget = !!document.querySelector('.tour-target-active');
-    page.classList.toggle('has-active-target', hasTarget);
+
+  var obs = new MutationObserver(function () {
+    var hasTarget = !!document.querySelector(".tour-target-active");
+    page.classList.toggle("has-active-target", hasTarget);
   });
-  obs.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
+
+  obs.observe(document.body, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["class"],
+  });
 })();

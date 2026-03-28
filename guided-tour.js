@@ -126,6 +126,8 @@
       onEnter: () => {
         closePreview();
         openSection("feed");
+        setSourceFilter("all");
+        setPriorityFilter("all");
       },
       check: () => Boolean(document.querySelector("#signalInspector [data-open-digest='proof-006']")),
       showMe: () => clickSelector("#recordGrid [data-inspect-record='proof-006']"),
@@ -653,7 +655,7 @@
     } else if (step.actionRequired) {
       setStatus("Step completed. Continue when you are ready.", "success");
     } else {
-      setStatus("This step is orientation only. Read it, look at the highlighted area, and continue when ready.");
+      setStatus("Read-only step - review the highlighted area, then click Continue when ready.", "success");
     }
 
     renderProgress();
@@ -761,7 +763,13 @@
     if (!step) return;
 
     const target = resolveTarget(step.target);
-    focusTarget(target, step.cueText, Boolean(step.actionRequired && !state.stepSatisfied));
+    const needsAction = Boolean(step.actionRequired && !state.stepSatisfied);
+
+    if (!needsAction) {
+      hideActionCue();
+    }
+
+    focusTarget(target, step.cueText, needsAction);
 
     const satisfied = step.check ? Boolean(step.check()) : true;
     if (satisfied) {
@@ -774,6 +782,7 @@
 
   function goToStep(index) {
     if (index < 0 || index >= steps.length) return;
+    hideActionCue();
 
     state.stepIndex = index;
     state.stepSatisfied = false;

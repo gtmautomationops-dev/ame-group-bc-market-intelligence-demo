@@ -1,15 +1,5 @@
-/* ═══════════════════════════════════════════════════════
-   GUIDED DEMO FIXES — drop-in override
-   Add to guided-demo.html:
-   <link rel="stylesheet" href="guided-fixes.css" />
-   (after the existing styles.css link)
-   ═══════════════════════════════════════════════════════ */
+/* Guided demo drop-in overrides */
 
-/* ── 1. SIDEBAR SCROLL FIX ──
-   The rail was clipping content because inner elements
-   competed for height. Force the rail to scroll properly
-   and give the content room to breathe.
-*/
 .guided-demo-page .guided-tour-card.guided-tour-rail {
   max-height: calc(100vh - 7.5rem);
   overflow-y: auto;
@@ -48,11 +38,6 @@
   margin-top: auto;
 }
 
-/* ── 2. STRONGER ORANGE SPOTLIGHT ──
-   The old highlight was 34% opacity on a 4px ring.
-   Now it's a solid 6px ring with a pulsing glow and
-   a page-wide dimming overlay so the target POPS.
-*/
 .guided-demo-page .tour-target-active {
   position: relative !important;
   z-index: 82 !important;
@@ -66,7 +51,8 @@
 }
 
 @keyframes spotlightPulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow:
       0 0 0 6px rgba(245, 124, 0, 0.55),
       0 0 0 14px rgba(245, 124, 0, 0.18),
@@ -80,9 +66,8 @@
   }
 }
 
-/* Dimming overlay behind target — makes the active element unmissable */
 .guided-demo-page .guided-demo-main::before {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   background: rgba(7, 9, 14, 0.25);
@@ -96,10 +81,6 @@
   opacity: 1;
 }
 
-/* ── 3. STRONGER ACTION CUE (ORANGE PILL) ──
-   Bigger, bolder, with a bounce animation so it
-   actually draws the eye.
-*/
 .guided-action-cue {
   min-height: 2.8rem;
   padding: 0.8rem 1.3rem;
@@ -115,14 +96,15 @@
 }
 
 @keyframes cueBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
-/* ── 4. TIGHTER SIDEBAR CONTENT ──
-   Less padding, more compact panels so more
-   content fits without scrolling on 1080p screens.
-*/
 .guided-demo-page .guided-tour-card.guided-tour-rail {
   padding: 0.85rem;
   gap: 0.6rem;
@@ -149,17 +131,12 @@
   padding: 0.5rem 0.7rem;
 }
 
-/* ── 5. PREVIEW MODAL — less detached ──
-   Makes the preview actually feel like part of the
-   workflow instead of a floating popup.
-*/
 .guided-demo-page .guided-preview-card {
   max-width: 720px;
   max-height: calc(100vh - 10rem);
   overflow-y: auto;
 }
 
-/* ── RESPONSIVE ── */
 @media (max-width: 1180px) {
   .guided-demo-page .guided-tour-card.guided-tour-rail {
     max-height: calc(100vh - 7rem);
