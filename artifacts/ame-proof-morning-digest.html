@@ -127,11 +127,24 @@
       color: var(--ink);
       text-decoration: none;
       font-weight: 700;
+      cursor: pointer;
+    }
+    .topbar-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.6rem;
+      padding: 0.68rem 0.92rem;
+      border-radius: 999px;
+      background: rgba(15,102,176,0.08);
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
     }
     .link-pill.primary {
       border: 0;
       background: linear-gradient(135deg, var(--blue), #3889cd);
       color: #fff;
+      cursor: pointer;
     }
     .page {
       padding: 1.25rem 0 2.5rem;
@@ -162,7 +175,7 @@
     .hero h1 {
       font-size: clamp(1.9rem, 3vw, 3rem);
       line-height: 0.98;
-      max-width: 16ch;
+      max-width: 30ch;
     }
     .hero-stats {
       display: grid;
@@ -337,6 +350,7 @@
         <a href="./ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Leadership Brief</a>
       </nav>
       <div class="topbar-actions">
+        <span class="topbar-pill">March 27, 2026</span>
         <a class="link-pill" href="../index.html" target="_blank" rel="noreferrer">Back To BC Project Intelligence Dashboard</a>
         <button class="link-pill primary" type="button" data-open-brief>Open Leadership Brief</button>
       </div>
