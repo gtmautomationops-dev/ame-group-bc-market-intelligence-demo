@@ -1552,11 +1552,11 @@ function deriveServiceLines(text) {
   const normalized = text.toLowerCase();
   const lines = new Set();
 
-  if (/(mechanical|hvac|plumbing|pool|aquatic|natatorium|dehumidification)/.test(normalized)) {
+  if (/(mechanical|hvac|plumbing|pool|aquatic|natatorium|dehumidification|boiler|chiller|ahu|heat pump|hydronic)/.test(normalized)) {
     lines.add("Mechanical Design");
   }
   if (/(fire suppression|sprinkler|life safety)/.test(normalized)) lines.add("Fire Suppression Design");
-  if (/(energy|sustainability|decarbonization|heat recovery|heat exchanger)/.test(normalized)) {
+  if (/(energy|sustainability|decarbonization|heat recovery|heat exchanger|boiler|chiller|heat pump)/.test(normalized)) {
     lines.add("Energy + Sustainability");
   }
   if (/(commissioning|controls|bas|integration)/.test(normalized)) lines.add("Commissioning");
@@ -1586,6 +1586,7 @@ function getAction(category, classification, priorityKey) {
   if (category === "merx_import") {
     if (priorityKey === "priority") return "Prioritize for AME review and validate the buyer, consultant, and delivery path through the approved intake lane.";
     if (priorityKey === "watch") return "Keep in the import queue and validate scope, timing, and delivery path before briefing.";
+    if (classification === "Mechanical systems lead") return "Review scope for mechanical fit - boiler, chiller, and HVAC upgrades may align with AME services.";
     return "Do not brief unless the watch profile changes.";
   }
 
@@ -1893,8 +1894,13 @@ function selectRecord(recordId, options = {}) {
   if (shouldScroll && state.selectedRecordId && !focusInspector) {
     spotlightRecord(state.selectedRecordId);
   }
-  if (focusInspector && signalInspector) {
-    signalInspector.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (focusInspector) {
+    const feedSection = document.getElementById("workspaceFeed");
+    if (feedSection) {
+      const headerOffset = 140;
+      const top = feedSection.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+      window.scrollTo({ top: top, behavior: "smooth" });
+    }
   }
   flashPanel(signalInspector);
 }
@@ -2567,7 +2573,7 @@ function renderMerxResult() {
       </div>
       <div class="detail-block">
         <p class="detail-label">Suggested service lines</p>
-        <p>${esc(analysis.serviceLines.join(", ") || "No clear AME fit")}</p>
+        <p>${esc(analysis.serviceLines.join(", ") || "General review - validate scope")}</p>
       </div>
     </div>
     <div class="detail-block">
@@ -2830,7 +2836,7 @@ function renderBcbidResult() {
       </div>
       <div class="detail-block">
         <p class="detail-label">Suggested service lines</p>
-        <p>${esc(analysis.serviceLines.join(", ") || "No clear AME fit")}</p>
+        <p>${esc(analysis.serviceLines.join(", ") || "General review - validate scope")}</p>
       </div>
     </div>
     <div class="detail-block">
