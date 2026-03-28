@@ -338,8 +338,8 @@ const realImportNotices = [
 ];
 
 const bcBidSnapshot = {
-  checkedAtLabel: "Mar 20, 2026",
-  checkedAtDetail: "Live snapshot checked from the BC Bid public browse page on Mar 20, 2026.",
+  checkedAtLabel: "Mar 27, 2026",
+  checkedAtDetail: "Live snapshot checked from the BC Bid public browse page on Mar 27, 2026.",
   newest: [
     {
       id: "226887",
