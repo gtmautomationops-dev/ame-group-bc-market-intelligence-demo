@@ -597,7 +597,7 @@
       <article class="panel hero-card">
         <div class="hero-title">
           <h1>AME Leadership Brief</h1>
-          <p><strong>4 priority leads ready for assignment - March 27, 2026</strong></p>
+          <p><strong id="heroSubtitle">4 priority leads ready for assignment - March 27, 2026</strong></p>
         </div>
         <div class="hero-stat-grid">
           <article class="metric">
@@ -1216,6 +1216,8 @@
       const watchCount = executiveLeads.filter(function (lead) { return lead.priorityKey === "watch"; }).length;
 
       if (heroPriorityCount) heroPriorityCount.textContent = String(priorityCount);
+      var heroSub = document.getElementById("heroSubtitle");
+      if (heroSub) heroSub.textContent = priorityCount + " priority leads ready for assignment - March 27, 2026";
       if (heroWatchCount) heroWatchCount.textContent = String(watchCount);
       if (priorityActiveCount) priorityActiveCount.textContent = priorityCount + " active";
     }

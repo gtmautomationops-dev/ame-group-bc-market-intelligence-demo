@@ -1747,7 +1747,7 @@ function renderShellSnapshot() {
 
   if (heroLastRun) heroLastRun.textContent = latestRunLabel;
   if (heroLastChecked) heroLastChecked.textContent = lastCheckedValue;
-  if (heroMerxCount) heroMerxCount.textContent = `${merxBuckets.recent.length} MERX / ${bcBidSnapshot.newest.length} BC Bid`;
+  if (heroMerxCount) heroMerxCount.textContent = `${merxBuckets.recent.length} MERX / ${getAllBcbidRecords().length} BC Bid`;
   if (heroPriorityCount) heroPriorityCount.textContent = `${priorityCount} Priority Leads`;
   if (heroEarlyCount) heroEarlyCount.textContent = `${earlySignalCount} Early Signals`;
 }

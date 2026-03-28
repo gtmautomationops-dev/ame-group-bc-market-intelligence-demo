@@ -363,7 +363,7 @@
     <section class="panel hero">
       <div>
         <h1>AME Morning Digest</h1>
-        <p><strong>4 priority leads for morning review - March 27, 2026</strong></p>
+        <p><strong id="heroSubtitle">4 priority leads for morning review - March 27, 2026</strong></p>
       </div>
       <div class="hero-stats">
         <article class="metric">
@@ -553,6 +553,8 @@
       const parts = [priorityCount + " priority", watchCount + " watchlist"];
       if (otherCount > 0) parts.push(otherCount + " other");
       digestCount.textContent = parts.join(" / ");
+      var heroSub = document.getElementById("heroSubtitle");
+      if (heroSub) heroSub.textContent = priorityCount + " priority leads for morning review - March 27, 2026";
     }
 
     function saveDigestRecord(recordId) {
