@@ -10,7 +10,7 @@ if (!appData) {
   document.body.innerHTML = `
     <main style="width:min(760px, calc(100vw - 2rem)); margin:4rem auto; color:#19222d; font-family:Aptos,Segoe UI,sans-serif;">
       <h1 style="font-family:Bahnschrift,Arial Narrow,sans-serif;">Proof data not found</h1>
-      <p>Run the pipeline to build the data file before opening this page.</p>
+      <p>Run <code>run-demo.ps1</code> to build <code>data/ame-proof-app-data.js</code> before opening this page.</p>
     </main>
   `;
   throw new Error("AME_DEMO_DATA is not available.");
@@ -1019,7 +1019,9 @@ function flashPanel(element) {
     window.setTimeout(() => {
       element.classList.remove("is-updated");
     }, 1200);
-  }
+  });
+}
+
 function showRouteConfirmation(message) {
   var toast = document.getElementById("routeToast");
   if (!toast) {
@@ -1032,8 +1034,6 @@ function showRouteConfirmation(message) {
   toast.style.opacity = "1";
   clearTimeout(toast._timer);
   toast._timer = setTimeout(function() { toast.style.opacity = "0"; }, 2400);
-}
-);
 }
 
 function spotlightRecord(recordId) {
@@ -1776,7 +1776,7 @@ function renderRunHistory() {
       <article class="run-history-card">
         <p class="section-tag">Run status</p>
         <h4>No local run history yet</h4>
-        <p class="empty-copy">The pipeline has not run yet. Run the automation to populate the dashboard.</p>
+        <p class="empty-copy">Run <code>run-demo.ps1</code> to stamp the dashboard with a local execution time and refreshed outputs.</p>
       </article>
     `;
     runHistoryList.innerHTML = "";
