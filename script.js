@@ -10,7 +10,7 @@ if (!appData) {
   document.body.innerHTML = `
     <main style="width:min(760px, calc(100vw - 2rem)); margin:4rem auto; color:#19222d; font-family:Aptos,Segoe UI,sans-serif;">
       <h1 style="font-family:Bahnschrift,Arial Narrow,sans-serif;">Proof data not found</h1>
-      <p>Run <code>run-demo.ps1</code> to build <code>data/ame-proof-app-data.js</code> before opening this page.</p>
+      <p>Run the pipeline to build the data file before opening this page.</p>
     </main>
   `;
   throw new Error("AME_DEMO_DATA is not available.");
@@ -792,7 +792,7 @@ function getMerxNoticeState(notice) {
     key: "reference",
     label: "Reference notice",
     timeline: `Reference from ${closingLabel}`,
-    explainer: "This older notice stays here as a demo example for the intake workflow.",
+    explainer: "This older notice is a reference example for the intake workflow.",
     actionLabel: "Open Example",
   };
 }
@@ -1019,7 +1019,21 @@ function flashPanel(element) {
     window.setTimeout(() => {
       element.classList.remove("is-updated");
     }, 1200);
-  });
+  }
+function showRouteConfirmation(message) {
+  var toast = document.getElementById("routeToast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "routeToast";
+    toast.style.cssText = "position:fixed;top:5.5rem;left:50%;transform:translateX(-50%);z-index:200;padding:0.7rem 1.4rem;border-radius:12px;background:#1a6b3c;color:#fff;font-weight:600;font-size:0.92rem;box-shadow:0 8px 24px rgba(0,0,0,0.18);opacity:0;transition:opacity 0.3s;pointer-events:none;";
+    document.body.appendChild(toast);
+  }
+  toast.textContent = "\u2713 " + message;
+  toast.style.opacity = "1";
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(function() { toast.style.opacity = "0"; }, 2400);
+}
+);
 }
 
 function spotlightRecord(recordId) {
@@ -1586,7 +1600,7 @@ function getAction(category, classification, priorityKey) {
   if (category === "merx_import") {
     if (priorityKey === "priority") return "Prioritize for AME review and validate the buyer, consultant, and delivery path through the approved intake lane.";
     if (priorityKey === "watch") return "Keep in the import queue and validate scope, timing, and delivery path before briefing.";
-    if (classification === "Mechanical systems lead") return "Review scope for mechanical fit - boiler, chiller, and HVAC upgrades may align with AME services.";
+    if (classification === "Mechanical systems lead") return "Review scope for mechanical fit — boiler, chiller, and HVAC upgrades may align with AME services.";
     return "Do not brief unless the watch profile changes.";
   }
 
@@ -1673,8 +1687,7 @@ function formatPriorityFilterLabel(key) {
 
 function matchesPriority(record, priorityKey) {
   if (priorityKey === "all") return true;
-  const order = { filtered: 0, peripheral: 1, watch: 2, priority: 3 };
-  return order[record.priorityKey] >= (order[priorityKey] || 0);
+  return record.priorityKey === priorityKey;
 }
 
 function matchesQuery(record, query) {
@@ -1763,7 +1776,7 @@ function renderRunHistory() {
       <article class="run-history-card">
         <p class="section-tag">Run status</p>
         <h4>No local run history yet</h4>
-        <p class="empty-copy">Run <code>run-demo.ps1</code> to stamp the dashboard with a local execution time and refreshed outputs.</p>
+        <p class="empty-copy">The pipeline has not run yet. Run the automation to populate the dashboard.</p>
       </article>
     `;
     runHistoryList.innerHTML = "";
@@ -1774,7 +1787,7 @@ function renderRunHistory() {
     <article class="run-history-card run-history-card-primary">
       <p class="section-tag">Latest local automation run</p>
       <h4>${esc(latestRun.label)}</h4>
-      <p class="empty-copy">${esc(latestRun.detail || "Local demo rebuild completed.")}</p>
+      <p class="empty-copy">${esc(latestRun.detail || "Pipeline refresh completed.")}</p>
       <div class="run-history-kpis">
         <div class="run-kpi">
           <span class="detail-label">Signals loaded</span>
@@ -1795,7 +1808,7 @@ function renderRunHistory() {
       </div>
       <div class="chip-row">
         <span class="pill signal-verified">${esc(latestRun.status || "Completed")}</span>
-        <span class="pill">${esc(latestRun.mode || "Local demo rebuild")}</span>
+        <span class="pill">${esc(latestRun.mode || "Pipeline refresh")}</span>
         <span class="pill">Verified data date ${esc(formatDate(latestRun.verifiedDate || appData.truthModel?.lastVerifiedAt))}</span>
       </div>
     </article>
@@ -1810,7 +1823,7 @@ function renderRunHistory() {
         </div>
         <span class="pill ${index === 0 ? "signal-verified" : "signal-date"}">${esc(run.status || "Completed")}</span>
       </div>
-      <p class="run-history-copy">${esc(run.detail || "Local demo rebuild completed.")}</p>
+      <p class="run-history-copy">${esc(run.detail || "Pipeline refresh completed.")}</p>
       <div class="chip-row">
         <span class="pill">Signals ${esc(run.signalsLoaded || 0)}</span>
         <span class="pill">Priority ${esc(run.priorityLeads || 0)}</span>
@@ -1853,6 +1866,7 @@ function selectDigestRecord(recordId, shouldScroll = false) {
   renderSignalInspector();
   renderEarlySignalRadar();
   renderActionRoutingPreview();
+  showRouteConfirmation("Routed to Morning Digest");
   if (briefingTable && artifactPreview) {
     setActiveSection("briefing", shouldScroll);
     renderBriefingTable();
@@ -1873,6 +1887,7 @@ function routeSelectedSignalToLeadership(recordId, shouldOpen = true) {
   renderSignalInspector();
   renderEarlySignalRadar();
   renderActionRoutingPreview();
+  showRouteConfirmation("Routed to Leadership Brief");
   renderBriefingTable();
   renderArtifact();
   if (shouldOpen) {
@@ -1895,10 +1910,10 @@ function selectRecord(recordId, options = {}) {
     spotlightRecord(state.selectedRecordId);
   }
   if (focusInspector) {
-    const feedSection = document.getElementById("workspaceFeed");
+    var feedSection = document.getElementById("workspaceFeed");
     if (feedSection) {
-      const headerOffset = 140;
-      const top = feedSection.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+      var headerOffset = 140;
+      var top = feedSection.getBoundingClientRect().top + window.pageYOffset - headerOffset;
       window.scrollTo({ top: top, behavior: "smooth" });
     }
   }
@@ -2360,7 +2375,7 @@ function renderMerxOptions() {
     {
       key: "reference",
       title: "Reference notices",
-      copy: "Older notices stay here only as demo examples, not as fresh market signals.",
+      copy: "Older notices are kept as reference examples.",
       notices: buckets.reference,
     },
   ].filter((group) => group.notices.length);
@@ -2503,7 +2518,7 @@ function renderMerxResult() {
     merxResult.classList.add("is-pending-panel");
     merxResult.innerHTML = `
       <p class="section-tag">AME Recommendation</p>
-      <h4>Choose a real notice to run the demo</h4>
+      <h4>Select a public notice to run through intake</h4>
       <p class="empty-copy">This section shows how AME would score a real imported notice once an approved MERX alert path is available.</p>
     `;
     return;
@@ -2573,7 +2588,7 @@ function renderMerxResult() {
       </div>
       <div class="detail-block">
         <p class="detail-label">Suggested service lines</p>
-        <p>${esc(analysis.serviceLines.join(", ") || "General review - validate scope")}</p>
+        <p>${esc(analysis.serviceLines.join(", ") || "General review — validate scope")}</p>
       </div>
     </div>
     <div class="detail-block">
@@ -2836,7 +2851,7 @@ function renderBcbidResult() {
       </div>
       <div class="detail-block">
         <p class="detail-label">Suggested service lines</p>
-        <p>${esc(analysis.serviceLines.join(", ") || "General review - validate scope")}</p>
+        <p>${esc(analysis.serviceLines.join(", ") || "General review — validate scope")}</p>
       </div>
     </div>
     <div class="detail-block">
