@@ -34,7 +34,7 @@
       box-shadow: 0 8px 24px rgba(19, 33, 54, 0.05);
     }
     .brief-topbar-inner {
-      width: min(1480px, calc(100vw - 2rem));
+      width: min(1640px, calc(100vw - 1.5rem));
       margin: 0 auto;
       padding: 1rem 0;
       display: grid;
@@ -128,7 +128,7 @@
       text-decoration: none;
     }
     .page {
-      width: min(1480px, calc(100vw - 2rem));
+      width: min(1640px, calc(100vw - 1.5rem));
       margin: 0 auto;
       padding: 1.25rem 0 2.5rem;
       display: grid;
@@ -307,7 +307,7 @@
     .metric.watch strong { color: var(--green); }
     .content-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.2fr) 320px;
+      grid-template-columns: minmax(0, 1.45fr) 300px;
       gap: 1rem;
       align-items: start;
     }
@@ -319,7 +319,7 @@
       justify-content: space-between;
       gap: 1rem;
     }
-    .priority-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    .priority-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
     .brief-card {
       border: 1px solid var(--line);
       border-radius: 20px;

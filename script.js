@@ -342,80 +342,41 @@ const bcBidSnapshot = {
   checkedAtDetail: "Live snapshot checked from the BC Bid public browse page on Mar 27, 2026.",
   newest: [
     {
-      id: "226887",
-      title: "RFI-2026-03-20-CRE Residential Rental",
-      commodity: "Request for Information",
-      opportunityType: "Request for Information (BPS)",
-      issueDate: "2026-03-20 3:08:07 PM",
-      closeDate: "2026-03-30 4:30:00 PM",
-      issuingOrganization: "Northern Health Authority",
-      location: "Northern BC",
-      summary: "Current public-browse example showing a same-day BC Bid posting from Northern Health.",
-      sourceUrl: BCBID_BROWSE_URL,
-      sourceMode: "latest",
-    },
-    {
-      id: "8557P",
-      title: "Property Management Service for Childcare Facilities",
-      commodity: "Property management services",
+      id: "BCP26-JO-08",
+      title: "Heating Ventilation and Air Conditioning (HVAC) Fan Restoration",
+      commodity: "Heating and cooling and air conditioning HVAC construction and maintenance services",
       opportunityType: "Request for Proposal (BPS)",
-      issueDate: "2026-03-20 3:00:00 PM",
-      closeDate: "2026-04-17 3:00:00 PM",
-      issuingOrganization: "City of Richmond",
-      location: "Richmond, BC",
-      summary: "A fresh owner-side facilities opportunity posted on BC Bid the same day as the live snapshot.",
-      sourceUrl: BCBID_BROWSE_URL,
-      sourceMode: "latest",
-    },
-    {
-      id: "226712",
-      title: "Emergency Equipment Outfitting for Vancouver Fire Rescue Services Battalion Chief Vehicles",
-      commodity: "Emergency equipment outfitting",
-      opportunityType: "Request for Proposal (BPS)",
-      issueDate: "2026-03-20 3:00:00 PM",
-      closeDate: "2026-04-20 3:00:00 PM",
-      issuingOrganization: "City of Vancouver",
+      issueDate: "2026-03-27 5:23:10 PM",
+      closeDate: "2026-04-22 2:00:00 PM",
+      issuingOrganization: "PavCo (BC Pavilion Corporation)",
       location: "Vancouver, BC",
-      summary: "A current City of Vancouver public posting included here to prove the platform can surface truly new BC Bid activity.",
+      summary: "Current BC Bid public-browse opportunity for HVAC fan restoration work.",
       sourceUrl: BCBID_BROWSE_URL,
       sourceMode: "latest",
     },
     {
-      id: "226886",
-      title: "Secure E-Device for E-Service's and Electronic Disclosure",
-      commodity: "Notice of Intent",
-      opportunityType: "Notice of Intent",
-      issueDate: "2026-03-20 2:50:13 PM",
-      closeDate: "2026-03-30 3:30:00 PM",
-      issuingOrganization: "Ministry of Public Safety and Solicitor General",
-      location: "Victoria, BC",
-      summary: "A same-day provincial posting that proves the platform captures current activity, even when the opportunity is not an AME fit.",
-      sourceUrl: BCBID_BROWSE_URL,
-      sourceMode: "latest",
-    },
-    {
-      id: "2026-P010",
-      title: "Rose Valley Dam Spillway Options Assessment Phase 2",
-      commodity: "Engineering and infrastructure assessment",
+      id: "4198",
+      title: "Nanaimo Aquatic Centre Water Feature Feature Project",
+      commodity: "Swimming pool construction service",
       opportunityType: "Request for Proposal (BPS)",
-      issueDate: "2026-03-20 2:00:11 PM",
-      closeDate: "2026-04-16 2:00:00 PM",
-      issuingOrganization: "City of West Kelowna",
-      location: "West Kelowna, BC",
-      summary: "A live municipal engineering assessment example from the newest BC Bid public list.",
+      issueDate: "2026-03-27 3:36:41 PM",
+      closeDate: "2026-04-28 3:00:00 PM",
+      issuingOrganization: "City of Nanaimo",
+      location: "Nanaimo, BC",
+      summary: "Current BC Bid public-browse aquatic-facility opportunity tied to Nanaimo Aquatic Centre water feature work.",
       sourceUrl: BCBID_BROWSE_URL,
       sourceMode: "latest",
     },
     {
-      id: "226709",
-      title: "PA26007 - Supply of Software-as-a-Service (SaaS) Subscriptions",
-      commodity: "Software subscriptions",
-      opportunityType: "Request for Quotation (BPS)",
-      issueDate: "2026-03-20 2:00:00 PM",
-      closeDate: "2026-04-03 2:00:00 PM",
-      issuingOrganization: "Capital Regional District",
-      location: "Victoria, BC",
-      summary: "A current CRD posting that stays in the watch section as a low-fit control example.",
+      id: "227238",
+      title: "2026-RFP-13 Construction of Upgrades - AWWTP",
+      commodity: "Building and Facility Construction and Maintenance Services",
+      opportunityType: "Request for Proposal (BPS)",
+      issueDate: "2026-03-27 5:00:00 PM",
+      closeDate: "2026-05-12 2:00:00 PM",
+      issuingOrganization: "City of Penticton",
+      location: "Penticton, BC",
+      summary: "Current BC Bid public-browse construction opportunity from the City of Penticton.",
       sourceUrl: BCBID_BROWSE_URL,
       sourceMode: "latest",
     },
@@ -874,6 +835,15 @@ function matchesBcbidQuery(record, query) {
   return haystack.includes(query);
 }
 
+function isRelevantBcbidRecord(record) {
+  const analysis = analyzeText(getBcbidAnalysisText(record), "procurement", "merx_import");
+  const analysisText = getBcbidAnalysisText(record).toLowerCase();
+
+  if (analysis.serviceLines.length > 0 && analysis.priorityKey !== "filtered") return true;
+
+  return /(aquatic|pool|hvac|boiler|chiller|ahu|heat pump|hydronic|mechanical|commissioning|cooling coil|heat recovery|construction)/.test(analysisText);
+}
+
 function getAllBcbidRecords() {
   const collection = new Map();
 
@@ -893,7 +863,7 @@ function getFilteredBcbidGroups(query = state.query.trim().toLowerCase()) {
   return getBcbidSourceGroups(query)
     .map((group) => ({
       ...group,
-      records: group.records.filter((record) => matchesBcbidQuery(record, query)),
+      records: group.records.filter((record) => matchesBcbidQuery(record, query) && isRelevantBcbidRecord(record)),
     }))
     .filter((group) => group.records.length);
 }
@@ -1705,7 +1675,6 @@ function matchesQuery(record, query) {
     record.summary,
     record.assetType,
     record.classification,
-    record.sourceExcerpt,
     (record.ameServiceLines || []).join(" "),
     (record.keywordHits || []).join(" "),
     (record.tags || []).join(" "),
