@@ -351,6 +351,7 @@
       border-radius: 14px;
       background: #f7faff;
       padding: 0.72rem 0.8rem;
+      text-align: center;
     }
     .mini-metric span {
       display: block;
@@ -358,12 +359,14 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--muted);
+      text-align: center;
     }
     .mini-metric strong {
       display: block;
       margin-top: 0.2rem;
       font-size: 1.05rem;
       color: var(--ink);
+      text-align: center;
     }
     .mini-pill {
       display: inline-flex;
@@ -507,6 +510,7 @@
       border: 1px solid var(--line);
       border-radius: 16px;
       background: rgba(247,250,255,0.98);
+      text-align: center;
     }
     .route-row p {
       margin: 0;
@@ -514,9 +518,10 @@
     }
     .route-row-head {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
+      justify-content: center;
+      gap: 0.2rem;
     }
     .section-shell {
       display: grid;
@@ -537,6 +542,12 @@
     .rail-column > .panel:last-child {
       display: grid;
       gap: 0.75rem;
+    }
+    .rail-column > .panel:last-child > h3,
+    .rail-column > .panel:last-child > p,
+    .executive-card > h3,
+    .executive-card > p {
+      text-align: center;
     }
     ul { margin: 0.75rem 0 0; padding-left: 1rem; }
     @media (max-width: 1180px) {

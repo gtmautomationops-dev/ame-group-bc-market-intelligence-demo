@@ -89,6 +89,20 @@
   text-align: center;
 }
 
+/* ── 7b. STAT CARDS — center numbers and supporting copy ── */
+.truth-card,
+.run-kpi {
+  text-align: center;
+}
+
+.truth-card .metric-label,
+.truth-card .metric-value,
+.truth-card .metric-note,
+.run-kpi .detail-label,
+.run-kpi strong {
+  text-align: center;
+}
+
 /* ── 8. FLOW STRIPS — sticky so steps stay visible during all workflows ── */
 /* Covers Project Signals (.signal-steps), BC Bid Watch and MERX Intake (.merx-steps) */
 .signal-steps,
