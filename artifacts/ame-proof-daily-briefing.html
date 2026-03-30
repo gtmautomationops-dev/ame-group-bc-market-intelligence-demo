@@ -1093,8 +1093,8 @@
       const people = teamDirectory[role] || [];
       const person = people.find(function (item) { return item.name === selectedPersonName; }) || people[0] || { name: "Unassigned", credentials: "" };
       const firstName = getFirstName(person.name);
-      const ownerAlias = toAlias(person.name) + "@ame-demo.local";
-      const officeAlias = toAlias(office ? office.name : "ame-office") + "@ame-demo.local";
+      const ownerAlias = toAlias(person.name) + "@amegroup.ca";
+      const officeAlias = toAlias(office ? office.name : "ame-office") + "@amegroup.ca";
       const serviceLines = formatServiceLines(lead ? lead.serviceLines : []);
 
       return {
@@ -1190,11 +1190,11 @@
         "",
         "Please reply with your view on timing, relationships, and any scope nuance before the leadership handoff goes out.",
         "",
-        "AME Market Intelligence Demo"
+        "AME Market Intelligence"
       ].join("\n");
 
       let contactDraft = [
-        "Demo Contact Response",
+        "Contact Response",
         "",
         "Office: " + (office ? office.name : "AME Office"),
         "Phone: " + (office ? office.phone : "TBD"),
@@ -1241,11 +1241,11 @@
         + '</div>';
 
       draftPanel.innerHTML = ''
-        + '<p class="detail-label">Internal Routing Email [demo draft only]</p>'
+        + '<p class="detail-label">Internal Routing Email [draft]</p>'
         + '<p class="draft-copy">' + esc(internalDraft) + '</p>';
 
       replyPanel.innerHTML = ''
-        + '<p class="detail-label">Contact Response [demo draft only]</p>'
+        + '<p class="detail-label">Contact Response [draft]</p>'
         + '<p class="draft-copy">' + esc(contactDraft) + '</p>';
 
       const hasQueuedMatch = Boolean(
@@ -1276,7 +1276,7 @@
       } else {
         outcomePanel.innerHTML = ''
           + '<p class="detail-label">Assignment Queue</p>'
-          + '<p class="draft-copy">Queue the assignment after you review the drafts. The demo will then show who owns the lead, which office it routes through, and when leadership should check back in.</p>';
+          + '<p class="draft-copy">Queue the assignment after you review the drafts. The console will then show who owns the lead, which office it routes through, and when leadership should check back in.</p>';
         queueButton.textContent = "Queue Assignment";
         queueButton.classList.remove("is-complete");
       }

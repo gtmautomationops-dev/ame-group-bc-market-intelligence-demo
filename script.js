@@ -841,9 +841,7 @@ function hasStrongBcbidFit(record, analysis) {
 }
 
 function isRelevantBcbidRecord(record) {
-  const analysis = analyzeText(getBcbidAnalysisText(record), "procurement", "merx_import");
-  if (!isCurrentBcbidRecord(record)) return false;
-  return hasStrongBcbidFit(record, analysis);
+  return true;
 }
 
 function getAllBcbidRecords() {
@@ -1894,14 +1892,12 @@ function selectRecord(recordId, options = {}) {
     if (signalInspector) {
       signalInspector.scrollTop = 0;
     }
-    var header = document.querySelector(".shell-topbar");
-    var feedSection = document.getElementById("workspaceFeed");
-    var anchor = feedSection || signalSteps || signalInspector;
-    if (anchor) {
-      var headerOffset = (header && header.getBoundingClientRect().height ? header.getBoundingClientRect().height : 112) + 32;
-      var top = anchor.getBoundingClientRect().top + window.pageYOffset - headerOffset;
-      window.scrollTo({ top: top, behavior: "smooth" });
-    }
+    setTimeout(function() {
+      var el = signalInspector || document.getElementById("workspaceFeed");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 100);
   }
   flashPanel(signalInspector);
 }
