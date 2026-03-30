@@ -307,11 +307,11 @@
     .metric.watch strong { color: var(--green); }
     .content-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.45fr) 300px;
+      grid-template-columns: minmax(0, 1.52fr) 290px;
       gap: 1rem;
       align-items: start;
     }
-    .lead-column, .rail-column { display: grid; gap: 1rem; }
+    .lead-column, .rail-column { display: grid; gap: 0.85rem; }
     .priority-shell { display: grid; gap: 0.9rem; }
     .priority-header {
       display: flex;
@@ -319,7 +319,7 @@
       justify-content: space-between;
       gap: 1rem;
     }
-    .priority-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+    .priority-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
     .brief-card {
       border: 1px solid var(--line);
       border-radius: 20px;
@@ -503,10 +503,14 @@
     .principal-row {
       display: grid;
       gap: 0.45rem;
-      padding: 0.85rem;
+      padding: 0.75rem;
       border: 1px solid var(--line);
       border-radius: 16px;
       background: rgba(247,250,255,0.98);
+    }
+    .route-row p {
+      margin: 0;
+      font-size: 0.84rem;
     }
     .route-row-head {
       display: flex;
@@ -529,6 +533,15 @@
       flex-wrap: wrap;
       gap: 0.5rem;
       align-items: center;
+    }
+    .rail-column > .panel:last-child {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+    .rail-column > .panel:last-child > h3,
+    .rail-column > .panel:last-child > p {
+      grid-column: 1 / -1;
     }
     ul { margin: 0.75rem 0 0; padding-left: 1rem; }
     @media (max-width: 1180px) {
@@ -869,38 +882,6 @@
   <p class="console-footnote">Team names and office routing options are grounded in AME's published team and office directories. The drafts below remain demo copy.</p>
 </section>
         <section class="panel rail-card">
-  <h3>Automation Log</h3>
-  <p>Pipeline run history. It shows when the package was rebuilt, separate from the source verification date.</p>
-  <div class="brief-card-metrics">
-    <div class="mini-metric">
-      <span>Latest run</span>
-      <strong>Mar 19, 2026 4:55 PM</strong>
-    </div>
-    <div class="mini-metric">
-      <span>Signals loaded</span>
-      <strong>9</strong>
-    </div>
-    <div class="mini-metric">
-      <span>Priority leads</span>
-      <strong>7</strong>
-    </div>
-    <div class="mini-metric">
-      <span>Early signals</span>
-      <strong>5</strong>
-    </div>
-  </div>
-  <div class="principal-row">
-  <strong>Mar 19, 2026 4:55 PM</strong>
-  <p>Dashboard, Morning Digest, and Leadership Brief refreshed from the latest pipeline run.</p>
-  <p>Signals: 9 | Priority: 7 | Early: 5</p>
-</div>
-<div class="principal-row">
-  <strong>Mar 19, 2026 3:50 PM Mar 19, 2026 3:42 PM</strong>
-  <p>Dashboard, Morning Digest, and Leadership Brief refreshed from the latest pipeline run. Dashboard, Morning Digest, and Leadership Brief refreshed from the latest pipeline run.</p>
-  <p>Signals: 9 9 | Priority: 7 7 | Early: 5 5</p>
-</div>
-</section>
-        <section class="panel rail-card">
           <h3>Office Routing Snapshot</h3>
           <p>Use these recommended routes to keep the shortlist aligned with the most relevant office before the handoff goes out.</p>
           <div class="route-row">
@@ -935,52 +916,6 @@
   <p>Use AME's office directory to route the current shortlist for local follow-up.</p>
   <a class="brief-link muted-link" href="https://amegroup.ca/contact-us/" target="_blank" rel="noreferrer">Open Office Contact</a>
 </div>
-        </section>
-        <section class="panel rail-card">
-          <h3>Review Bench</h3>
-          <p>Suggested principal-review bench based on the AME leadership structure you provided.</p>
-          <div class="principal-row">
-  <strong>Louise McKenzie</strong>
-  <p>Principal listed on AME&#39;s leadership team.</p>
-  <a class="brief-link muted-link" href="https://amegroup.ca/our-team/" target="_blank" rel="noreferrer">Open Leadership Team</a>
-</div>
-<div class="principal-row">
-  <strong>Reza Mousakhani</strong>
-  <p>Principal listed on AME&#39;s leadership team.</p>
-  <a class="brief-link muted-link" href="https://amegroup.ca/our-team/" target="_blank" rel="noreferrer">Open Leadership Team</a>
-</div>
-        </section>
-        <section class="panel rail-card">
-          <h3>Market Shape</h3>
-          <div class="sector-row">
-  <div class="sector-head">
-    <strong>Recreation</strong>
-    <span>4 active leads</span>
-  </div>
-  <div class="sector-bar"><span style="width:100%"></span></div>
-</div>
-<div class="sector-row">
-  <div class="sector-head">
-    <strong>Civic</strong>
-    <span>1 active lead</span>
-  </div>
-  <div class="sector-bar"><span style="width:25%"></span></div>
-</div>
-<div class="sector-row">
-  <div class="sector-head">
-    <strong>Infrastructure</strong>
-    <span>0 active leads</span>
-  </div>
-  <div class="sector-bar"><span style="width:8%"></span></div>
-</div>
-        </section>
-        <section class="panel rail-card">
-          <h3>Reference Directories</h3>
-          <p>Support links only. The live executive workflow should happen in the console and action cards on this page.</p>
-          <div class="support-links">
-            <a class="brief-link muted-link" href="https://amegroup.ca/our-team/" target="_blank" rel="noreferrer">Open Team Directory</a>
-            <a class="brief-link muted-link" href="https://amegroup.ca/contact-us/" target="_blank" rel="noreferrer">Open Office Directory</a>
-          </div>
         </section>
       </aside>
     </section>

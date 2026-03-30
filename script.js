@@ -364,20 +364,7 @@ const bcBidSnapshot = {
       issuingOrganization: "City of Nanaimo",
       location: "Nanaimo, BC",
       summary: "Current BC Bid public-browse aquatic-facility opportunity tied to Nanaimo Aquatic Centre water feature work.",
-      sourceUrl: BCBID_BROWSE_URL,
-      sourceMode: "latest",
-    },
-    {
-      id: "227238",
-      title: "2026-RFP-13 Construction of Upgrades - AWWTP",
-      commodity: "Building and Facility Construction and Maintenance Services",
-      opportunityType: "Request for Proposal (BPS)",
-      issueDate: "2026-03-27 5:00:00 PM",
-      closeDate: "2026-05-12 2:00:00 PM",
-      issuingOrganization: "City of Penticton",
-      location: "Penticton, BC",
-      summary: "Current BC Bid public-browse construction opportunity from the City of Penticton.",
-      sourceUrl: BCBID_BROWSE_URL,
+      sourceUrl: "https://bcbid.gov.bc.ca/page.aspx/en/bpm/process_manage_extranet/4198",
       sourceMode: "latest",
     },
   ],
@@ -835,13 +822,28 @@ function matchesBcbidQuery(record, query) {
   return haystack.includes(query);
 }
 
+function isCurrentBcbidRecord(record) {
+  const closeDate = parseDateValue(record?.closeDate);
+  if (!closeDate) return true;
+  return closeDate.getTime() >= getReferenceDate().getTime();
+}
+
+function hasStrongBcbidFit(record, analysis) {
+  const analysisText = getBcbidAnalysisText(record).toLowerCase();
+  const strongKeywordMatch = /(aquatic|pool|natatorium|hvac|mechanical|boiler|chiller|ahu|heat pump|hydronic|commissioning|dehumidification|cooling coil|heat recovery)/.test(analysisText);
+  const strongClassification = analysis.classification === "Mechanical systems lead"
+    || analysis.classification === "Aquatic procurement lead"
+    || analysis.classification === "Aquatic capital signal"
+    || analysis.classification === "Aquatic construction lead";
+  const strongPriority = analysis.priorityKey === "priority" || analysis.priorityKey === "watch";
+
+  return analysis.serviceLines.length > 0 && strongKeywordMatch && (strongClassification || strongPriority);
+}
+
 function isRelevantBcbidRecord(record) {
   const analysis = analyzeText(getBcbidAnalysisText(record), "procurement", "merx_import");
-  const analysisText = getBcbidAnalysisText(record).toLowerCase();
-
-  if (analysis.serviceLines.length > 0 && analysis.priorityKey !== "filtered") return true;
-
-  return /(aquatic|pool|hvac|boiler|chiller|ahu|heat pump|hydronic|mechanical|commissioning|cooling coil|heat recovery|construction)/.test(analysisText);
+  if (!isCurrentBcbidRecord(record)) return false;
+  return hasStrongBcbidFit(record, analysis);
 }
 
 function getAllBcbidRecords() {
@@ -885,6 +887,10 @@ function getBcbidAnalysisText(record) {
 
 function getBcbidDisplaySource(record) {
   return record.sourceMode === "keyword" ? "BC Bid search match" : "BC Bid public-browse snapshot";
+}
+
+function getBcbidSourceActionLabel(record) {
+  return record.sourceUrl === BCBID_BROWSE_URL ? "Open BC Bid Browse Page" : "Open Official Source";
 }
 
 function inferLocationFromText(text) {
@@ -1885,10 +1891,15 @@ function selectRecord(recordId, options = {}) {
     spotlightRecord(state.selectedRecordId);
   }
   if (focusInspector) {
+    if (signalInspector) {
+      signalInspector.scrollTop = 0;
+    }
+    var header = document.querySelector(".shell-topbar");
     var feedSection = document.getElementById("workspaceFeed");
-    if (feedSection) {
-      var headerOffset = 140;
-      var top = feedSection.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+    var anchor = feedSection || signalSteps || signalInspector;
+    if (anchor) {
+      var headerOffset = (header && header.getBoundingClientRect().height ? header.getBoundingClientRect().height : 112) + 32;
+      var top = anchor.getBoundingClientRect().top + window.pageYOffset - headerOffset;
       window.scrollTo({ top: top, behavior: "smooth" });
     }
   }
@@ -2842,7 +2853,7 @@ function renderBcbidResult() {
     <div class="detail-block">
       <p class="detail-label">Source backing this opportunity</p>
       <div class="record-inline-actions">
-        <a class="record-inline-link action-blue" href="${esc(record.sourceUrl)}" target="_blank" rel="noreferrer">Open Official Source</a>
+        <a class="record-inline-link action-blue" href="${esc(record.sourceUrl)}" target="_blank" rel="noreferrer">${esc(getBcbidSourceActionLabel(record))}</a>
         <button class="record-inline-link action-grey" type="button" data-route-bcbid="digest">Send To Morning Digest</button>
         <button class="record-inline-link action-green" type="button" data-route-bcbid="leadership">Route To Leadership Brief</button>
       </div>

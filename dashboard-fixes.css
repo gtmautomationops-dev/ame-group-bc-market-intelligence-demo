@@ -94,8 +94,8 @@
 .signal-steps,
 .merx-steps {
   position: sticky;
-  top: 6.2rem;
-  z-index: 10;
+  top: 8.55rem;
+  z-index: 18;
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(8px);
   padding: 0.6rem 0;
@@ -103,12 +103,19 @@
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   border-bottom: 1px solid rgba(19, 33, 54, 0.06);
+  box-shadow: 0 12px 22px rgba(19, 33, 54, 0.06);
+  scroll-margin-top: 9rem;
 }
 
 .signal-inspector,
 .merx-detail-stack {
-  max-height: calc(100vh - 9.4rem);
-  overflow: auto;
+  position: sticky;
+  top: 13rem;
+  height: calc(100vh - 13.9rem);
+  max-height: calc(100vh - 13.9rem);
+  min-height: 0;
+  overflow-y: auto;
   overscroll-behavior: contain;
   padding-right: 0.2rem;
+  scroll-margin-top: 13.4rem;
 }
