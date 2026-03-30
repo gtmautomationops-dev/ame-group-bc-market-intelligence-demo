@@ -79,3 +79,28 @@
   font-size: 0.9rem;
   line-height: 1.55;
 }
+
+/* ── 7. SEARCH LABEL — centered above the input ── */
+.topbar-search {
+  justify-items: center;
+}
+
+.search-label {
+  text-align: center;
+}
+
+/* ── 8. FLOW STRIPS — sticky so steps stay visible during all workflows ── */
+/* Covers Project Signals (.signal-steps), BC Bid Watch and MERX Intake (.merx-steps) */
+.signal-steps,
+.merx-steps {
+  position: sticky;
+  top: 5.5rem;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  padding: 0.6rem 0;
+  margin: 0 -0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-bottom: 1px solid rgba(19, 33, 54, 0.06);
+}

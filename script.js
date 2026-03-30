@@ -10,7 +10,7 @@ if (!appData) {
   document.body.innerHTML = `
     <main style="width:min(760px, calc(100vw - 2rem)); margin:4rem auto; color:#19222d; font-family:Aptos,Segoe UI,sans-serif;">
       <h1 style="font-family:Bahnschrift,Arial Narrow,sans-serif;">Proof data not found</h1>
-      <p>Run <code>run-demo.ps1</code> to build <code>data/ame-proof-app-data.js</code> before opening this page.</p>
+      <p>Data file not loaded. Contact the platform administrator.</p>
     </main>
   `;
   throw new Error("AME_DEMO_DATA is not available.");
@@ -389,7 +389,7 @@ const bcBidSnapshot = {
       closeDate: "2026-03-30 3:30:00 PM",
       issuingOrganization: "Ministry of Public Safety and Solicitor General",
       location: "Victoria, BC",
-      summary: "A same-day provincial posting that demonstrates freshness even when the opportunity is not an AME fit.",
+      summary: "A same-day provincial posting that proves the platform captures current activity, even when the opportunity is not an AME fit.",
       sourceUrl: BCBID_BROWSE_URL,
       sourceMode: "latest",
     },
@@ -773,7 +773,7 @@ function getMerxNoticeState(notice) {
       key: "recent",
       label: "Active notice",
       timeline: `Closes ${closingLabel}`,
-      explainer: "This notice is still active in the intake lane.",
+      explainer: "This notice is still active and open for submission.",
       actionLabel: "Select Notice",
     };
   }
@@ -783,7 +783,7 @@ function getMerxNoticeState(notice) {
       key: "recent",
       label: "Recent notice",
       timeline: `Closed ${closingLabel}`,
-      explainer: "This recent notice keeps the intake lane grounded in current procurement behavior.",
+      explainer: "This recent notice reflects current procurement activity.",
       actionLabel: "Select Notice",
     };
   }
@@ -826,6 +826,12 @@ function getBcbidSourceGroups(query = state.query.trim().toLowerCase()) {
         title: "Newest public opportunities",
         copy: `Fresh public-browse examples checked ${bcBidSnapshot.checkedAtLabel}.`,
         records: bcBidSnapshot.newest,
+      },
+      {
+        key: "keyword",
+        title: "Keyword watch matches",
+        copy: "Opportunities surfaced by AME keyword watch terms (boiler, chiller, HVAC).",
+        records: bcBidSnapshot.boiler,
       },
     ];
   }
@@ -1416,7 +1422,7 @@ function buildMerxTransientLead() {
   const analysis = analyzeText(rawText, "procurement", "merx_import");
   const noticeState = getMerxNoticeState(notice);
   const displayHits = formatDisplayList(analysis.hits);
-  const summary = notice.summary || `${parsed.subject} routed from the intake lane.`;
+  const summary = notice.summary || `${parsed.subject} routed for AME review.`;
 
   return {
     id: `merx-${notice.id}`,
@@ -1440,7 +1446,7 @@ function buildMerxTransientLead() {
     keywordHits: analysis.hits,
     ameServiceLines: analysis.serviceLines,
     evidence: [
-      `Imported from ${parsed.sourceName || notice.sourceName || "a public procurement notice"} through the AME intake lane.`,
+      `Imported from ${parsed.sourceName || notice.sourceName || "a public procurement notice"} through the AME procurement monitoring pipeline.`,
       `Buyer: ${parsed.buyer} | Location: ${parsed.location}.`,
       `Closing: ${parsed.closing}.`,
     ],
@@ -1598,10 +1604,10 @@ function getClassification(stage, hits) {
 
 function getAction(category, classification, priorityKey) {
   if (category === "merx_import") {
-    if (priorityKey === "priority") return "Prioritize for AME review and validate the buyer, consultant, and delivery path through the approved intake lane.";
+    if (priorityKey === "priority") return "Prioritize for AME review and validate the buyer, consultant, and delivery path.";
     if (priorityKey === "watch") return "Keep in the import queue and validate scope, timing, and delivery path before briefing.";
     if (classification === "Mechanical systems lead") return "Review scope for mechanical fit — boiler, chiller, and HVAC upgrades may align with AME services.";
-    return "Do not brief unless the watch profile changes.";
+    return "Low priority — monitor for scope changes before briefing.";
   }
 
   if (classification === "Aquatic procurement lead") return "Track owner, architect, and procurement movement while the project is still shapeable.";
@@ -1739,7 +1745,7 @@ function renderTruthStrip() {
     ["Early signals", earlySignalCount, "Owner-side signals that surface before broad procurement visibility."],
     ["Priority leads", appData.briefing.totals.priorityCount, "High-fit opportunities scored for AME."],
     ["Meeting-linked docs", meetingLinkedCount, "Council-linked records surfaced before broad market visibility."],
-    ["Recent notices", merxBuckets.recent.length, "Recent public procurement notices ready to run through the intake lane."],
+    ["Recent notices", merxBuckets.recent.length, "Recent public procurement notices scored for AME relevance."],
   ];
 
   truthStrip.innerHTML = items.map(([label, value, note]) => `
@@ -1776,7 +1782,7 @@ function renderRunHistory() {
       <article class="run-history-card">
         <p class="section-tag">Run status</p>
         <h4>No local run history yet</h4>
-        <p class="empty-copy">Run <code>run-demo.ps1</code> to stamp the dashboard with a local execution time and refreshed outputs.</p>
+        <p class="empty-copy">No pipeline run history available yet.</p>
       </article>
     `;
     runHistoryList.innerHTML = "";
