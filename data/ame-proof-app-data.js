@@ -4,9 +4,9 @@ window.AME_DEMO_DATA = {
     "runLog": {
         "mode": "Live data pipeline",
         "latestRun": {
-            "runId": "20260411-211138",
-            "generatedAt": "2026-04-11T21:11:38.644880",
-            "label": "Apr 11, 2026 9:11 PM",
+            "runId": "20260411-211543",
+            "generatedAt": "2026-04-11T21:15:43.147384",
+            "label": "Apr 11, 2026 9:15 PM",
             "status": "Completed",
             "runner": "generate_data_js.py",
             "mode": "Live data — MERX + BC Municipalities",
@@ -26,9 +26,9 @@ window.AME_DEMO_DATA = {
         },
         "history": [
             {
-                "runId": "20260411-211138",
-                "generatedAt": "2026-04-11T21:11:38.644880",
-                "label": "Apr 11, 2026 9:11 PM",
+                "runId": "20260411-211543",
+                "generatedAt": "2026-04-11T21:15:43.147384",
+                "label": "Apr 11, 2026 9:15 PM",
                 "status": "Completed",
                 "runner": "generate_data_js.py",
                 "mode": "Live data — MERX + BC Municipalities",
