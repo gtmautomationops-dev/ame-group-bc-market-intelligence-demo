@@ -354,7 +354,7 @@
         <a href="./ame-proof-daily-briefing.html" target="_blank" rel="noreferrer">Leadership Brief</a>
       </nav>
       <div class="topbar-actions">
-        <span id="digestDatePill" class="topbar-pill">March 27, 2026</span>
+        <span class="topbar-pill">March 27, 2026</span>
       </div>
     </div>
   </header>
@@ -368,17 +368,17 @@
       <div class="hero-stats">
         <article class="metric">
           <p class="eyebrow">Priority Leads</p>
-          <strong id="heroPriorityCount">4</strong>
+          <strong>4</strong>
           <p>High-fit items ready for the morning discussion.</p>
         </article>
         <article class="metric watch">
           <p class="eyebrow">Watchlist</p>
-          <strong id="heroWatchCount">1</strong>
+          <strong>1</strong>
           <p>Signals that still need timing or scope confirmation.</p>
         </article>
         <article class="metric">
           <p class="eyebrow">Checked</p>
-          <strong id="heroCheckedDate">March 27, 2026</strong>
+          <strong>March 27, 2026</strong>
           <p>Public-source verification date for the digest.</p>
         </article>
       </div>
@@ -409,7 +409,7 @@
     </section>
   </main>
 
-  <script src="../data/ame-proof-app-data.js?v=20260411-211149"></script>
+  <script src="../data/ame-proof-app-data.js"></script>
   <script>
     const appData = window.AME_DEMO_DATA;
     const storageKey = "ameDigestRecordId";
@@ -420,10 +420,6 @@
     const digestList = document.getElementById("digestList");
     const digestFocus = document.getElementById("digestFocus");
     const digestCount = document.getElementById("digestCount");
-    const digestDatePill = document.getElementById("digestDatePill");
-    const heroPriorityCount = document.getElementById("heroPriorityCount");
-    const heroWatchCount = document.getElementById("heroWatchCount");
-    const heroCheckedDate = document.getElementById("heroCheckedDate");
 
     const esc = (value) => String(value ?? "")
       .replaceAll("&", "&amp;")
@@ -447,18 +443,6 @@
         const mapped = map[word.toLowerCase()];
         if (mapped) return mapped;
         return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-      });
-    }
-
-    function formatDisplayDate(value) {
-      if (!value) return "Current";
-      const normalized = String(value).replace(/\//g, "-");
-      const date = new Date(normalized);
-      if (Number.isNaN(date.getTime())) return String(value);
-      return date.toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric"
       });
     }
 
@@ -566,17 +550,12 @@
       const priorityCount = digestRecords.filter(function (record) { return record.priorityKey === "priority"; }).length;
       const watchCount = digestRecords.filter(function (record) { return record.priorityKey === "watch"; }).length;
       const otherCount = digestRecords.length - priorityCount - watchCount;
-      const generatedDate = formatDisplayDate(appData && (appData.generatedOn || (appData.runLog && appData.runLog.latestRun && appData.runLog.latestRun.datasetDate)));
 
       const parts = [priorityCount + " priority", watchCount + " watchlist"];
       if (otherCount > 0) parts.push(otherCount + " other");
       digestCount.textContent = parts.join(" / ");
       var heroSub = document.getElementById("heroSubtitle");
-      if (heroSub) heroSub.textContent = priorityCount + " priority leads for morning review - " + generatedDate;
-      if (heroPriorityCount) heroPriorityCount.textContent = String(priorityCount);
-      if (heroWatchCount) heroWatchCount.textContent = String(watchCount);
-      if (heroCheckedDate) heroCheckedDate.textContent = generatedDate;
-      if (digestDatePill) digestDatePill.textContent = generatedDate;
+      if (heroSub) heroSub.textContent = priorityCount + " priority leads for morning review - March 27, 2026";
     }
 
     function saveDigestRecord(recordId) {
@@ -674,4 +653,3 @@
   </script>
 </body>
 </html>
-

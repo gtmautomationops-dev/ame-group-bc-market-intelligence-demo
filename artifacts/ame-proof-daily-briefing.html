@@ -606,7 +606,7 @@
         <a class="is-active" href="#">Leadership Brief</a>
       </nav>
       <div class="topbar-actions">
-        <span id="briefDatePill" class="topbar-pill">March 27, 2026</span>
+        <span class="topbar-pill">March 27, 2026</span>
       </div>
     </div>
   </header>
@@ -631,7 +631,7 @@
           </article>
           <article class="metric">
             <p class="eyebrow">Checked</p>
-            <strong id="heroCheckedDate">March 27, 2026</strong>
+            <strong>March 27, 2026</strong>
             <p>Public-source verification date for this briefing set.</p>
           </article>
         </div>
@@ -927,9 +927,7 @@
     </section>
   </main>
 
-  <script src="../data/ame-proof-app-data.js?v=20260411-211149"></script>
   <script>
-    const appData = window.AME_DEMO_DATA || null;
     const storedExecutiveLeadKey = "ameExecutiveLeadId";
     const transientLeadStorageKey = "ameTransientDigestLead";
     const baseExecutiveLeads = [{"id":"proof-003","title":"Burnaby civic update says Burnaby Lake Recreation Complex is past 50% completion","entity":"City of Burnaby","location":"Burnaby, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Construction","asset":"Recreation Complex","whyItMatters":"The project is in delivery and still relevant for downstream packages, specialist scopes, and relationship mapping around aquatic centre, pool, aquatic.","action":"Map likely packages, local partners, and probable follow-on scopes for AME pursuit.","serviceLines":["Mechanical Design","Commissioning","Energy + Sustainability"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.burnaby.ca/our-city/news/2026-03-09/burnabys-once-generation-civic-building-program-reaches-50-completion"},{"id":"proof-006","title":"Crystal Pool project page says construction management procurement is underway","entity":"City of Victoria","location":"Victoria, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Procurement","asset":"Pool / Aquatic Centre","whyItMatters":"This record is already in procurement-facing motion and contains direct signals around aquatic centre, crystal pool, pool.","action":"Track council or owner procurement milestones and identify likely consultant or trade entry points.","serviceLines":["Mechanical Design","Fire Suppression Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Victoria Office","sourceUrl":"https://www.victoria.ca/city-government/projects/crystal-pool-replacement-project"},{"id":"proof-009","title":"Park Board gives greenlight to Vancouver Aquatic Centre renewal","entity":"City of Vancouver","location":"Vancouver, BC","priority":"Priority","priorityKey":"priority","score":100,"stage":"Planning","asset":"Aquatic Centre","whyItMatters":"The project is pre-construction but clearly aligned with AME\u0027s watch profile through aquatic centre, vancouver aquatic centre, pool.","action":"Monitor the project for next-phase design, enabling works, or management procurements.","serviceLines":["Mechanical Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://vancouver.ca/news-calendar/green-light-for-vancouver-aquatic-centre-renewal-april-1.aspx"},{"id":"proof-004","title":"Newton Community Centre page lists 50-metre pool and early-2026 design-build target","entity":"City of Surrey","location":"Surrey, BC","priority":"Priority","priorityKey":"priority","score":88,"stage":"Planning","asset":"Community Centre / Aquatic Centre","whyItMatters":"The project is pre-construction but clearly aligned with AME\u0027s watch profile through pool, aquatic, construction.","action":"Monitor the project for next-phase design, enabling works, or management procurements.","serviceLines":["Mechanical Design","Fire Suppression Design","Energy + Sustainability","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.surrey.ca/about-surrey/capital-projects/newton-community-centre"},{"id":"proof-005","title":"Contract for direct-access road to future Newton Community Centre goes before council","entity":"City of Surrey","location":"Surrey, BC","priority":"Watch","priorityKey":"watch","score":70,"stage":"Procurement","asset":"Community Centre Enabling Works","whyItMatters":"This record is already in procurement-facing motion and contains direct signals around aquatic, construction, community centre.","action":"Hold for background context only.","serviceLines":["Mechanical Design","Fire Suppression Design","Commissioning"],"recommendedOffice":"Vancouver Office","sourceUrl":"https://www.surrey.ca/news-events/news/contract-direct-access-road-future-newton-community-centre-goes-council"}];
@@ -1017,8 +1015,6 @@
     const outcomePanel = document.getElementById("execOutcome");
     const heroPriorityCount = document.getElementById("heroPriorityCount");
     const heroWatchCount = document.getElementById("heroWatchCount");
-    const heroCheckedDate = document.getElementById("heroCheckedDate");
-    const briefDatePill = document.getElementById("briefDatePill");
     const priorityActiveCount = document.getElementById("priorityActiveCount");
     const quickButtons = Array.from(document.querySelectorAll(".js-exec-quick"));
     const leadCards = Array.from(document.querySelectorAll(".brief-card[data-lead-id]"));
@@ -1086,18 +1082,6 @@
 
     function getFirstName(fullName) {
       return String(fullName || "").split(" ")[0] || "Team";
-    }
-
-    function formatDisplayDate(value) {
-      if (!value) return "Current";
-      const normalized = String(value).replace(/\//g, "-");
-      const date = new Date(normalized);
-      if (Number.isNaN(date.getTime())) return String(value);
-      return date.toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric"
-      });
     }
 
     function getCurrentExecutiveSelection() {
@@ -1171,15 +1155,12 @@
     function renderHeroCounts() {
       const priorityCount = executiveLeads.filter(function (lead) { return lead.priorityKey === "priority"; }).length;
       const watchCount = executiveLeads.filter(function (lead) { return lead.priorityKey === "watch"; }).length;
-      const generatedDate = formatDisplayDate(appData && (appData.generatedOn || (appData.runLog && appData.runLog.latestRun && appData.runLog.latestRun.datasetDate)));
 
       if (heroPriorityCount) heroPriorityCount.textContent = String(priorityCount);
       var heroSub = document.getElementById("heroSubtitle");
-      if (heroSub) heroSub.textContent = priorityCount + " priority leads ready for assignment - " + generatedDate;
+      if (heroSub) heroSub.textContent = priorityCount + " priority leads ready for assignment - March 27, 2026";
       if (heroWatchCount) heroWatchCount.textContent = String(watchCount);
       if (priorityActiveCount) priorityActiveCount.textContent = priorityCount + " active";
-      if (heroCheckedDate) heroCheckedDate.textContent = generatedDate;
-      if (briefDatePill) briefDatePill.textContent = generatedDate;
     }
 
     function renderExecutivePanels() {
@@ -1420,4 +1401,3 @@
   </script>
 </body>
 </html>
-
